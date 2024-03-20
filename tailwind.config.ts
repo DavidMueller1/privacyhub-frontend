@@ -25,10 +25,6 @@ export default {
 						name: 'crimson',
 						enhancements: true,
 					},
-					{
-						name: 'custom',
-						enhancements: true,
-					},
 				],
 				custom: [
 					Private,

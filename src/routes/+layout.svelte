@@ -1,6 +1,14 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+	import {
+		AppShell,
+		AppBar,
+		initializeStores,
+		getDrawerStore,
+		Drawer,
+		LightSwitch,
+		Modal, type ModalComponent, modeCurrent, getModeUserPrefers, getModeAutoPrefers
+	} from '@skeletonlabs/skeleton';
 
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';
@@ -20,44 +28,69 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
+	import Navigation from '$lib/navigation/Navigation.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+
+	initializeStores();
+
+	const drawerStore = getDrawerStore();
+
+	const drawerOpen = () => {
+		drawerStore.open({});
+	};
+
+	// Setting up custom modals
+	import LoadingModal from '$lib/modals/LoadingModal.svelte';
+	const modalRegistry: Record<string, ModalComponent> = {
+		loading: { ref: LoadingModal }
+	}
+
+	// Set the current mode
+	let currentMode = getModeUserPrefers();
+	modeCurrent.subscribe((value) => {
+		currentMode = value;
+	});
 </script>
 
+<Drawer>
+	<Navigation />
+</Drawer>
+
+<Modal components={modalRegistry}/>
 <!-- App Shell -->
-<AppShell>
+<AppShell slotSidebarLeft="bg-surface-500/5 w-0 lg:w-64">
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">Skeleton</strong>
+				<div class="flex items-center">
+					<button
+						class="lg:hidden btn btn-sm mr-4"
+						on:click={drawerOpen}
+					>
+            <span>
+                <svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
+                    <rect width="100" height="20" />
+                    <rect y="30" width="100" height="20" />
+                    <rect y="60" width="100" height="20" />
+                </svg>
+            </span>
+					</button>
+					{#if currentMode}
+						<img src="/images/logo_dark.svg" alt="PrivacyHub Logo" class="w-28 lg:w-36 lg:px-4" />
+					{:else}
+						<img src="/images/logo_light.svg" alt="PrivacyHub Logo" class="w-28 lg:w-36 lg:px-4" />
+					{/if}
+<!--					<strong class="text-xl uppercase">PrivacyHub</strong>-->
+				</div>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://discord.gg/EXqV7W8MtY"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Discord
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://twitter.com/SkeletonUI"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Twitter
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://github.com/skeletonlabs/skeleton"
-					target="_blank"
-					rel="noreferrer"
-				>
-					GitHub
-				</a>
+				<LightSwitch />
 			</svelte:fragment>
 		</AppBar>
+	</svelte:fragment>
+	<svelte:fragment slot="sidebarLeft">
+		<Navigation />
 	</svelte:fragment>
 	<!-- Page Route Content -->
 	<slot />
