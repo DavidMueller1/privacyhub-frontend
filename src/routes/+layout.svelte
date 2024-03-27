@@ -7,7 +7,11 @@
 		getDrawerStore,
 		Drawer,
 		LightSwitch,
-		Modal, type ModalComponent, modeCurrent, getModeUserPrefers, getModeAutoPrefers
+		Modal,
+		type ModalComponent,
+		modeCurrent,
+		getModeUserPrefers,
+		getModeAutoPrefers
 	} from '@skeletonlabs/skeleton';
 
 	// Highlight JS
@@ -18,6 +22,8 @@
 	import css from 'highlight.js/lib/languages/css';
 	import javascript from 'highlight.js/lib/languages/javascript';
 	import typescript from 'highlight.js/lib/languages/typescript';
+
+	import '$lib/styles/app.css';
 
 	hljs.registerLanguage('xml', xml); // for HTML
 	hljs.registerLanguage('css', css);
@@ -43,7 +49,7 @@
 	import LoadingModal from '$lib/modals/LoadingModal.svelte';
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal }
-	}
+	};
 
 	// Set the current mode
 	let currentMode = getModeUserPrefers();
@@ -56,7 +62,7 @@
 	<Navigation />
 </Drawer>
 
-<Modal components={modalRegistry}/>
+<Modal components={modalRegistry} />
 <!-- App Shell -->
 <AppShell slotSidebarLeft="bg-surface-500/5 w-0 lg:w-64">
 	<svelte:fragment slot="header">
@@ -64,24 +70,29 @@
 		<AppBar>
 			<svelte:fragment slot="lead">
 				<div class="flex items-center">
-					<button
-						class="lg:hidden btn btn-sm mr-4"
-						on:click={drawerOpen}
-					>
-            <span>
-                <svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
-                    <rect width="100" height="20" />
-                    <rect y="30" width="100" height="20" />
-                    <rect y="60" width="100" height="20" />
-                </svg>
-            </span>
+					<button class="lg:hidden btn btn-sm mr-4" on:click={drawerOpen}>
+						<span>
+							<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
+								<rect width="100" height="20" />
+								<rect y="30" width="100" height="20" />
+								<rect y="60" width="100" height="20" />
+							</svg>
+						</span>
 					</button>
 					{#if currentMode}
-						<img src="/images/logo_dark.svg" alt="PrivacyHub Logo" class="w-28 lg:w-36 lg:px-4" />
+						<img
+							src="/images/logo_dark.svg"
+							alt="PrivacyHub Logo"
+							class="w-28 lg:w-36 lg:px-4"
+						/>
 					{:else}
-						<img src="/images/logo_light.svg" alt="PrivacyHub Logo" class="w-28 lg:w-36 lg:px-4" />
+						<img
+							src="/images/logo_light.svg"
+							alt="PrivacyHub Logo"
+							class="w-28 lg:w-36 lg:px-4"
+						/>
 					{/if}
-<!--					<strong class="text-xl uppercase">PrivacyHub</strong>-->
+					<!--					<strong class="text-xl uppercase">PrivacyHub</strong>-->
 				</div>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
