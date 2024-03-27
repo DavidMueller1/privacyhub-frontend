@@ -70,7 +70,7 @@
 	};
 
 	let deviceList: BaseDevice[] = [];
-	const numberOfTestDevices = 2;
+	const numberOfTestDevices = 1;
 	const getDeviceList = () => {
 		isLoading = true;
 		ApiClient.getNodes()
@@ -132,7 +132,7 @@
 		</span>
 	{:else}
 		{#if deviceList.length > 0}
-			<div class="w-full grid grid-cols-[repeat(auto-fit,_33.33333%)] gap-4 m-auto p-24 justify-center">
+			<div class="w-full grid grid-cols-[repeat(auto-fit,_32%)] gap-4 m-auto p-4 justify-center">
 				{#each deviceList as device}
 					<svelte:component this={device.getOverviewComponent()} device={device} />
 				{/each}
