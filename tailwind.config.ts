@@ -12,7 +12,14 @@ export default {
 		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				'connected-light': '#7eaf57',
+				'connected-dark': '#61913c',
+				'disconnected-light': '#b14b4b',
+				'disconnected-dark': '#7f2d2d'
+			},
+		}
 	},
 	plugins: [
 		forms,

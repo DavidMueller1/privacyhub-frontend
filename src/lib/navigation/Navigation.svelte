@@ -1,13 +1,19 @@
 <script>
-	import { getDrawerStore } from '@skeletonlabs/skeleton';
+	import { getDrawerStore, getModeUserPrefers, LightSwitch, modeCurrent } from '@skeletonlabs/skeleton';
 
 	const drawerStore = getDrawerStore();
 	const drawerClose = () => {
 		drawerStore.close();
 	};
+
+	// Set the current mode
+	let currentMode = getModeUserPrefers();
+	modeCurrent.subscribe((value) => {
+		currentMode = value;
+	});
 </script>
 
-<nav class="list-nav p-4">
+<nav class="list-nav grow">
 	<ul>
 		<li>
 			<a href="/" on:click={drawerClose}>
@@ -37,3 +43,7 @@
 		</li>
 	</ul>
 </nav>
+<!--Align bottom-->
+<div class="align-bottom p-4">
+	<LightSwitch />
+</div>

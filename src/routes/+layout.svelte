@@ -39,6 +39,8 @@
 
 	initializeStores();
 
+	connectSocket();
+
 	const drawerStore = getDrawerStore();
 
 	const drawerOpen = () => {
@@ -47,6 +49,8 @@
 
 	// Setting up custom modals
 	import LoadingModal from '$lib/modals/LoadingModal.svelte';
+	import { connectSocket } from '$lib/sockets/SocketClient';
+	import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal }
 	};
@@ -96,12 +100,14 @@
 				</div>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<LightSwitch />
+				<ConnectionStatus />
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
-		<Navigation />
+		<div class="flex flex-col">
+			<Navigation />
+		</div>
 	</svelte:fragment>
 	<!-- Page Route Content -->
 	<slot />
