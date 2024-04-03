@@ -27,5 +27,10 @@ export const connectSocket = () => {
 		console.log('Received data:', data);
 	});
 
+	// socket.on('onOffState', (data) => {
+	// 	console.log('Received onOffState:');
+	// 	console.log(data);
+	// });
+
 	socketStore.set(socket);
 }

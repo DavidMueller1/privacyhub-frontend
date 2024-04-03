@@ -4,8 +4,18 @@
 	import Fa from 'svelte-fa';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 	import type OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
+	import { socketStore } from '$lib/store/GeneralStore';
 
 	export let device: OnOffPluginUnit;
+
+	$socketStore.on('onOffState', (data) => {
+		console.log('Received onOffState:');
+		console.log(data);
+
+		if (device.nodeId === data.nodeId) {
+			device.state = data.state;
+		}
+	});
 </script>
 
 <div class="card flex items-center space-x-8 px-8 h-20">

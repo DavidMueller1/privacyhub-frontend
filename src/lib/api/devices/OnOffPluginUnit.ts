@@ -2,6 +2,7 @@ import BaseDevice from '$lib/api/devices/BaseDevice';
 import ApiClient from '$lib/api/ApiClient';
 import DefaultOverview from '$lib/components/deviceOverviews/DefaultOverview.svelte';
 import OnOffPluginUnitOverview from '$lib/components/deviceOverviews/OnOffPluginUnitOverview.svelte';
+import { socketStore } from '$lib/store/GeneralStore';
 
 export default class OnOffPluginUnit extends BaseDevice {
 	state: boolean;
