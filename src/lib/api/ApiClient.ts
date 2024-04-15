@@ -69,8 +69,13 @@ export default abstract class ApiClient {
 									});
 									break;
 								default:
-									console.error(`Unknown node type: ${type}`);
-									resolve();
+									console.warn(`Unknown node type: ${type}`);
+									const unknownDevice = new BaseDevice(nodeId, vendor, product);
+									unknownDevice.initialize().then(() => {
+										nodes.push(unknownDevice);
+										resolve();
+									});
+									break;
 							}
 						});
 					})).then(() => {

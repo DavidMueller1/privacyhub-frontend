@@ -5,6 +5,7 @@ import { get } from 'svelte/store';
 const BACKEND_URL = 'http://192.168.178.65:8000';
 export const connectSocket = () => {
 	if (get(socketStore) !== undefined) {
+		console.log('Socket already connected');
 		return;
 	}
 	const socket = io(BACKEND_URL);

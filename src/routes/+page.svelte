@@ -1,13 +1,14 @@
 <script lang="ts">
 	import {
-		getModalStore,
-		type ModalSettings,
+		getModalStore, getModeUserPrefers,
+		type ModalSettings, modeCurrent,
 		ProgressRadial,
 		SlideToggle
 	} from '@skeletonlabs/skeleton';
 	import ApiClient, { type DeviceOverview } from '$lib/api/ApiClient';
 	import { nodes } from '../../.svelte-kit/generated/client/app';
 	import BaseDevice from '$lib/api/devices/BaseDevice';
+	import { connectedStore, ConnectionStatus, socketStore } from '$lib/store/GeneralStore';
 
 	const modalStore = getModalStore();
 
@@ -75,7 +76,6 @@
 		isLoading = true;
 		ApiClient.getNodes()
 			.then((nodes) => {
-				console.log('Nodes:', nodes);
 				deviceList = nodes;
 				if (deviceList.length < numberOfTestDevices) {
 					for (let i = deviceList.length; i < numberOfTestDevices; i++) {
@@ -100,52 +100,98 @@
 			});
 	};
 
-	getDeviceList();
+	connectedStore.subscribe((value) => {
+		if (value === ConnectionStatus.CONNECTED) {
+			getDeviceList();
+		}
+	});
+
+	let currentMode = getModeUserPrefers();
+	modeCurrent.subscribe((value) => {
+		currentMode = value;
+	});
 
 </script>
 
 
-<div class="container h-full mx-auto flex justify-center items-center">
-	{#if isLoading}
-		<!--		<ProgressRadial width="w-28"  strokeLinecap="round" track="stroke-primary-50" meter="stroke-primary-500"/>-->
-		<span class="flex justify-center">
-			<svg
-				class="animate-spin -ml-1 mr-3 h-12 w-12 text-sky-600"
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-			>
-				<circle
-					class="opacity-25"
-					cx="12"
-					cy="12"
-					r="10"
-					stroke="currentColor"
-					stroke-width="4"
-				></circle>
-				<path
-					class="opacity-75"
-					fill="currentColor"
-					d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-				></path>
-			</svg>
-		</span>
-	{:else}
-		{#if deviceList.length > 0}
-			<div class="w-full grid grid-cols-[repeat(auto-fit,_32%)] gap-4 m-auto p-4 justify-center">
-				{#each deviceList as device}
-					<svelte:component this={device.getOverviewComponent()} device={device} />
-				{/each}
+<div class="container relative h-full w-full flex items-center self-center">
+
+	{#if $connectedStore !== ConnectionStatus.CONNECTED}
+		<div
+			class="absolute bg-surface-700 bg-opacity-60 z-10 h-full w-full flex items-center justify-center"
+			 class:bg-surface-900={!currentMode} class:bg-surface-100={currentMode}
+		>
+			<div class="flex items-center">
+				<svg
+					class="animate-spin -ml-1 mr-3 h-12 w-12 text-sky-600"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<circle
+						class="opacity-25"
+						cx="12"
+						cy="12"
+						r="10"
+						stroke="currentColor"
+						stroke-width="4"
+					></circle>
+					<path
+						class="opacity-75"
+						fill="currentColor"
+						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+					></path>
+				</svg>
+				<span class="text-3xl mr-4">Connecting to Hub</span>
 			</div>
+		</div>
+	{/if}
+
+	{#if !(isLoading && $connectedStore !== ConnectionStatus.CONNECTED)}
+		{#if isLoading}
+			<!--		<ProgressRadial width="w-28"  strokeLinecap="round" track="stroke-primary-50" meter="stroke-primary-500"/>-->
+			<span class="h-full w-full flex items-center justify-center">
+				<svg
+					class="animate-spin -ml-1 mr-3 h-12 w-12 text-sky-600"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<circle
+						class="opacity-25"
+						cx="12"
+						cy="12"
+						r="10"
+						stroke="currentColor"
+						stroke-width="4"
+					></circle>
+					<path
+						class="opacity-75"
+						fill="currentColor"
+						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+					></path>
+				</svg>
+			</span>
 		{:else}
-			<div class="space-y-10 text-center flex flex-col items-center">
-				<h2 class="h2">Dashboard</h2>
-				<p class="text-lg">No devices paired yet.</p>
+			{#if deviceList.length > 0}
+				<div class="w-full grid grid-cols-[repeat(auto-fit,_32%)] gap-4 m-auto p-4 justify-center">
+					{#each deviceList as device}
+						<svelte:component this={device.getOverviewComponent()} device={device} />
+					{/each}
+				</div>
+			{:else}
+				<div class="space-y-10 text-center flex flex-col items-center">
+					<h2 class="h2">Dashboard</h2>
+					<p class="text-lg">No devices paired yet.</p>
+				</div>
+			{/if}
+			<div class="fixed bottom-4 right-4">
+				<button class="btn variant-filled-primary" on:click={openModal}>
+					<i class="fa-solid fa-plus"></i>
+					<span>Add device</span>
+				</button>
 			</div>
 		{/if}
-		<div class="fixed bottom-4 right-4">
-			<button class="btn variant-filled-primary" on:click={openModal}> Add device </button>
-		</div>
 	{/if}
 </div>
 

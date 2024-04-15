@@ -16,6 +16,15 @@
 			device.state = data.state;
 		}
 	});
+
+	$socketStore.on('connectionStatus', (data) => {
+		console.log('Received connectionStatus:');
+		console.log(data);
+
+		if (device.nodeId === data.nodeId) {
+			// device.connected = data.connected;
+		}
+	});
 </script>
 
 <div class="card flex items-center space-x-8 px-8 h-20">
