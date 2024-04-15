@@ -51,8 +51,11 @@
 	import LoadingModal from '$lib/modals/LoadingModal.svelte';
 	import { connectSocket } from '$lib/sockets/SocketClient';
 	import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
+	import OnOffPluginUnitDetails from '$lib/components/deviceDetails/OnOffPluginUnitDetails.svelte';
+
 	const modalRegistry: Record<string, ModalComponent> = {
-		loading: { ref: LoadingModal }
+		loading: { ref: LoadingModal },
+		onOffPluginUnitDetails: { ref: OnOffPluginUnitDetails}
 	};
 
 	// Set the current mode

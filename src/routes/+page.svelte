@@ -79,7 +79,7 @@
 				deviceList = nodes;
 				if (deviceList.length < numberOfTestDevices) {
 					for (let i = deviceList.length; i < numberOfTestDevices; i++) {
-						deviceList.push(new BaseDevice(i.toString(), "Test", "Test"));
+						deviceList.push(new BaseDevice(i.toString(), "0", "Test", "Test"));
 					}
 				}
 				isLoading = false;

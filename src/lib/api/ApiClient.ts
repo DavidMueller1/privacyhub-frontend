@@ -57,12 +57,13 @@ export default abstract class ApiClient {
 					Promise.all(data.map((node: any) => {
 						return new Promise<void>((resolve, reject) => {
 							const nodeId: string = node.nodeId;
+							const endpointId: string = node.endpointId;
 							const vendor: string | undefined = node.vendor;
 							const product: string | undefined = node.product;
 							const type: string = node.type;
 							switch (type) {
 								case 'OnOffPluginUnit':
-									const device = new OnOffPluginUnit(nodeId, vendor, product);
+									const device = new OnOffPluginUnit(nodeId, endpointId, vendor, product);
 									device.initialize().then(() => {
 										nodes.push(device);
 										resolve();
@@ -70,7 +71,7 @@ export default abstract class ApiClient {
 									break;
 								default:
 									console.warn(`Unknown node type: ${type}`);
-									const unknownDevice = new BaseDevice(nodeId, vendor, product);
+									const unknownDevice = new BaseDevice(nodeId, endpointId, vendor, product);
 									unknownDevice.initialize().then(() => {
 										nodes.push(unknownDevice);
 										resolve();
@@ -95,13 +96,13 @@ export default abstract class ApiClient {
 		});
 	};
 
-	static setOnOff = (nodeId: string, state: boolean): Promise<void> => {
+	static setOnOff = (nodeId: string, endpointId: string, state: boolean): Promise<void> => {
 		const payload = {
 			state: state
 		};
 
 		return new Promise<void>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/onOff`, {
+			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/onOff`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -121,9 +122,9 @@ export default abstract class ApiClient {
 		});
 	};
 
-	static getOnOff = (nodeId: string): Promise<boolean | undefined> => {
+	static getOnOff = (nodeId: string, endpointId: string): Promise<boolean | undefined> => {
 		return new Promise<boolean | undefined>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/onOff`)
+			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/onOff`)
 				.then((response) => {
 					if (!response.ok) {
 						reject(response.body);
