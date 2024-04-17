@@ -38,7 +38,7 @@
 		modalStore.trigger(detailsModalSettings);
 	}
 
-	const onOffStateChnaged = (event: Event) => {
+	const onOffStateChanged = () => {
 		ApiClient.setOnOff(device.nodeId, device.endpointId, !device.state)
 			.then(() => {
 				device.state = !device.state;
@@ -61,6 +61,6 @@
 		active="bg-primary-500"
 		class="!ml-auto slide-toggle"
 		on:click={(event) => event.stopPropagation()}
-		on:change={onOffStateChnaged}
+		on:change={onOffStateChanged}
 	/>
 </button>

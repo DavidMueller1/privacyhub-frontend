@@ -38,6 +38,6 @@ export default {
 				],
 				custom: [Private]
 			}
-		})
+		}),
 	]
 } satisfies Config;
