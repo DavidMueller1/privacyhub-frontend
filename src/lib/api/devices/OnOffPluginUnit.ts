@@ -1,8 +1,15 @@
-import BaseDevice from '$lib/api/devices/BaseDevice';
+import BaseDevice, { type IReturnBaseDeviceState } from '$lib/api/devices/BaseDevice';
 import ApiClient from '$lib/api/ApiClient';
 import DefaultOverview from '$lib/components/deviceOverviews/DefaultOverview.svelte';
 import OnOffPluginUnitOverview from '$lib/components/deviceOverviews/OnOffPluginUnitOverview.svelte';
-import { socketStore } from '$lib/store/GeneralStore';
+import { ConnectionStatus, socketStore } from '$lib/store/GeneralStore';
+import OnOffPluginUnitHistory from '$lib/components/deviceHistories/OnOffPluginUnitHistory.svelte';
+
+export interface IReturnOnOffPluginUnitState {
+	connectionStatus: ConnectionStatus;
+	onOffState: boolean;
+	timestamp: number;
+}
 
 export default class OnOffPluginUnit extends BaseDevice {
 	state: boolean;
@@ -24,7 +31,21 @@ export default class OnOffPluginUnit extends BaseDevice {
 		});
 	}
 
+	override getHistory = (): Promise<IReturnOnOffPluginUnitState[]> => {
+		return new Promise<IReturnOnOffPluginUnitState[]>((resolve, reject) => {
+			ApiClient.getHistory<IReturnOnOffPluginUnitState>(this._nodeId, this._endpointId).then((data) => {
+				resolve(data);
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	}
+
 	override getOverviewComponent = () => {
 		return OnOffPluginUnitOverview;
+	}
+
+	override getHistoryComponent = () => {
+		return OnOffPluginUnitHistory;
 	}
 }

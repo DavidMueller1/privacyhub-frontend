@@ -62,7 +62,7 @@ export default abstract class ApiClient {
 							const product: string | undefined = node.product;
 							const type: string = node.type;
 							switch (type) {
-								case 'OnOffPluginUnit':
+								case 'OnOffPluginUnit': // TODO Better way to handle this
 									const device = new OnOffPluginUnit(nodeId, endpointId, vendor, product);
 									device.initialize().then(() => {
 										nodes.push(device);
@@ -141,57 +141,22 @@ export default abstract class ApiClient {
 		});
 	}
 
-	// constructor(privacyhubNode: PrivacyhubNode) {
-	// 		this.privacyhubNode = privacyhubNode;
-	// 		this.logger = Logger.get("ApiClient");
-	// }
-	//
-	// async getDeviceList(req: Request, res: Response) {
-	// 		this.logger.info("getDeviceList called");
-	// 		const devices = await this.privacyhubNode.matterServer.getDeviceList();
-	// 		res.json(devices);
-	// }
-	//
-	// async getDevice(req: Request, res: Response) {
-	// 		this.logger.info("getDevice called");
-	// 		const deviceId = req.params.deviceId;
-	// 		const device = await this.privacyhubNode.matterServer.getDevice(deviceId);
-	// 		res.json(device);
-	// }
-	//
-	// async getDeviceEndpoint(req: Request, res: Response) {
-	// 		this.logger.info("getDeviceEndpoint called");
-	// 		const deviceId = req.params.deviceId;
-	// 		const endpointId = req.params.endpointId;
-	// 		const endpoint = await this.privacyhubNode.matterServer.getDeviceEndpoint(deviceId, endpointId);
-	// 		res.json(endpoint);
-	// }
-	//
-	// async getDeviceEndpointClusters(req: Request, res: Response) {
-	// 		this.logger.info("getDeviceEndpointClusters called");
-	// 		const deviceId = req.params.deviceId;
-	// 		const endpointId = req.params.endpointId;
-	// 		const clusters = await this.privacyhubNode.matterServer.getDeviceEndpointClusters(deviceId, endpointId);
-	// 		res.json(clusters);
-	// }
-	//
-	// async getDeviceEndpointClusterAttributes(req: Request, res: Response) {
-	// 		this.logger.info("getDeviceEndpointClusterAttributes called");
-	// 		const deviceId = req.params.deviceId;
-	// 		const endpointId = req.params.endpointId;
-	// 		const clusterId = req.params.clusterId;
-	// 		const attributes = await this.privacyhubNode.matterServer.getDeviceEndpointClusterAttributes(deviceId, endpointId, clusterId);
-	// 		res.json(attributes);
-	// }
-	//
-	// async getDeviceEndpointClusterCommands(req: Request, res: Response) {
-	// 		this.logger.info("getDeviceEndpointClusterCommands called");
-	// 		const deviceId = req.params.deviceId;
-	// 		const endpointId = req.params.endpointId;
-	// 		const clusterId = req.params.clusterId;
-	// 		const commands = await this.privacyhubNode.matterServer.getDeviceEndpointClusterCommands(deviceId, endpointId, clusterId);
-	// 		res.json(commands);
-	// }
-	//
-	// async getDeviceEndpointClusterCommand(req: Request, res
+	static getHistory<T>(nodeId: string, endpointId: string, from?: number, to?: number): Promise<T[]> {
+		return new Promise<T[]>((resolve, reject) => {
+			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/history?from=${from}&to=${to}`)
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					resolve(data as T[]);
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+	}
 }

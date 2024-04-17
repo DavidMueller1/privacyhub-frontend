@@ -14,8 +14,8 @@
 			<i class="fa-solid fa-link" class:text-connected-light={!currentMode} class:text-connected-dark={currentMode}></i>
 			<p class:text-connected-light={!currentMode} class:text-connected-dark={currentMode}>Connected</p>
 		</div>
-	{:else if $connectedStore === ConnectionStatus.CONNECTING}
-		<p>Connecting</p>
+	<!--{:else if $connectedStore === ConnectionStatus.CONNECTING}-->
+	<!--	<p>Connecting</p>-->
 	{:else if $connectedStore === ConnectionStatus.DISCONNECTED}
 <!--		<div class="flex items-center space-x-2 px-4 py-2 rounded-full" class:bg-disconnected-light={currentMode} class:bg-disconnected-dark={!currentMode}>-->
 		<div class="flex items-center space-x-2 px-4 py-2 rounded-full">

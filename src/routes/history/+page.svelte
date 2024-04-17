@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
+	import DeviceSelection from '$lib/components/DeviceSelection.svelte';
+	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
+	import type BaseDevice from '$lib/api/devices/BaseDevice';
+	import OnOffPluginUnitHistory from '$lib/components/deviceHistories/OnOffPluginUnitHistory.svelte';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+
+	let loadingDevices = true;
+	let loadingData = true;
 
 	interface Data {
 		timestamp: number;
@@ -57,17 +65,19 @@
 		// console.log(line);
 	})
 
-	// let chartRef: HTMLDivElement;
-	//
-	// onMount(() => {
-	// 	d3.select(chartRef)
-	// 		.selectAll('div')
-	// 		.data(data)
-	// 		.enter()
-	// 		.append('div')
-	// 		.style('width', d => d + 'px')
-	// 		.text(d => d);
-	// })
+	const popupClick: PopupSettings = {
+		event: 'click',
+		target: 'popupClick',
+		placement: 'bottom',
+		closeQuery: '.close-popup'
+	}
+
+	let currentDevice: BaseDevice | undefined = undefined;
+
+	const handleDeviceSelection = (event: CustomEvent<{ device: BaseDevice }>) => {
+		currentDevice = event.detail.device;
+		console.log(event.detail.device);
+	}
 </script>
 
 <style>
@@ -82,24 +92,17 @@
 </style>
 
 <div class="container h-full mx-auto flex justify-center items-center">
+	<DeviceSelection on:select={handleDeviceSelection} />
 	<div class="space-y-10 text-center flex flex-col items-center">
+		<button class="btn variant-ghost-tertiary" use:popup={popupClick}>
+			{#if currentDevice}
+				{[currentDevice?.vendor, currentDevice?.product].filter(Boolean).join(' ')}
+			{:else}
+				<LoadingSpinner classes="h-6 w-6" />
+			{/if}
+		</button>
 		<h2 class="h2">History</h2>
-<!--		<div bind:this={chartRef} class="chart"></div>-->
-		<svg width={width} height={height}>
-			<g bind:this={gx} transform="translate(0,{height - marginBottom})" />
-			<g bind:this={gy} transform="translate({marginLeft},0)" />
-			<g fill="none">
-				<path d={d3.line()(fixedData.map(entry => [x(entry.timestamp), y(entry.value ? 1 : 0)]))} stroke="steelblue" stroke-width="4"></path>
-				<!--{#each data as entry}-->
-				<!--	<rect x={x(entry.timestamp)} y={height - y(entry.value)} width={width / data.length} height={y(entry.value)} />-->
-				<!--{/each}-->
-			</g>
-<!--			<path fill="none" stroke="currentColor" stroke-width="1.5" d={line(data)} />-->
-<!--			<g fill="white" stroke="currentColor" stroke-width="1.5">-->
-<!--				{#each data as d, i}-->
-<!--					<circle key={i} cx={x(i)} cy={y(d)} r="2.5" />-->
-<!--				{/each}-->
-<!--			</g>-->
-		</svg>
+		<svelte:component this={currentDevice?.getHistoryComponent()} device={currentDevice} />
 	</div>
 </div>
+
