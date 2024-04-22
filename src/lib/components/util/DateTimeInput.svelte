@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import BaseDevice from '$lib/api/devices/BaseDevice';
+	import { getModeUserPrefers, modeCurrent } from '@skeletonlabs/skeleton';
 
 	export let classes: string = '';
 	export let date = new Date(Date.now());
 
 	const dispatch = createEventDispatcher<{ dateUpdate:{ newDate: Date } }>();
+
+	let currentMode = getModeUserPrefers();
+	modeCurrent.subscribe((value) => {
+		currentMode = value;
+	});
 
 	let year = "";
 	let month = "";
@@ -27,6 +33,11 @@
 	const updateDate = () => {
 		console.log("UPDATE DATE");
 		console.log(year, month, day, hours, minutes, seconds);
+
+		if (year.length < 4) {
+			return;
+		}
+
 		date = new Date(
 			Number(year),
 			Number(month) - 1,
@@ -44,11 +55,11 @@
 		console.log("DATE CHANGED");
 		console.log(date);
 		year = date.getFullYear().toString();
-		month = (date.getMonth() + 1).toString();
-		day = date.getDate().toString();
-		hours = date.getHours().toString();
-		minutes = date.getMinutes().toString();
-		seconds = date.getSeconds().toString();
+		month = (date.getMonth() + 1).toLocaleString(undefined, { minimumIntegerDigits: 2 });
+		day = date.getDate().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+		hours = date.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+		minutes = date.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+		seconds = date.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 });
 	}
 
 	$: if (year.length > 4) {
@@ -87,6 +98,10 @@
 		seconds = "59";
 	}
 
+	const highlightOnClick = (event) => {
+		event.target.select();
+	}
+
 </script>
 
 <style>
@@ -94,18 +109,103 @@
 		min-width: 0;
 		border: none;
 		flex-grow: 1;
+		width: auto;
+		flex-basis: 0;
+		text-align: center;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	input:focus {
+		outline: none;
+		/*border: none;*/
+		box-shadow: none;
+	}
+
+	.container-light {
+		background: #f1f1f1;
+	}
+
+	.container-dark {
+		background: #272b38;
+        border: 1px solid #d1d1d1;
+	}
+
+	.input-light {
+		background: #d1d1d1;
+	}
+
+    .input-dark {
+        background: #272b38;
+    }
+
+    .date-separator {
+        padding-bottom: 7px;
+    }
+
+	.time-separator {
+		padding-bottom: 6px;
 	}
 </style>
 
-<div class="flex flex-col w-40 {classes}">
-	<div class="flex flex-row w-full">
-		<input class="rounded-tl-3xl" bind:value={day} on:input={updateDate}>
-		<input bind:value={month} on:input={updateDate}>
-		<input class="rounded-tr-3xl" bind:value={year} on:input={updateDate}>
+<div class="flex flex-col w-40 px-2 rounded-xl {classes}" class:container-light={currentMode} class:container-dark={!currentMode}>
+	<div class="flex flex-row w-full items-end">
+		<input
+			class="rounded-tl-3xl"
+			bind:value={day}
+			on:input={updateDate}
+			on:focusin={highlightOnClick}
+			class:input-light={currentMode}
+			class:input-dark={!currentMode}
+		>
+		<div class="date-separator">.</div>
+		<input
+			bind:value={month}
+			on:input={updateDate}
+			on:focusin={highlightOnClick}
+			class:input-light={currentMode}
+			class:input-dark={!currentMode}
+		>
+		<div class="date-separator">.</div>
+		<input
+			class="rounded-tr-3xl"
+			bind:value={year}
+			on:input={updateDate}
+			on:focusin={highlightOnClick}
+			class:input-light={currentMode}
+			class:input-dark={!currentMode}
+			style="flex-grow: 1.5"
+		>
 	</div>
-	<div class="flex flex-row w-full">
-		<input class="rounded-bl-3xl" bind:value={hours} on:input={updateDate}>
-		<input bind:value={minutes} on:input={updateDate}>
-		<input class="rounded-br-3xl" bind:value={seconds} on:input={updateDate}>
+	<div
+		class="flex flex-row w-full items-end text-2xl"
+		style="border-top: 1px solid #d1d1d1;"
+	>
+		<input
+			class="rounded-bl-3xl text-2xl py-1"
+			bind:value={hours}
+			on:input={updateDate}
+			on:focusin={highlightOnClick}
+			class:input-light={currentMode}
+			class:input-dark={!currentMode}
+		>
+		<div class="time-separator">:</div>
+		<input
+			class="rounded-br-3xl text-2xl py-1"
+			bind:value={minutes}
+			on:input={updateDate}
+			on:focusin={highlightOnClick}
+			class:input-light={currentMode}
+			class:input-dark={!currentMode}
+		>
+<!--		<div class="time-separator">:</div>-->
+<!--		<input-->
+<!--			class="rounded-br-3xl"-->
+<!--			bind:value={seconds}-->
+<!--			on:input={updateDate}-->
+<!--			on:focusin={highlightOnClick}-->
+<!--			class:input-light={currentMode}-->
+<!--			class:input-dark={!currentMode}-->
+<!--		>-->
 	</div>
 </div>

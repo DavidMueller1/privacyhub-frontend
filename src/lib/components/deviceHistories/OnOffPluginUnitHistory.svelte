@@ -103,7 +103,7 @@
 	// The D3 Magic
 	// $: x = d3.scaleTime(d3.extent(data.map(entry => entry.timestamp)), [marginLeft, width - marginRight]).nice();
 	$: x = d3.scaleTime([timestampStart, timestampEnd], [marginLeft, width - marginRight]);
-	$: y = d3.scaleLinear([0, 1], [height - marginBottom, marginTop]);
+	$: y = d3.scaleLinear([-0.01, 1], [height - marginBottom, marginTop]);
 	// $: d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')));
 	$: d3.select(xAxisBinding).call(d3.axisBottom(x));
 	$: d3.select(yAxisBinding).call(d3.axisLeft(y).tickValues([0, 1]).tickFormat(d => d ? 'ON' : 'OFF'));
