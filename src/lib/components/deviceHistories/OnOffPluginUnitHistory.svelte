@@ -9,6 +9,7 @@
 	import { centerEvent, getTimestampDifference } from '$lib/components/deviceHistories/HistoryUtils';
 
 	export let device: OnOffPluginUnit;
+
 	export let width = 640;
 	export let height = 400;
 	export let marginTop = 10;
@@ -20,11 +21,12 @@
 
 	// Bindings
 	let viewBoxBinding: HTMLElement;
-	let xAxisBinding;
-	let yAxisBinding;
+	let xAxisBinding: SVGElement;
+	let yAxisBinding: SVGElement;
 
-	let timestampStart: number = 0;
-	let timestampEnd: number = 0;
+	// The start and end of the graph's x-axis
+	export let timestampStart: number = 0;
+	export let timestampEnd: number = 0;
 
 
 	// Get the history data of the device
@@ -119,7 +121,7 @@
 			<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />
 			<g bind:this={yAxisBinding} transform="translate({marginLeft},0)" />
 			<g fill="none">
-				<path d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.onOffState ? 1 : 0)]))} stroke="steelblue" stroke-width="4"></path>
+				<path d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.onOffState ? 1 : 0)]))} stroke="#3c8eae" stroke-width="4"></path>
 				<!--{#each data as entry}-->
 				<!--	<rect x={x(entry.timestamp)} y={height - y(entry.value)} width={width / data.length} height={y(entry.value)} />-->
 				<!--{/each}-->

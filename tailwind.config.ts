@@ -19,6 +19,9 @@ export default {
 				'disconnected-light': '#b14b4b',
 				'disconnected-dark': '#7f2d2d'
 			},
+			flexGrow: {
+
+			}
 		}
 	},
 	plugins: [

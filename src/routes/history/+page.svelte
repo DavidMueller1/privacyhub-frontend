@@ -6,6 +6,8 @@
 	import type BaseDevice from '$lib/api/devices/BaseDevice';
 	import OnOffPluginUnitHistory from '$lib/components/deviceHistories/OnOffPluginUnitHistory.svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import { DateInput } from 'date-picker-svelte';
+	import DateTimeInput from '$lib/components/util/DateTimeInput.svelte';
 
 	let loadingDevices = true;
 	let loadingData = true;
@@ -78,6 +80,25 @@
 		currentDevice = event.detail.device;
 		console.log(event.detail.device);
 	}
+
+	let startDate = new Date();
+	let endDate = new Date();
+
+	let timestampStart = 0;
+	let timestampEnd = 0;
+
+	$: {
+		startDate = new Date(timestampStart);
+		endDate = new Date(timestampEnd);
+	}
+
+	const inputStartDateUpdated = (event: CustomEvent<{ newDate: Date }>) => {
+		timestampStart = event.detail.newDate.getTime();
+	}
+
+	const inputEndDateUpdated = (event: CustomEvent<{ newDate: Date }>) => {
+		timestampEnd = event.detail.newDate.getTime();
+	}
 </script>
 
 <style>
@@ -94,15 +115,24 @@
 <div class="container h-full mx-auto flex justify-center items-center">
 	<DeviceSelection on:select={handleDeviceSelection} />
 	<div class="space-y-10 text-center flex flex-col items-center">
-		<button class="btn variant-ghost-tertiary" use:popup={popupClick}>
-			{#if currentDevice}
-				{[currentDevice?.vendor, currentDevice?.product].filter(Boolean).join(' ')}
-			{:else}
-				<LoadingSpinner classes="h-6 w-6" />
-			{/if}
-		</button>
 		<h2 class="h2">History</h2>
-		<svelte:component this={currentDevice?.getHistoryComponent()} device={currentDevice} />
+		<div class="flex flex-row w-full items-center justify-between">
+			<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
+			<button class="btn variant-ghost-tertiary h-10" use:popup={popupClick}>
+				{#if currentDevice}
+					{[currentDevice?.vendor, currentDevice?.product].filter(Boolean).join(' ')}
+				{:else}
+					<LoadingSpinner classes="h-6 w-6" />
+				{/if}
+			</button>
+			<DateTimeInput date={endDate} on:dateUpdate={inputEndDateUpdated} />
+		</div>
+		<svelte:component
+			this={currentDevice?.getHistoryComponent()}
+			device={currentDevice}
+			bind:timestampStart={timestampStart}
+			bind:timestampEnd={timestampEnd}
+		/>
 	</div>
 </div>
 
