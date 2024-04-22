@@ -5,6 +5,8 @@
 	import { error } from '@sveltejs/kit';
 	import { ConnectionStatus } from '$lib/store/GeneralStore';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import { onMount } from 'svelte';
+	import { centerEvent, getTimestampDifference } from '$lib/components/deviceHistories/HistoryUtils';
 
 	export let device: OnOffPluginUnit;
 	export let width = 640;
@@ -16,15 +18,16 @@
 
 	let isLoading = true;
 
-	let gx;
-	let gy;
+	// Bindings
+	let viewBoxBinding: HTMLElement;
+	let xAxisBinding;
+	let yAxisBinding;
 
-	$: x = d3.scaleTime(d3.extent(data.map(entry => entry.timestamp)), [marginLeft, width - marginRight]).nice();
-	$: y = d3.scaleLinear(d3.extent(data.map(entry => entry.onOffState ? 1 : 0)), [height - marginBottom, marginTop]);
-	$: d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')));
-	$: d3.select(gy).call(d3.axisLeft(y));
+	let timestampStart: number = 0;
+	let timestampEnd: number = 0;
 
-	// Some random testing data
+
+	// Get the history data of the device
 	let data: IReturnOnOffPluginUnitState[] = [];
 
 	device.getHistory().then(history => {
@@ -44,22 +47,77 @@
 			}
 		});
 		data = data;
-		isLoading = false;
 		console.log("DATA:");
 		console.log(data);
+
+		// Calculate the start and end of the data
+		const startEnd = d3.extent(data.map(entry => entry.timestamp));
+		timestampStart = startEnd[0] ?? 0;
+		timestampEnd = startEnd[1] ?? 0;
+
+		isLoading = false;
 	}).catch((error) => {
 		isLoading = false;
 		console.error(error);
 	});
+
+	// Event for panning the xAxis
+	const dragEvent = (event, d) => {
+		const panDistance = getTimestampDifference(
+			event.dx,
+			timestampStart,
+			timestampEnd,
+			width,
+			marginLeft,
+			marginRight
+		)
+		timestampStart -= panDistance;
+		timestampEnd -= panDistance;
+	};
+
+	// Event for zooming the xAxis
+	const zoomEvent = (event, d) => {
+		const localCenter = centerEvent(event, viewBoxBinding);
+		const localX = localCenter[0] - marginLeft;
+		const graphWidth = width - marginLeft - marginRight;
+		const zoomDelta = event.sourceEvent.deltaY;
+
+		const timestampDifference = timestampEnd - timestampStart;
+
+		// Calculate the new timestamp difference
+		const targetTimestampDifference = timestampDifference + zoomDelta * timestampDifference / 1000;
+
+		const differenceToCurrent = targetTimestampDifference - timestampDifference;
+
+		// "Zoom" around the mouse position
+		const distanceStart = localX / graphWidth * differenceToCurrent;
+		const distanceEnd = (graphWidth - localX) / graphWidth * differenceToCurrent;
+
+		// Update the timestamps
+		timestampStart = timestampStart - distanceStart;
+		timestampEnd = timestampEnd + distanceEnd;
+	};
+
+	// The D3 Magic
+	// $: x = d3.scaleTime(d3.extent(data.map(entry => entry.timestamp)), [marginLeft, width - marginRight]).nice();
+	$: x = d3.scaleTime([timestampStart, timestampEnd], [marginLeft, width - marginRight]);
+	$: y = d3.scaleLinear([0, 1], [height - marginBottom, marginTop]);
+	// $: d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')));
+	$: d3.select(xAxisBinding).call(d3.axisBottom(x));
+	$: d3.select(yAxisBinding).call(d3.axisLeft(y).tickValues([0, 1]).tickFormat(d => d ? 'ON' : 'OFF'));
+
+	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
+	$: d3.select(viewBoxBinding).call(d3.zoom().on('zoom', zoomEvent));
+
 </script>
 
 {#if isLoading}
 	<LoadingSpinner />
 {:else}
 	<div>
-		<svg width={width} height={height}>
-			<g bind:this={gx} transform="translate(0,{height - marginBottom})" />
-			<g bind:this={gy} transform="translate({marginLeft},0)" />
+		<svg bind:this={viewBoxBinding} width={width} height={height}>
+			<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />
+			<g bind:this={yAxisBinding} transform="translate({marginLeft},0)" />
 			<g fill="none">
 				<path d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.onOffState ? 1 : 0)]))} stroke="steelblue" stroke-width="4"></path>
 				<!--{#each data as entry}-->
