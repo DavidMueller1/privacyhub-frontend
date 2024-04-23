@@ -118,7 +118,7 @@
 			<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
 			<button class="btn variant-ghost-tertiary h-10" use:popup={popupClick}>
 				{#if currentDevice}
-					{[currentDevice?.vendor, currentDevice?.product].filter(Boolean).join(' ')}
+					{currentDevice.formattedVendorAndProduct}
 				{:else}
 					<LoadingSpinner classes="h-6 w-6" />
 				{/if}

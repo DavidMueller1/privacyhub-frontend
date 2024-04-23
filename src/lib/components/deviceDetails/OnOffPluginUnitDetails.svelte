@@ -33,8 +33,7 @@
 				class="btn-icon variant-soft-tertiary"
 				on:click={() => modalStore.close()}
 			><i class="fa-solid fa-x"></i></button>
-			<header class='text-2xl font-bold'><i class="fa-solid fa-plug mr-2"></i>{[device.vendor, device.product].filter(Boolean).join(' ')}
-			</header>
+			<header class='text-2xl font-bold'><i class="fa-solid fa-plug mr-2"></i>{device.formattedVendorAndProduct}</header>
 		</div>
 		<span class="flex justify-center items-center min-h-40">
 			<button

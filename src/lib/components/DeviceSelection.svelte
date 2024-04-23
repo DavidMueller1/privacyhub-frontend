@@ -66,7 +66,7 @@
 					name="medium"
 					value={device}
 					on:change={handleSelect}
-				>{[device.vendor, device.product].filter(Boolean).join(' ')}</ListBoxItem>
+				>{device.formattedVendorAndProduct}</ListBoxItem>
 			{/each}
 		</ListBox>
 	{/if}

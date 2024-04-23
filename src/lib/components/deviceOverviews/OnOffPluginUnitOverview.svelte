@@ -54,7 +54,7 @@
 	on:click={openDetailsModal}
 >
 	<i class="fa-solid fa-plug"></i>
-	<p>{[device.vendor, device.product].filter(Boolean).join(' ')}</p>
+	<p>{device.formattedVendorAndProduct}</p>
 	<SlideToggle
 		name={device.nodeId}
 		checked={device.state}
