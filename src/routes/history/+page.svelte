@@ -6,7 +6,6 @@
 	import type BaseDevice from '$lib/api/devices/BaseDevice';
 	import OnOffPluginUnitHistory from '$lib/components/deviceHistories/OnOffPluginUnitHistory.svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-	import { DateInput } from 'date-picker-svelte';
 	import DateTimeInput from '$lib/components/util/DateTimeInput.svelte';
 
 	let loadingDevices = true;
@@ -78,7 +77,6 @@
 
 	const handleDeviceSelection = (event: CustomEvent<{ device: BaseDevice }>) => {
 		currentDevice = event.detail.device;
-		console.log(event.detail.device);
 	}
 
 	let startDate = new Date();

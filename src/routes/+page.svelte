@@ -82,6 +82,8 @@
 						deviceList.push(new BaseDevice(i.toString(), "0", "Test", "Test"));
 					}
 				}
+				console.log('Device list:');
+				console.log(deviceList);
 				isLoading = false;
 			})
 			.catch((error) => {

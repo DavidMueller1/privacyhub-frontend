@@ -49,8 +49,6 @@
 			}
 		});
 		data = data;
-		console.log("DATA:");
-		console.log(data);
 
 		// Calculate the start and end of the data
 		const startEnd = d3.extent(data.map(entry => entry.timestamp));

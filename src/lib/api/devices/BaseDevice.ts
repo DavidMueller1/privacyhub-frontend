@@ -61,4 +61,9 @@ export default class BaseDevice {
 	get product() {
 		return this._product;
 	}
+
+	get formattedVendorAndProduct(): string {
+		if (!this._vendor && !this._product) return 'Unknown device';
+		return [this._vendor, this._product].filter(Boolean).join(' - ')
+	}
 }

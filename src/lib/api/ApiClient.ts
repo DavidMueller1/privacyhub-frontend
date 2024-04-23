@@ -1,6 +1,7 @@
 import { readable } from 'svelte/store';
 import BaseDevice from '$lib/api/devices/BaseDevice';
 import OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
+import ContactSensor from '$lib/api/devices/ContactSensor';
 
 export type DeviceOverview = {
 	nodeId: string;
@@ -61,11 +62,20 @@ export default abstract class ApiClient {
 							const vendor: string | undefined = node.vendor;
 							const product: string | undefined = node.product;
 							const type: string = node.type;
+							console.log("NODE");
+							console.log(node);
 							switch (type) {
 								case 'OnOffPluginUnit': // TODO Better way to handle this
 									const device = new OnOffPluginUnit(nodeId, endpointId, vendor, product);
 									device.initialize().then(() => {
 										nodes.push(device);
+										resolve();
+									});
+									break;
+								case 'ContactSensor':
+									const contactSensor = new ContactSensor(nodeId, endpointId, vendor, product);
+									contactSensor.initialize().then(() => {
+										nodes.push(contactSensor);
 										resolve();
 									});
 									break;
