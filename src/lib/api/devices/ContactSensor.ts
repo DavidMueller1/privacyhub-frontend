@@ -1,8 +1,8 @@
 import BaseDevice from '$lib/api/devices/BaseDevice';
 import ApiClient from '$lib/api/ApiClient';
-import { ConnectionStatus, socketStore } from '$lib/store/GeneralStore';
-import OnOffPluginUnitHistory from '$lib/components/deviceHistories/OnOffPluginUnitHistory.svelte';
+import { ConnectionStatus } from '$lib/store/GeneralStore';
 import ContactSensorOverview from '$lib/components/deviceOverviews/ContactSensorOverview.svelte';
+import BooleanHistory from '$lib/components/deviceHistories/BooleanHistory.svelte';
 
 export interface IReturnContactSensorState {
 	connectionStatus: ConnectionStatus;
@@ -45,6 +45,6 @@ export default class ContactSensor extends BaseDevice {
 	}
 
 	override getHistoryComponent = () => {
-		return OnOffPluginUnitHistory; // TODO
+		return BooleanHistory;
 	}
 }

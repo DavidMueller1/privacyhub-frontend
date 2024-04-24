@@ -17,19 +17,19 @@
 	<ul>
 		<li>
 			<a href="/" on:click={drawerClose}>
-				<i class="fa-solid fa-grip text-4xl"></i>
+				<i class="fa-solid fa-grip text-4xl w-9"></i>
 				<span>Dashboard</span>
 			</a>
 		</li>
 		<li>
 			<a href="/history" on:click={drawerClose}>
-				<i class="fa-solid fa-square-poll-vertical text-4xl"></i>
+				<i class="fa-solid fa-square-poll-vertical text-4xl w-9"></i>
 				<span>History</span>
 			</a>
 		</li>
 		<li>
 			<a href="/about" on:click={drawerClose}>
-				<i class="fa-solid fa-circle-question text-4xl"></i>
+				<i class="fa-solid fa-circle-question text-4xl w-9"></i>
 				<span>About</span>
 			</a>
 		</li>

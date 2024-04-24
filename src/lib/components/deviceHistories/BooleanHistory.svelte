@@ -7,11 +7,12 @@
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { onMount } from 'svelte';
 	import { centerEvent, getTimestampDifference } from '$lib/components/deviceHistories/HistoryUtils';
+	import type ContactSensor from '$lib/api/devices/ContactSensor';
 
-	export let device: OnOffPluginUnit;
+	export let device: OnOffPluginUnit | ContactSensor;
 
 	export let width = 640;
-	export let height = 250;
+	export let height = 200;
 	export let marginTop = 20;
 	export let marginBottom = 20;
 	export let marginRight = 20;
@@ -28,9 +29,16 @@
 	export let timestampStart: number = 0;
 	export let timestampEnd: number = 0;
 
+	let booleanAttributeName: string = '';
+	$: booleanAttributeName = device instanceof OnOffPluginUnit ? 'onOffState' : 'booleanState';
+
 
 	// Get the history data of the device
-	let data: IReturnOnOffPluginUnitState[] = [];
+	let data: {
+		connectionStatus: ConnectionStatus;
+		booleanState: boolean;
+		timestamp: number;
+	}[] = [];
 
 	$: device && loadData();
 
@@ -41,14 +49,14 @@
 			history.forEach((entry, index) => {
 				data.push({
 					connectionStatus: entry.connectionStatus,
-					onOffState: entry["onOffState"],
+					booleanState: entry[booleanAttributeName],
 					timestamp: entry.timestamp,
 				});
 				const next = history[index + 1];
 				if (next) {
 					data.push({
 						connectionStatus: entry.connectionStatus,
-						onOffState: entry.onOffState,
+						booleanState: entry[booleanAttributeName],
 						timestamp: next.timestamp,
 					});
 				}
@@ -141,7 +149,7 @@
 				<clipPath id="clip">
 					<rect x={marginLeft} y={0} width={width - marginLeft - marginRight} height={height} />
 				</clipPath>
-				<path id="chart-path" d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.onOffState ? 1 : 0)]))}></path>
+				<path id="chart-path" d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.booleanState ? 1 : 0)]))}></path>
 				<use href="#chart-path" clip-path="url(#clip)" stroke="#3c8eae" stroke-width="4" />
 			</g>
 		</svg>

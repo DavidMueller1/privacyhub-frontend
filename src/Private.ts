@@ -11,6 +11,9 @@ Private['--color-primary-600'] = '60 142 174';
 Private['--color-primary-700'] = '60 142 174';
 Private['--color-primary-800'] = '60 142 174';
 Private['--color-primary-900'] = '60 142 174';
+
+Private['--theme-font-family-base'] = 'Urbanist';
+Private['--theme-font-family-heading'] = 'Urbanist';
 // 	{
 // 	name: 'Private',
 // 	properties: {

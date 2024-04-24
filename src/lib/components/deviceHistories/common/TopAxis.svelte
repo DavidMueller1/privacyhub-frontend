@@ -25,8 +25,8 @@
 	export let timestampEnd: number = 0;
 
 	const arrowWidth = 20;
-	const arrowMarginTop = 2;
-	const arrowMarginBottom = 8;
+	const arrowMarginTop = 6;
+	const arrowMarginBottom = 9;
 
 
 	// Event for panning the xAxis
@@ -79,7 +79,7 @@
 <svg bind:this={viewBoxBinding} class="mt-0" width={width} height={height}>
 	<polygon points="{marginLeft - arrowWidth / 2},{arrowMarginTop} {marginLeft + arrowWidth / 2},{arrowMarginTop} {marginLeft},{marginTop - arrowMarginBottom}" fill="#ffffff40" />
 	<polygon points="{width - marginRight - arrowWidth / 2},{arrowMarginTop} {width - marginRight + arrowWidth / 2},{arrowMarginTop} {width - marginRight},{marginTop - arrowMarginBottom}" fill="#ffffff40" />
-	<g bind:this={xAxisBinding} transform="translate(0,{marginTop})" />
+	<g bind:this={xAxisBinding} class="text-base" transform="translate(0,{marginTop})" />
 	<g bind:this={xAxisGridBinding} transform="translate(0,{marginTop})" />
 	<!--	<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />-->
 </svg>

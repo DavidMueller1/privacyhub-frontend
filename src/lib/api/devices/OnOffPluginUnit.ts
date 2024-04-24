@@ -1,9 +1,8 @@
-import BaseDevice, { type IReturnBaseDeviceState } from '$lib/api/devices/BaseDevice';
+import BaseDevice from '$lib/api/devices/BaseDevice';
 import ApiClient from '$lib/api/ApiClient';
-import DefaultOverview from '$lib/components/deviceOverviews/DefaultOverview.svelte';
 import OnOffPluginUnitOverview from '$lib/components/deviceOverviews/OnOffPluginUnitOverview.svelte';
-import { ConnectionStatus, socketStore } from '$lib/store/GeneralStore';
-import OnOffPluginUnitHistory from '$lib/components/deviceHistories/OnOffPluginUnitHistory.svelte';
+import { ConnectionStatus } from '$lib/store/GeneralStore';
+import BooleanHistory from '$lib/components/deviceHistories/BooleanHistory.svelte';
 
 export interface IReturnOnOffPluginUnitState {
 	connectionStatus: ConnectionStatus;
@@ -46,6 +45,6 @@ export default class OnOffPluginUnit extends BaseDevice {
 	}
 
 	override getHistoryComponent = () => {
-		return OnOffPluginUnitHistory;
+		return BooleanHistory;
 	}
 }
