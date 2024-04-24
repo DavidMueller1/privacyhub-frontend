@@ -38,6 +38,26 @@
 			return;
 		}
 
+		if (month.length < 2) {
+			return;
+		}
+
+		if (day.length < 2) {
+			return;
+		}
+
+		if (hours.length < 2) {
+			return;
+		}
+
+		if (minutes.length < 2) {
+			return;
+		}
+
+		if (seconds.length < 2) {
+			return;
+		}
+
 		date = new Date(
 			Number(year),
 			Number(month) - 1,
@@ -47,6 +67,16 @@
 			Number(seconds)
 		);
 		dispatch('dateUpdate', { newDate: date })
+
+		// Focus the next input
+		const inputs = document.querySelectorAll('input');
+		const currentInput = document.activeElement;
+		const currentIndex = Array.from(inputs).indexOf(currentInput);
+		if (currentIndex < inputs.length - 1) {
+			inputs[currentIndex + 1].focus();
+		} else {
+			inputs[currentIndex].blur();
+		}
 	}
 
 	// Date updated from outside

@@ -11,8 +11,8 @@
 	export let width = 640;
 	export let height = 100;
 	export let marginTop = 60;
-	export let marginRight = 45;
 	export let marginBottom = 30;
+	export let marginRight = 45;
 	export let marginLeft = 45;
 
 	// Bindings

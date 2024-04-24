@@ -9,8 +9,11 @@
 	import TopAxis from '$lib/components/deviceHistories/common/TopAxis.svelte';
 
 	let containerBinding: HTMLElement;
-	const containerPadding = 20;
+	const containerPadding = 40;
 	let containerWidth = 0;
+
+	const graphMarginLeft = 45;
+	const graphMarginRight = 45;
 
 
 	const handleResize = () => {
@@ -93,6 +96,8 @@
 		</div>
 		<TopAxis
 			width={containerWidth}
+			marginLeft={graphMarginLeft}
+			marginRight={graphMarginRight}
 			bind:timestampStart={timestampStart}
 			bind:timestampEnd={timestampEnd}
 		/>
@@ -100,6 +105,8 @@
 			this={historyComponent}
 			device={currentDevice}
 			width={containerWidth}
+			marginLeft={graphMarginLeft}
+			marginRight={graphMarginRight}
 			bind:timestampStart={timestampStart}
 			bind:timestampEnd={timestampEnd}
 		/>
