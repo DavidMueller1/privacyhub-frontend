@@ -52,8 +52,6 @@
 	// Date updated from outside
 	$: date && dateChanged();
 	const dateChanged = () => {
-		console.log("DATE CHANGED");
-		console.log(date);
 		year = date.getFullYear().toString();
 		month = (date.getMonth() + 1).toLocaleString(undefined, { minimumIntegerDigits: 2 });
 		day = date.getDate().toLocaleString(undefined, { minimumIntegerDigits: 2 });

@@ -79,6 +79,10 @@
 		currentDevice = event.detail.device;
 	}
 
+	let historyComponent = null;
+
+	$: historyComponent = currentDevice?.getHistoryComponent()
+
 	let startDate = new Date();
 	let endDate = new Date();
 
@@ -126,7 +130,7 @@
 			<DateTimeInput date={endDate} on:dateUpdate={inputEndDateUpdated} />
 		</div>
 		<svelte:component
-			this={currentDevice?.getHistoryComponent()}
+			this={historyComponent}
 			device={currentDevice}
 			bind:timestampStart={timestampStart}
 			bind:timestampEnd={timestampEnd}

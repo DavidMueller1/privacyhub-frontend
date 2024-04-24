@@ -15,7 +15,7 @@
 	export let marginTop = 10;
 	export let marginRight = 20;
 	export let marginBottom = 30;
-	export let marginLeft = 30;
+	export let marginLeft = 45;
 
 	let isLoading = true;
 
@@ -32,34 +32,40 @@
 	// Get the history data of the device
 	let data: IReturnOnOffPluginUnitState[] = [];
 
-	device.getHistory().then(history => {
-		history.forEach((entry, index) => {
-			data.push({
-				connectionStatus: entry.connectionStatus,
-				onOffState: entry.onOffState,
-				timestamp: entry.timestamp,
-			});
-			const next = history[index + 1];
-			if (next) {
+	$: device && loadData();
+
+	const loadData = () => {
+		device.getHistory().then(history => {
+			isLoading = true;
+			data = [];
+			history.forEach((entry, index) => {
 				data.push({
 					connectionStatus: entry.connectionStatus,
 					onOffState: entry.onOffState,
-					timestamp: next.timestamp,
+					timestamp: entry.timestamp,
 				});
-			}
+				const next = history[index + 1];
+				if (next) {
+					data.push({
+						connectionStatus: entry.connectionStatus,
+						onOffState: entry.onOffState,
+						timestamp: next.timestamp,
+					});
+				}
+			});
+			data = data;
+
+			// Calculate the start and end of the data
+			const startEnd = d3.extent(data.map(entry => entry.timestamp));
+			timestampStart = startEnd[0] ?? 0;
+			timestampEnd = startEnd[1] ?? 0;
+
+			isLoading = false;
+		}).catch((error) => {
+			isLoading = false;
+			console.error(error);
 		});
-		data = data;
-
-		// Calculate the start and end of the data
-		const startEnd = d3.extent(data.map(entry => entry.timestamp));
-		timestampStart = startEnd[0] ?? 0;
-		timestampEnd = startEnd[1] ?? 0;
-
-		isLoading = false;
-	}).catch((error) => {
-		isLoading = false;
-		console.error(error);
-	});
+	}
 
 	// Event for panning the xAxis
 	const dragEvent = (event, d) => {
@@ -117,19 +123,10 @@
 	<div>
 		<svg bind:this={viewBoxBinding} width={width} height={height}>
 			<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />
-			<g bind:this={yAxisBinding} transform="translate({marginLeft},0)" />
+			<g bind:this={yAxisBinding} class="text-lg" transform="translate({marginLeft},0)" />
 			<g fill="none">
 				<path d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.onOffState ? 1 : 0)]))} stroke="#3c8eae" stroke-width="4"></path>
-				<!--{#each data as entry}-->
-				<!--	<rect x={x(entry.timestamp)} y={height - y(entry.value)} width={width / data.length} height={y(entry.value)} />-->
-				<!--{/each}-->
 			</g>
-			<!--			<path fill="none" stroke="currentColor" stroke-width="1.5" d={line(data)} />-->
-			<!--			<g fill="white" stroke="currentColor" stroke-width="1.5">-->
-			<!--				{#each data as d, i}-->
-			<!--					<circle key={i} cx={x(i)} cy={y(d)} r="2.5" />-->
-			<!--				{/each}-->
-			<!--			</g>-->
 		</svg>
 	</div>
 {/if}
