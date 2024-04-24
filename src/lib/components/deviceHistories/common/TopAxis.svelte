@@ -8,16 +8,12 @@
 	import { onMount } from 'svelte';
 	import { centerEvent, getTimestampDifference } from '$lib/components/deviceHistories/HistoryUtils';
 
-	export let device: OnOffPluginUnit;
-
 	export let width = 640;
-	export let height = 250;
-	export let marginTop = 10;
-	export let marginRight = 20;
+	export let height = 100;
+	export let marginTop = 60;
+	export let marginRight = 45;
 	export let marginBottom = 30;
 	export let marginLeft = 45;
-
-	let isLoading = true;
 
 	// Bindings
 	let viewBoxBinding: HTMLElement;
@@ -28,44 +24,10 @@
 	export let timestampStart: number = 0;
 	export let timestampEnd: number = 0;
 
+	const arrowWidth = 20;
+	const arrowMarginTop = 2;
+	const arrowMarginBottom = 8;
 
-	// Get the history data of the device
-	let data: IReturnOnOffPluginUnitState[] = [];
-
-	$: device && loadData();
-
-	const loadData = () => {
-		device.getHistory().then(history => {
-			isLoading = true;
-			data = [];
-			history.forEach((entry, index) => {
-				data.push({
-					connectionStatus: entry.connectionStatus,
-					onOffState: entry.onOffState,
-					timestamp: entry.timestamp,
-				});
-				const next = history[index + 1];
-				if (next) {
-					data.push({
-						connectionStatus: entry.connectionStatus,
-						onOffState: entry.onOffState,
-						timestamp: next.timestamp,
-					});
-				}
-			});
-			data = data;
-
-			// Calculate the start and end of the data
-			const startEnd = d3.extent(data.map(entry => entry.timestamp));
-			timestampStart = startEnd[0] ?? 0;
-			timestampEnd = startEnd[1] ?? 0;
-
-			isLoading = false;
-		}).catch((error) => {
-			isLoading = false;
-			console.error(error);
-		});
-	}
 
 	// Event for panning the xAxis
 	const dragEvent = (event, d) => {
@@ -109,7 +71,7 @@
 	$: x = d3.scaleTime([timestampStart, timestampEnd], [marginLeft, width - marginRight]);
 	$: y = d3.scaleLinear([-0.01, 1], [height - marginBottom, marginTop]);
 	// $: d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')));
-	$: d3.select(xAxisBinding).call(d3.axisBottom(x));
+	$: d3.select(xAxisBinding).call(d3.axisTop(x));
 	$: d3.select(yAxisBinding).call(d3.axisLeft(y).tickValues([0, 1]).tickFormat(d => d ? 'ON' : 'OFF'));
 
 	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
@@ -117,16 +79,9 @@
 
 </script>
 
-{#if isLoading}
-	<LoadingSpinner />
-{:else}
-	<div>
-		<svg bind:this={viewBoxBinding} width={width} height={height}>
-<!--			<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />-->
-			<g bind:this={yAxisBinding} class="text-lg" transform="translate({marginLeft},0)" />
-			<g fill="none">
-				<path d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.onOffState ? 1 : 0)]))} stroke="#3c8eae" stroke-width="4"></path>
-			</g>
-		</svg>
-	</div>
-{/if}
+<svg bind:this={viewBoxBinding} class="mt-0" width={width} height={height}>
+	<polygon points="{marginLeft - arrowWidth / 2},{arrowMarginTop} {marginLeft + arrowWidth / 2},{arrowMarginTop} {marginLeft},{marginTop - arrowMarginBottom}" fill="#ffffff40" />
+	<polygon points="{width - marginRight - arrowWidth / 2},{arrowMarginTop} {width - marginRight + arrowWidth / 2},{arrowMarginTop} {width - marginRight},{marginTop - arrowMarginBottom}" fill="#ffffff40" />
+	<g bind:this={xAxisBinding} transform="translate(0,{marginTop})" />
+	<!--	<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />-->
+</svg>

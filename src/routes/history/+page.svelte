@@ -4,67 +4,19 @@
 	import DeviceSelection from '$lib/components/DeviceSelection.svelte';
 	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
 	import type BaseDevice from '$lib/api/devices/BaseDevice';
-	import OnOffPluginUnitHistory from '$lib/components/deviceHistories/OnOffPluginUnitHistory.svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import DateTimeInput from '$lib/components/util/DateTimeInput.svelte';
+	import TopAxis from '$lib/components/deviceHistories/common/TopAxis.svelte';
 
-	let loadingDevices = true;
-	let loadingData = true;
+	let containerBinding: HTMLElement;
+	const containerPadding = 20;
+	let containerWidth = 0;
 
-	interface Data {
-		timestamp: number;
-		value: boolean;
+
+	const handleResize = () => {
+		containerWidth = containerBinding.clientWidth - containerPadding * 2;
+		console.log(`Resized to ${containerWidth}`);
 	}
-
-	const generateRandomTimestampToday = () => {
-		const now = new Date();
-		const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2);
-		const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-		return startOfDay.getTime() + Math.random() * (endOfDay.getTime() - startOfDay.getTime());
-	}
-
-	// Some random testing data
-	let data = [
-		{ timestamp: generateRandomTimestampToday(), value: true },
-		{ timestamp: generateRandomTimestampToday(), value: false },
-		{ timestamp: generateRandomTimestampToday(), value: true },
-		{ timestamp: generateRandomTimestampToday(), value: false },
-		{ timestamp: generateRandomTimestampToday(), value: true },
-		{ timestamp: generateRandomTimestampToday(), value: false },
-		{ timestamp: generateRandomTimestampToday(), value: true },
-		{ timestamp: generateRandomTimestampToday(), value: false },
-		{ timestamp: generateRandomTimestampToday(), value: true },
-		{ timestamp: generateRandomTimestampToday(), value: false },
-	]
-	data = data.sort((a, b) => a.timestamp - b.timestamp);
-
-	let fixedData: Data[] = []
-	data.forEach((entry, index) => {
-		fixedData.push({ timestamp: entry.timestamp, value: entry.value });
-		const next = data[index + 1];
-		if (next) {
-			fixedData.push({ timestamp: next.timestamp, value: entry.value });
-		}
-	});
-
-	export let width = 640;
-	export let height = 400;
-	export let marginTop = 10;
-	export let marginRight = 20;
-	export let marginBottom = 30;
-	export let marginLeft = 30;
-
-	let gx;
-	let gy;
-
-	$: x = d3.scaleTime(d3.extent(fixedData.map(entry => entry.timestamp)), [marginLeft, width - marginRight]).nice();
-	$: y = d3.scaleLinear(d3.extent(fixedData.map(entry => entry.value ? 1 : 0)), [height - marginBottom, marginTop]);
-	$: d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')));
-	$: d3.select(gy).call(d3.axisLeft(y));
-	// $: line = d3.line((d, i) => x(i), y);
-	onMount(() => {
-		// console.log(line);
-	})
 
 	const popupClick: PopupSettings = {
 		event: 'click',
@@ -101,6 +53,10 @@
 	const inputEndDateUpdated = (event: CustomEvent<{ newDate: Date }>) => {
 		timestampEnd = event.detail.newDate.getTime();
 	}
+
+	onMount(() => {
+		handleResize();
+	});
 </script>
 
 <style>
@@ -114,13 +70,19 @@
     }
 </style>
 
-<div class="container h-full mx-auto flex justify-center items-center">
+<svelte:window on:resize={handleResize} />
+
+<div
+	bind:this={containerBinding}
+	class="box-border h-full w-full flex justify-center items-center"
+	style="padding-left: {containerPadding}px; padding-right: {containerPadding}px;"
+>
 	<DeviceSelection on:select={handleDeviceSelection} />
-	<div class="space-y-10 text-center flex flex-col items-center">
-		<h2 class="h2">History</h2>
+	<div class="text-center flex flex-col items-center">
+		<h2 class="h2">Device</h2>
 		<div class="flex flex-row w-full items-center justify-between">
 			<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
-			<button class="btn variant-ghost-tertiary h-10" use:popup={popupClick}>
+			<button class="btn variant-ghost-tertiary h-10 mx-8" use:popup={popupClick}>
 				{#if currentDevice}
 					{currentDevice.formattedVendorAndProduct}
 				{:else}
@@ -129,9 +91,15 @@
 			</button>
 			<DateTimeInput date={endDate} on:dateUpdate={inputEndDateUpdated} />
 		</div>
+		<TopAxis
+			width={containerWidth}
+			bind:timestampStart={timestampStart}
+			bind:timestampEnd={timestampEnd}
+		/>
 		<svelte:component
 			this={historyComponent}
 			device={currentDevice}
+			width={containerWidth}
 			bind:timestampStart={timestampStart}
 			bind:timestampEnd={timestampEnd}
 		/>

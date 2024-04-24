@@ -14,7 +14,7 @@
 
 	let selectedDevice: BaseDevice;
 
-	const numberOfTestDevices = 5;
+	const numberOfTestDevices = 0;
 	const getDeviceList = () => {
 		isLoading = true;
 		ApiClient.getNodes()
