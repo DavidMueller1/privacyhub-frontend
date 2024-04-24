@@ -12,16 +12,16 @@
 
 	export let width = 640;
 	export let height = 250;
-	export let marginTop = 10;
+	export let marginTop = 20;
+	export let marginBottom = 20;
 	export let marginRight = 20;
-	export let marginBottom = 30;
 	export let marginLeft = 45;
 
 	let isLoading = true;
 
 	// Bindings
 	let viewBoxBinding: HTMLElement;
-	let xAxisBinding: SVGElement;
+	let xAxisGridBinding: SVGElement;
 	let yAxisBinding: SVGElement;
 
 	// The start and end of the graph's x-axis
@@ -41,7 +41,7 @@
 			history.forEach((entry, index) => {
 				data.push({
 					connectionStatus: entry.connectionStatus,
-					onOffState: entry.onOffState,
+					onOffState: entry["onOffState"],
 					timestamp: entry.timestamp,
 				});
 				const next = history[index + 1];
@@ -107,10 +107,10 @@
 	// The D3 Magic
 	// $: x = d3.scaleTime(d3.extent(data.map(entry => entry.timestamp)), [marginLeft, width - marginRight]).nice();
 	$: x = d3.scaleTime([timestampStart, timestampEnd], [marginLeft, width - marginRight]);
-	$: y = d3.scaleLinear([-0.01, 1], [height - marginBottom, marginTop]);
+	$: y = d3.scaleLinear([0, 1], [height - marginBottom, marginTop]);
 	// $: d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')));
-	$: d3.select(xAxisBinding).call(d3.axisBottom(x));
-	$: d3.select(yAxisBinding).call(d3.axisLeft(y).tickValues([0, 1]).tickFormat(d => d ? 'ON' : 'OFF'));
+	$: d3.select(xAxisGridBinding).call(d3.axisBottom(x).tickSize(-height).tickFormat('').ticks(10)) && d3.select(xAxisGridBinding).selectAll('path').remove() && d3.select(xAxisGridBinding).selectAll('line').attr('stroke', '#ffffff33');
+	$: d3.select(yAxisBinding).call(d3.axisLeft(y).tickValues([0, 1]).tickFormat(d => d ? 'ON' : 'OFF')) && d3.select(yAxisBinding).selectAll('path').remove() && d3.select(yAxisBinding).selectAll('line').remove();
 
 	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
 	$: d3.select(viewBoxBinding).call(d3.zoom().on('zoom', zoomEvent));
@@ -122,10 +122,27 @@
 {:else}
 	<div>
 		<svg bind:this={viewBoxBinding} width={width} height={height}>
-<!--			<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />-->
+			<g>
+				<rect width={width} height={height} rx="10" ry="10" fill="#ffffff11" />
+			</g>
+			<g bind:this={xAxisGridBinding} transform="translate(0,{height})" />
 			<g bind:this={yAxisBinding} class="text-lg" transform="translate({marginLeft},0)" />
+			<g>
+				<text
+					x={width - 30}
+					y={height / 2}
+					text-anchor="middle"
+					alignment-baseline="middle"
+					fill="#ffffff"
+					transform="rotate(90, {width - 30}, {height / 2})"
+				>On / Off State</text>
+			</g>
 			<g fill="none">
-				<path d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.onOffState ? 1 : 0)]))} stroke="#3c8eae" stroke-width="4"></path>
+				<clipPath id="clip">
+					<rect x={marginLeft} y={0} width={width - marginLeft - marginRight} height={height} />
+				</clipPath>
+				<path id="chart-path" d={d3.line()(data.map(entry => [x(entry.timestamp), y(entry.onOffState ? 1 : 0)]))}></path>
+				<use href="#chart-path" clip-path="url(#clip)" stroke="#3c8eae" stroke-width="4" />
 			</g>
 		</svg>
 	</div>

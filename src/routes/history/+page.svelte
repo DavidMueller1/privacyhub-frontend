@@ -12,8 +12,8 @@
 	const containerPadding = 40;
 	let containerWidth = 0;
 
-	const graphMarginLeft = 45;
-	const graphMarginRight = 45;
+	const graphMarginLeft = 60;
+	const graphMarginRight = 60;
 
 
 	const handleResize = () => {

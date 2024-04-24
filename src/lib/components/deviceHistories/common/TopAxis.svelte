@@ -18,7 +18,7 @@
 	// Bindings
 	let viewBoxBinding: HTMLElement;
 	let xAxisBinding: SVGElement;
-	let yAxisBinding: SVGElement;
+	let xAxisGridBinding: SVGElement;
 
 	// The start and end of the graph's x-axis
 	export let timestampStart: number = 0;
@@ -67,12 +67,9 @@
 	};
 
 	// The D3 Magic
-	// $: x = d3.scaleTime(d3.extent(data.map(entry => entry.timestamp)), [marginLeft, width - marginRight]).nice();
 	$: x = d3.scaleTime([timestampStart, timestampEnd], [marginLeft, width - marginRight]);
-	$: y = d3.scaleLinear([-0.01, 1], [height - marginBottom, marginTop]);
-	// $: d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')));
 	$: d3.select(xAxisBinding).call(d3.axisTop(x));
-	$: d3.select(yAxisBinding).call(d3.axisLeft(y).tickValues([0, 1]).tickFormat(d => d ? 'ON' : 'OFF'));
+	$: d3.select(xAxisGridBinding).call(d3.axisBottom(x).tickSize(height - marginTop).tickFormat('').ticks(10)) && d3.select(xAxisGridBinding).selectAll('path').remove() && d3.select(xAxisGridBinding).selectAll('line').attr('stroke', '#ffffff33');
 
 	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
 	$: d3.select(viewBoxBinding).call(d3.zoom().on('zoom', zoomEvent));
@@ -83,5 +80,6 @@
 	<polygon points="{marginLeft - arrowWidth / 2},{arrowMarginTop} {marginLeft + arrowWidth / 2},{arrowMarginTop} {marginLeft},{marginTop - arrowMarginBottom}" fill="#ffffff40" />
 	<polygon points="{width - marginRight - arrowWidth / 2},{arrowMarginTop} {width - marginRight + arrowWidth / 2},{arrowMarginTop} {width - marginRight},{marginTop - arrowMarginBottom}" fill="#ffffff40" />
 	<g bind:this={xAxisBinding} transform="translate(0,{marginTop})" />
+	<g bind:this={xAxisGridBinding} transform="translate(0,{marginTop})" />
 	<!--	<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />-->
 </svg>
