@@ -11,7 +11,7 @@ export type DeviceOverview = {
 };
 
 export default abstract class ApiClient {
-	private static readonly BACKEND_URL = 'http://192.168.178.65:8000';
+	private static readonly BACKEND_URL = 'http://192.168.178.21:8000';
 
 	static commissionNodeBLEThread = (pairingCode: string): Promise<void> => {
 		const payload = {
@@ -62,18 +62,34 @@ export default abstract class ApiClient {
 							const vendor: string | undefined = node.vendor;
 							const product: string | undefined = node.product;
 							const type: string = node.type;
+							const manualPairingCode: string = node.manualPairingCode;
+							const qrCode: string = node.qrCode;
 							console.log("NODE");
 							console.log(node);
 							switch (type) {
 								case 'OnOffPluginUnit': // TODO Better way to handle this
-									const device = new OnOffPluginUnit(nodeId, endpointId, vendor, product);
+									const device = new OnOffPluginUnit(
+										nodeId,
+										endpointId,
+										vendor,
+										product,
+										manualPairingCode,
+										qrCode
+									);
 									device.initialize().then(() => {
 										nodes.push(device);
 										resolve();
 									});
 									break;
 								case 'ContactSensor':
-									const contactSensor = new ContactSensor(nodeId, endpointId, vendor, product);
+									const contactSensor = new ContactSensor(
+										nodeId,
+										endpointId,
+										vendor,
+										product,
+										manualPairingCode,
+										qrCode
+									);
 									contactSensor.initialize().then(() => {
 										nodes.push(contactSensor);
 										resolve();
@@ -81,7 +97,14 @@ export default abstract class ApiClient {
 									break;
 								default:
 									console.warn(`Unknown node type: ${type}`);
-									const unknownDevice = new BaseDevice(nodeId, endpointId, vendor, product);
+									const unknownDevice = new BaseDevice(
+										nodeId,
+										endpointId,
+										vendor,
+										product,
+										manualPairingCode,
+										qrCode
+									);
 									unknownDevice.initialize().then(() => {
 										nodes.push(unknownDevice);
 										resolve();

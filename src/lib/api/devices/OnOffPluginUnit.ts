@@ -13,8 +13,15 @@ export interface IReturnOnOffPluginUnitState {
 export default class OnOffPluginUnit extends BaseDevice {
 	state: boolean;
 
-	constructor(nodeId: string, endpointId: string, vendor: string | undefined, product: string | undefined) {
-		super(nodeId, endpointId, vendor, product);
+	constructor(
+		nodeId: string,
+		endpointId: string,
+		vendor: string | undefined,
+		product: string | undefined,
+		manualPairingCode: string,
+		qrCode: string
+	) {
+		super(nodeId, endpointId, vendor, product, manualPairingCode, qrCode);
 		this.state = false;
 	}
 

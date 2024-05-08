@@ -14,12 +14,23 @@ export default class BaseDevice {
 	protected _endpointId: string;
 	protected _vendor: string | undefined;
 	protected _product: string | undefined;
+	protected _manualPairingCode: string;
+	protected _qrCode: string;
 
-	constructor(nodeId: string, endpointId: string, vendor: string | undefined, product: string | undefined) {
+	constructor(
+		nodeId: string,
+		endpointId: string,
+		vendor: string | undefined,
+		product: string | undefined,
+		manualPairingCode: string,
+		qrCode: string
+	) {
 		this._nodeId = nodeId;
 		this._endpointId = endpointId;
 		this._vendor = vendor;
 		this._product = product;
+		this._manualPairingCode = manualPairingCode;
+		this._qrCode = qrCode;
 	}
 
 	initialize = (): Promise<void> => {
@@ -60,6 +71,14 @@ export default class BaseDevice {
 
 	get product() {
 		return this._product;
+	}
+
+	get manualPairingCode(): string {
+		return this._manualPairingCode;
+	}
+
+	get qrCode(): string {
+		return this._qrCode;
 	}
 
 	get formattedVendorAndProduct(): string {
