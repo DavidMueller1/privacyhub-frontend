@@ -21,6 +21,12 @@
 		}
 	});
 
+	$socketStore.on('privacyState', (data) => {
+		if (device.nodeId === data.nodeId) {
+			console.log('Privacy state changed:', data.state);
+		}
+	});
+
 	// Modal
 	const modalStore = getModalStore();
 

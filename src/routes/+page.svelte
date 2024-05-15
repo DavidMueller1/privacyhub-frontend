@@ -71,7 +71,7 @@
 	};
 
 	let deviceList: BaseDevice[] = [];
-	const numberOfTestDevices = 1;
+	const numberOfTestDevices = 0;
 	const getDeviceList = () => {
 		isLoading = true;
 		ApiClient.getNodes()
