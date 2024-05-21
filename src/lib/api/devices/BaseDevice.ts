@@ -29,7 +29,7 @@ export default class BaseDevice {
 
 	connectionStatus: ConnectionStatus;
 	privacyState: PrivacyState;
-
+	connectedProxy: number;
 
 	constructor(
 		nodeId: string,
@@ -39,7 +39,8 @@ export default class BaseDevice {
 		manualPairingCode: string,
 		qrCode: string,
 		connectionStatus: ConnectionStatus,
-		privacyState: PrivacyState
+		privacyState: PrivacyState,
+		connectedProxy: number
 	) {
 		this._nodeId = nodeId;
 		this._endpointId = endpointId;
@@ -49,6 +50,7 @@ export default class BaseDevice {
 		this._qrCode = qrCode;
 		this.connectionStatus = connectionStatus;
 		this.privacyState = privacyState;
+		this.connectedProxy = connectedProxy;
 	}
 
 	initialize = (): Promise<void> => {

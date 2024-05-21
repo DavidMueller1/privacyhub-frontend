@@ -7,20 +7,21 @@
 
 	export let device: BaseDevice;
 	export let detailsModalSettings: ModalSettings;
+	export let icon: string;
 
 	let connectionString = '';
 
 	// Socket events
 	$socketStore.on('connectionStatus', (data) => {
 		console.log('connectionStatus', data);
-		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+		if (device.nodeId === data.nodeId) {
 			device.connectionStatus = data.connectionStatus;
 		}
 	});
 
 	$socketStore.on('privacyState', (data) => {
 		console.log('privacyState', data);
-		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+		if (device.nodeId === data.nodeId) {
 			device.privacyState = data.privacyState;
 		}
 	});
@@ -76,7 +77,7 @@
 	class="card flex items-center space-x-8 px-8 h-20 hover:cursor-pointer"
 	on:click={openDetailsModal}
 >
-	<OverviewIcon icon="fa-satellite-dish" connectionStatus={device.connectionStatus} privacyState={device.privacyState} popupSettings={popupState} />
+	<OverviewIcon icon={icon} connectionStatus={device.connectionStatus} privacyState={device.privacyState} popupSettings={popupState} />
 	<!--	<i class="fa-solid fa-satellite-dish {stateIconColor}" use:popup={popupState}></i>-->
 	<p class="text-left">{device.formattedVendorAndProduct}</p>
 	<slot/>

@@ -39,6 +39,7 @@
 <OverviewBase
 	device={device}
 	detailsModalSettings={detailsModalSettings}
+	icon="fa-plug"
 >
 	<SlideToggle
 		name={device.nodeId}

@@ -3,20 +3,93 @@
 	import SvgQR from '@svelte-put/qr/svg/QR.svelte';
 
 	// Stores
-	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, ListBox, ListBoxItem, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import type OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 	import ApiClient from '$lib/api/ApiClient';
-	import type BaseDevice from '$lib/api/devices/BaseDevice';
+	import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import { socketStore } from '$lib/store/GeneralStore';
 
 	// Props
 	export let device: BaseDevice;
+
+	const NUM_PROXIES = 2;
 
 	let showQrCode = false;
 
 	const modalStore = getModalStore();
 
+	// Sockets
+	$socketStore.on('privacyState', (data) => {
+		console.log('privacyState', data);
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+			device.privacyState = data.privacyState;
+		}
+	});
+
 	// const device: OnOffPluginUnit = $modalStore[0].meta.device;
 	if (!device) throw new Error('Device is required for this modal.');
+
+	// Privacy State
+	const privacyStateList = [
+		{ key: PrivacyState.LOCAL, text: 'LOCAL', color: 'text-state-local' },
+		{ key: PrivacyState.THIRD_PARTY, text: 'THIRD PARTY', color: 'text-state-third-party' }
+	];
+	let selectedPrivacyState: PrivacyState = device.privacyState;
+	let lastSelectedPrivacyState: PrivacyState = device.privacyState;
+
+	const handleSelectPrivacyState = () => {
+		privacyStateLoading = true;
+		ApiClient.updatePrivacyState(device.nodeId, device.endpointId, selectedPrivacyState).then(() => {
+			lastSelectedPrivacyState = selectedPrivacyState;
+			device.privacyState = selectedPrivacyState;
+			privacyStateLoading = false;
+		}).catch(() => {
+			console.error('Failed to update privacy state');
+			selectedPrivacyState = lastSelectedPrivacyState;
+			privacyStateLoading = false;
+		});
+	};
+
+	let privacyStateLoading = false;
+	let privacyStateString = 'Unknown';
+	let privacyStateColor = '';
+
+	const updatePrivacyState = async (state: PrivacyState) => {
+		privacyStateString = privacyStateList.find((x) => x.key === state)?.text || 'Unknown';
+		privacyStateColor = privacyStateList.find((x) => x.key === state)?.color || '';
+	};
+	$: updatePrivacyState(device.privacyState);
+
+	// Connected Proxy
+	let proxyLoading = false;
+	let selectedProxy: number = device.connectedProxy;
+	let lastSelectedProxy: number = device.connectedProxy;
+	const handleSelectProxy = () => {
+		proxyLoading = true;
+		ApiClient.updateConnectedProxy(device.nodeId, device.endpointId, selectedProxy).then(() => {
+			lastSelectedProxy = selectedProxy;
+			proxyLoading = false;
+		}).catch(() => {
+			console.error('Failed to update connected proxy');
+			selectedProxy = lastSelectedProxy;
+			proxyLoading = false;
+		});
+	};
+
+	const popupPrivacy: PopupSettings = {
+		event: 'click',
+		target: 'popupPrivacy',
+		placement: 'bottom',
+		closeQuery: '.close-popup'
+	}
+
+	const popupProxy: PopupSettings = {
+		event: 'click',
+		target: 'popupProxy',
+		placement: 'bottom',
+		closeQuery: '.close-popup'
+	}
 
 	onMount(() => {
 		console.log("MANUAL PAIRING CODE");
@@ -25,6 +98,46 @@
 		console.log(device.qrCode);
 	});
 </script>
+
+
+<div class="card p-4" data-popup="popupPrivacy">
+	<ListBox>
+		{#each privacyStateList as privacyState}
+			<ListBoxItem
+				class="close-popup {privacyState.color}"
+				bind:group={selectedPrivacyState}
+				name="medium"
+				value={privacyState.key}
+				on:change={handleSelectPrivacyState}
+			>{privacyState.text}</ListBoxItem>
+		{/each}
+	</ListBox>
+</div>
+
+<div class="card p-4" data-popup="popupProxy">
+	<ListBox>
+		{#each Array(NUM_PROXIES + 1) as _, i}
+			<ListBoxItem
+				class="close-popup"
+				bind:group={selectedProxy}
+				name="medium"
+				value={i}
+				on:change={handleSelectProxy}
+			>
+				{i === 0 ? "None" : `Proxy ${i}`}
+			</ListBoxItem>
+		{/each}
+		<!--{#for deviceList as device}-->
+		<!--	<ListBoxItem-->
+		<!--		class="close-popup"-->
+		<!--		bind:group={selectedDevice}-->
+		<!--		name="medium"-->
+		<!--		value={device}-->
+		<!--		on:change={handleSelect}-->
+		<!--	>{device.formattedVendorAndProduct}</ListBoxItem>-->
+		<!--{/each}-->
+	</ListBox>
+</div>
 
 {#if $modalStore[0]}
 	<div class="my-modal text-center card p-4 w-modal shadow-xl space-y-4 flex flex-col">
@@ -63,7 +176,31 @@
 				<span class="text-gray-600">{device.manualPairingCode}</span>
 			</span>
 		{:else}
-			<slot />
+			<div class="flex flex-col">
+				<div class="py-8" >
+					<slot/>
+				</div>
+				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
+					<div>Privacy State</div>
+					<button class="btn variant-ghost-tertiary h-10 w-28 {privacyStateColor}" use:popup={popupPrivacy}>
+						{#if privacyStateLoading}
+							<LoadingSpinner classes="h-6" />
+						{:else}
+							{privacyStateString}
+						{/if}
+					</button>
+				</div>
+				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
+					<div>Connected Proxy</div>
+					<button class="btn variant-ghost-tertiary h-10 w-28" use:popup={popupProxy}>
+						{#if proxyLoading}
+							<LoadingSpinner classes="h-6" />
+						{:else}
+							{selectedProxy === 0 ? "None" : `Proxy ${selectedProxy}`}
+						{/if}
+					</button>
+				</div>
+			</div>
 		{/if}
 	</div>
 {/if}

@@ -20,9 +20,20 @@ export default class OnOffPluginUnit extends BaseDevice {
 		manualPairingCode: string,
 		qrCode: string,
 		connectionStatus: ConnectionStatus,
-		privacyState: PrivacyState
+		privacyState: PrivacyState,
+		connectedProxy: number
 	) {
-		super(nodeId, endpointId, vendor, product, manualPairingCode, qrCode, connectionStatus, privacyState);
+		super(
+			nodeId,
+			endpointId,
+			vendor,
+			product,
+			manualPairingCode,
+			qrCode,
+			connectionStatus,
+			privacyState,
+			connectedProxy
+		);
 		this.state = false;
 	}
 

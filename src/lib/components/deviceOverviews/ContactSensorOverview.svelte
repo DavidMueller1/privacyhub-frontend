@@ -24,6 +24,7 @@
 <OverviewBase
 	device={device}
 	detailsModalSettings={detailsModalSettings}
+	icon="fa-satellite-dish"
 >
 	{#if device.state}
 		<!--		<i class="fa-solid fa-check text-3xl text-green-500 ml-auto"></i>-->

@@ -1,5 +1,5 @@
 import { readable } from 'svelte/store';
-import BaseDevice from '$lib/api/devices/BaseDevice';
+import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 import OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 import ContactSensor from '$lib/api/devices/ContactSensor';
 
@@ -68,6 +68,7 @@ export default abstract class ApiClient {
 							const qrCode: string = node.qrCode;
 							const connectionStatus = node.connectionStatus;
 							const privacyState = node.privacyState;
+							const connectedProxy = node.connectedProxy;
 							console.log("NODE");
 							console.log(node);
 							switch (type) {
@@ -80,7 +81,8 @@ export default abstract class ApiClient {
 										manualPairingCode,
 										qrCode,
 										connectionStatus,
-										privacyState
+										privacyState,
+										connectedProxy
 									);
 									device.initialize().then(() => {
 										nodes.push(device);
@@ -96,7 +98,8 @@ export default abstract class ApiClient {
 										manualPairingCode,
 										qrCode,
 										connectionStatus,
-										privacyState
+										privacyState,
+										connectedProxy
 									);
 									contactSensor.initialize().then(() => {
 										nodes.push(contactSensor);
@@ -113,7 +116,8 @@ export default abstract class ApiClient {
 										manualPairingCode,
 										qrCode,
 										connectionStatus,
-										privacyState
+										privacyState,
+										connectedProxy
 									);
 									unknownDevice.initialize().then(() => {
 										nodes.push(unknownDevice);
@@ -176,6 +180,58 @@ export default abstract class ApiClient {
 				})
 				.then((data) => {
 					resolve(data.state);
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+	}
+
+	static updatePrivacyState = (nodeId: string, endpointId: string, privacyState: PrivacyState): Promise<void> => {
+		const payload = {
+			privacyState: privacyState
+		};
+
+		return new Promise<void>((resolve, reject) => {
+			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/privacyState`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			})
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					resolve();
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+	}
+
+	static updateConnectedProxy = (nodeId: string, endpointId: string, connectedProxy: number): Promise<void> => {
+		const payload = {
+			connectedProxy: connectedProxy
+		};
+
+		return new Promise<void>((resolve, reject) => {
+			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/connectedProxy`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			})
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					resolve();
 				})
 				.catch((error) => {
 					console.error('Error:', error);

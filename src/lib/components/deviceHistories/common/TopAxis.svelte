@@ -3,7 +3,6 @@
 	import BaseDevice from '$lib/api/devices/BaseDevice';
 	import OnOffPluginUnit, { type IReturnOnOffPluginUnitState } from '$lib/api/devices/OnOffPluginUnit';
 	import { error } from '@sveltejs/kit';
-	import { ConnectionStatus } from '$lib/store/GeneralStore';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { onMount } from 'svelte';
 	import { centerEvent, getTimestampDifference } from '$lib/components/deviceHistories/HistoryUtils';
