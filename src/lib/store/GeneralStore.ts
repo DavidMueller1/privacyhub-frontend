@@ -3,8 +3,8 @@ import { Socket } from 'socket.io-client';
 
 export const socketStore: Writable<Socket> = writable();
 
-export enum ConnectionStatus {
+export enum HubConnectionStatus {
 	CONNECTED,
 	DISCONNECTED
 }
-export const connectedStore: Writable<ConnectionStatus> = writable(ConnectionStatus.DISCONNECTED);
+export const connectedStore: Writable<HubConnectionStatus> = writable(HubConnectionStatus.DISCONNECTED);

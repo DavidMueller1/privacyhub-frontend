@@ -3,12 +3,14 @@ import BaseDevice from '$lib/api/devices/BaseDevice';
 import OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 import ContactSensor from '$lib/api/devices/ContactSensor';
 
-export type DeviceOverview = {
-	nodeId: string;
-	vendor: string | undefined;
-	product: string | undefined;
-	state: boolean;
-};
+// export type DeviceOverview = {
+// 	nodeId: string;
+// 	vendor: string | undefined;
+// 	product: string | undefined;
+// 	state: boolean;
+// };
+
+
 
 export default abstract class ApiClient {
 	private static readonly BACKEND_URL = 'http://192.168.178.21:8000';
@@ -64,6 +66,8 @@ export default abstract class ApiClient {
 							const type: string = node.type;
 							const manualPairingCode: string = node.manualPairingCode;
 							const qrCode: string = node.qrCode;
+							const connectionStatus = node.connectionStatus;
+							const privacyState = node.privacyState;
 							console.log("NODE");
 							console.log(node);
 							switch (type) {
@@ -74,7 +78,9 @@ export default abstract class ApiClient {
 										vendor,
 										product,
 										manualPairingCode,
-										qrCode
+										qrCode,
+										connectionStatus,
+										privacyState
 									);
 									device.initialize().then(() => {
 										nodes.push(device);
@@ -88,7 +94,9 @@ export default abstract class ApiClient {
 										vendor,
 										product,
 										manualPairingCode,
-										qrCode
+										qrCode,
+										connectionStatus,
+										privacyState
 									);
 									contactSensor.initialize().then(() => {
 										nodes.push(contactSensor);
@@ -103,7 +111,9 @@ export default abstract class ApiClient {
 										vendor,
 										product,
 										manualPairingCode,
-										qrCode
+										qrCode,
+										connectionStatus,
+										privacyState
 									);
 									unknownDevice.initialize().then(() => {
 										nodes.push(unknownDevice);

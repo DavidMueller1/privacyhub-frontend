@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-import { connectedStore, ConnectionStatus, socketStore } from '$lib/store/GeneralStore';
+import { connectedStore, HubConnectionStatus, socketStore } from '$lib/store/GeneralStore';
 import { get } from 'svelte/store';
 
 const BACKEND_URL = 'http://192.168.178.21:8000';
@@ -12,12 +12,12 @@ export const connectSocket = () => {
 
 	socket.on('connect', () => {
 		console.log('Connected to socket');
-		connectedStore.set(ConnectionStatus.CONNECTED);
+		connectedStore.set(HubConnectionStatus.CONNECTED);
 	});
 
 	socket.on('disconnect', () => {
 		console.log('Disconnected from socket');
-		connectedStore.set(ConnectionStatus.DISCONNECTED);
+		connectedStore.set(HubConnectionStatus.DISCONNECTED);
 	});
 
 	socket.on('error', (error) => {

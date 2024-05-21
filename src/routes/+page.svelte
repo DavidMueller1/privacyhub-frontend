@@ -5,10 +5,10 @@
 		ProgressRadial,
 		SlideToggle
 	} from '@skeletonlabs/skeleton';
-	import ApiClient, { type DeviceOverview } from '$lib/api/ApiClient';
+	import ApiClient from '$lib/api/ApiClient';
 	import { nodes } from '../../.svelte-kit/generated/client/app';
 	import BaseDevice from '$lib/api/devices/BaseDevice';
-	import { connectedStore, ConnectionStatus, socketStore } from '$lib/store/GeneralStore';
+	import { connectedStore, HubConnectionStatus, socketStore } from '$lib/store/GeneralStore';
 
 	const modalStore = getModalStore();
 
@@ -77,11 +77,11 @@
 		ApiClient.getNodes()
 			.then((nodes) => {
 				deviceList = nodes;
-				if (deviceList.length < numberOfTestDevices) {
-					for (let i = deviceList.length; i < numberOfTestDevices; i++) {
-						deviceList.push(new BaseDevice(i.toString(), "0", "Test", "Test"));
-					}
-				}
+				// if (deviceList.length < numberOfTestDevices) {
+				// 	for (let i = deviceList.length; i < numberOfTestDevices; i++) {
+				// 		deviceList.push(new BaseDevice(i.toString(), "0", "Test", "Test"));
+				// 	}
+				// }
 				console.log('Device list:');
 				console.log(deviceList);
 				isLoading = false;
@@ -103,7 +103,7 @@
 	};
 
 	connectedStore.subscribe((value) => {
-		if (value === ConnectionStatus.CONNECTED) {
+		if (value === HubConnectionStatus.CONNECTED) {
 			getDeviceList();
 		}
 	});
@@ -118,7 +118,7 @@
 
 <div class="container relative h-full w-full flex items-center self-center">
 
-	{#if $connectedStore !== ConnectionStatus.CONNECTED}
+	{#if $connectedStore !== HubConnectionStatus.CONNECTED}
 		<div
 			class="absolute bg-surface-700 bg-opacity-60 z-10 h-full w-full flex items-center justify-center"
 			 class:bg-surface-900={!currentMode} class:bg-surface-100={currentMode}
@@ -149,7 +149,7 @@
 		</div>
 	{/if}
 
-	{#if !(isLoading && $connectedStore !== ConnectionStatus.CONNECTED)}
+	{#if !(isLoading && $connectedStore !== HubConnectionStatus.CONNECTED)}
 		{#if isLoading}
 			<!--		<ProgressRadial width="w-28"  strokeLinecap="round" track="stroke-primary-50" meter="stroke-primary-500"/>-->
 			<span class="h-full w-full flex items-center justify-center">

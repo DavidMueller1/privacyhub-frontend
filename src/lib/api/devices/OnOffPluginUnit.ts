@@ -1,7 +1,6 @@
-import BaseDevice from '$lib/api/devices/BaseDevice';
+import BaseDevice, { ConnectionStatus, PrivacyState } from '$lib/api/devices/BaseDevice';
 import ApiClient from '$lib/api/ApiClient';
 import OnOffPluginUnitOverview from '$lib/components/deviceOverviews/OnOffPluginUnitOverview.svelte';
-import { ConnectionStatus } from '$lib/store/GeneralStore';
 import BooleanHistory from '$lib/components/deviceHistories/BooleanHistory.svelte';
 
 export interface IReturnOnOffPluginUnitState {
@@ -19,9 +18,11 @@ export default class OnOffPluginUnit extends BaseDevice {
 		vendor: string | undefined,
 		product: string | undefined,
 		manualPairingCode: string,
-		qrCode: string
+		qrCode: string,
+		connectionStatus: ConnectionStatus,
+		privacyState: PrivacyState
 	) {
-		super(nodeId, endpointId, vendor, product, manualPairingCode, qrCode);
+		super(nodeId, endpointId, vendor, product, manualPairingCode, qrCode, connectionStatus, privacyState);
 		this.state = false;
 	}
 

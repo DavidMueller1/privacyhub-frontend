@@ -9,21 +9,23 @@
 	export let device: OnOffPluginUnit;
 
 	// Socket events
-	$socketStore.on('onOffState', (data) => {
-		if (device.nodeId === data.nodeId) {
+	$socketStore.on('booleanState', (data) => {
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.state = data.state;
 		}
 	});
 
 	$socketStore.on('connectionStatus', (data) => {
-		if (device.nodeId === data.nodeId) {
-			// TODO device.connected = data.connected;
+		console.log('connectionStatus', data);
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+			device.connectionStatus = data.connectionStatus;
 		}
 	});
 
 	$socketStore.on('privacyState', (data) => {
-		if (device.nodeId === data.nodeId) {
-			console.log('Privacy state changed:', data.state);
+		console.log('privacyState', data);
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+			device.privacyState = data.privacyState;
 		}
 	});
 
@@ -34,6 +36,13 @@
 		type: 'component',
 		component: 'onOffPluginUnitDetails',
 		meta: { device: device },
+	};
+
+	// State Popup
+	const popupState: PopupSettings = {
+		event: 'hover',
+		target: 'popupState',
+		placement: 'top'
 	};
 
 	// UI events

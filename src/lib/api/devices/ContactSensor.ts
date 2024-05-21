@@ -1,6 +1,5 @@
-import BaseDevice from '$lib/api/devices/BaseDevice';
+import BaseDevice, { ConnectionStatus, PrivacyState } from '$lib/api/devices/BaseDevice';
 import ApiClient from '$lib/api/ApiClient';
-import { ConnectionStatus } from '$lib/store/GeneralStore';
 import ContactSensorOverview from '$lib/components/deviceOverviews/ContactSensorOverview.svelte';
 import BooleanHistory from '$lib/components/deviceHistories/BooleanHistory.svelte';
 
@@ -19,9 +18,11 @@ export default class ContactSensor extends BaseDevice {
 		vendor: string | undefined,
 		product: string | undefined,
 		manualPairingCode: string,
-		qrCode: string
+		qrCode: string,
+		connectionStatus: ConnectionStatus,
+		privacyState: PrivacyState
 	) {
-		super(nodeId, endpointId, vendor, product, manualPairingCode, qrCode);
+		super(nodeId, endpointId, vendor, product, manualPairingCode, qrCode, connectionStatus, privacyState);
 		this.state = false;
 	}
 

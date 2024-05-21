@@ -1,8 +1,18 @@
 import DefaultOverview from '$lib/components/deviceOverviews/DefaultOverview.svelte';
 import type { SvelteComponent } from 'svelte';
 import BaseDeviceHistory from '$lib/components/deviceHistories/BaseDeviceHistory.svelte';
-import { ConnectionStatus } from '$lib/store/GeneralStore';
+import { HubConnectionStatus } from '$lib/store/GeneralStore';
 import ApiClient from '$lib/api/ApiClient';
+
+export enum ConnectionStatus {
+	CONNECTED,
+	DISCONNECTED,
+}
+
+export enum PrivacyState {
+	LOCAL,
+	THIRD_PARTY,
+}
 
 export interface IReturnBaseDeviceState {
 	connectionStatus: ConnectionStatus;
@@ -17,13 +27,19 @@ export default class BaseDevice {
 	protected _manualPairingCode: string;
 	protected _qrCode: string;
 
+	connectionStatus: ConnectionStatus;
+	privacyState: PrivacyState;
+
+
 	constructor(
 		nodeId: string,
 		endpointId: string,
 		vendor: string | undefined,
 		product: string | undefined,
 		manualPairingCode: string,
-		qrCode: string
+		qrCode: string,
+		connectionStatus: ConnectionStatus,
+		privacyState: PrivacyState
 	) {
 		this._nodeId = nodeId;
 		this._endpointId = endpointId;
@@ -31,6 +47,8 @@ export default class BaseDevice {
 		this._product = product;
 		this._manualPairingCode = manualPairingCode;
 		this._qrCode = qrCode;
+		this.connectionStatus = connectionStatus;
+		this.privacyState = privacyState;
 	}
 
 	initialize = (): Promise<void> => {
