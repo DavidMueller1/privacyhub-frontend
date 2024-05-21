@@ -52,10 +52,12 @@
 	import { connectSocket } from '$lib/sockets/SocketClient';
 	import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
 	import OnOffPluginUnitDetails from '$lib/components/deviceDetails/OnOffPluginUnitDetails.svelte';
+	import ContactSensorDetails from '$lib/components/deviceDetails/ContactSensorDetails.svelte';
 
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal },
-		onOffPluginUnitDetails: { ref: OnOffPluginUnitDetails}
+		onOffPluginUnitDetails: { ref: OnOffPluginUnitDetails },
+		contactSensorDetails: {ref: ContactSensorDetails }
 	};
 
 	// Set the current mode

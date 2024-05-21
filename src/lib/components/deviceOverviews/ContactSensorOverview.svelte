@@ -8,7 +8,7 @@
 
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
-		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+		if (device.nodeId === data.nodeId) {
 			device.state = data.state;
 		}
 	});
@@ -16,7 +16,7 @@
 	// Modal
 	const detailsModalSettings: ModalSettings = {
 		type: 'component',
-		component: 'onOffPluginUnitDetails', // TODO
+		component: 'contactSensorDetails',
 		meta: { device: device },
 	};
 </script>
