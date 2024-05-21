@@ -22,7 +22,9 @@
 	// Sockets
 	$socketStore.on('privacyState', (data) => {
 		console.log('privacyState', data);
-		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+		if (device.nodeId === data.nodeId) {
+			selectedPrivacyState = data.privacyState;
+			lastSelectedPrivacyState = data.privacyState;
 			device.privacyState = data.privacyState;
 		}
 	});
