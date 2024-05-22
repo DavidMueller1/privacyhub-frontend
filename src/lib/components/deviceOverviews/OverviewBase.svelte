@@ -73,6 +73,7 @@
 	</div>
 	<div class="arrow variant-filled-surface" />
 </div>
+
 <button
 	class="card flex items-center space-x-8 px-8 h-20 hover:cursor-pointer"
 	on:click={openDetailsModal}

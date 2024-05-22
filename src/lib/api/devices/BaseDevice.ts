@@ -82,7 +82,7 @@ export default class BaseDevice {
 	}
 
 	get endpointId(): string {
-		return this._endpointId;
+		return String(this._endpointId);
 	}
 
 	get vendor() {

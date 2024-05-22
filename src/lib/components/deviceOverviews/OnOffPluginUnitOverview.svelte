@@ -12,6 +12,7 @@
 
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
+		console.log('booleanState', data);
 		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.state = data.state;
 		}

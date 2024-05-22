@@ -116,7 +116,7 @@
 </script>
 
 
-<div class="container relative h-full w-full flex items-center self-center">
+<div class="container relative h-full w-full flex items-center self-center justify-center">
 
 	{#if $connectedStore !== HubConnectionStatus.CONNECTED}
 		<div

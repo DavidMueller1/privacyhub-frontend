@@ -29,13 +29,10 @@
 		}
 	});
 
-	// const device: OnOffPluginUnit = $modalStore[0].meta.device;
-	if (!device) throw new Error('Device is required for this modal.');
-
 	// Privacy State
 	const privacyStateList = [
-		{ key: PrivacyState.LOCAL, text: 'LOCAL', color: 'text-state-local' },
-		{ key: PrivacyState.THIRD_PARTY, text: 'THIRD PARTY', color: 'text-state-third-party' }
+		{ key: PrivacyState.LOCAL, text: 'Local', color: 'text-state-local' },
+		{ key: PrivacyState.THIRD_PARTY, text: 'Third Party', color: 'text-state-third-party' }
 	];
 	let selectedPrivacyState: PrivacyState = device.privacyState;
 	let lastSelectedPrivacyState: PrivacyState = device.privacyState;
@@ -86,6 +83,13 @@
 		closeQuery: '.close-popup'
 	}
 
+	const popupPrivacyInfo: PopupSettings = {
+		event: 'hover',
+		target: 'popupPrivacyInfo',
+		placement: 'bottom',
+		closeQuery: '.close-popup'
+	}
+
 	const popupProxy: PopupSettings = {
 		event: 'click',
 		target: 'popupProxy',
@@ -116,6 +120,20 @@
 	</ListBox>
 </div>
 
+<div class="card p-4" data-popup="popupPrivacyInfo">
+	<ListBox>
+		{#each privacyStateList as privacyState}
+			<ListBoxItem
+				class="close-popup {privacyState.color}"
+				bind:group={selectedPrivacyState}
+				name="medium"
+				value={privacyState.key}
+				on:change={handleSelectPrivacyState}
+			>{privacyState.text}</ListBoxItem>
+		{/each}
+	</ListBox>
+</div>
+
 <div class="card p-4" data-popup="popupProxy">
 	<ListBox>
 		{#each Array(NUM_PROXIES + 1) as _, i}
@@ -129,15 +147,6 @@
 				{i === 0 ? "None" : `Proxy ${i}`}
 			</ListBoxItem>
 		{/each}
-		<!--{#for deviceList as device}-->
-		<!--	<ListBoxItem-->
-		<!--		class="close-popup"-->
-		<!--		bind:group={selectedDevice}-->
-		<!--		name="medium"-->
-		<!--		value={device}-->
-		<!--		on:change={handleSelect}-->
-		<!--	>{device.formattedVendorAndProduct}</ListBoxItem>-->
-		<!--{/each}-->
 	</ListBox>
 </div>
 
@@ -182,7 +191,7 @@
 				<div class="py-8" >
 					<slot/>
 				</div>
-				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
+				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500" use:popup={popupPrivacyInfo}>
 					<div>Privacy State</div>
 					<button class="btn variant-ghost-tertiary h-10 w-28 {privacyStateColor}" use:popup={popupPrivacy}>
 						{#if privacyStateLoading}
