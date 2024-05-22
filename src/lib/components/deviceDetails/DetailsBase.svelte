@@ -86,7 +86,7 @@
 	const popupPrivacyInfo: PopupSettings = {
 		event: 'hover',
 		target: 'popupPrivacyInfo',
-		placement: 'bottom',
+		placement: 'top',
 		closeQuery: '.close-popup'
 	}
 
@@ -94,6 +94,13 @@
 		event: 'click',
 		target: 'popupProxy',
 		placement: 'bottom',
+		closeQuery: '.close-popup'
+	}
+
+	const popupProxyInfo: PopupSettings = {
+		event: 'hover',
+		target: 'popupProxyInfo',
+		placement: 'top',
 		closeQuery: '.close-popup'
 	}
 
@@ -106,6 +113,7 @@
 </script>
 
 
+<!-- Privacy State Selection Popup -->
 <div class="card p-4" data-popup="popupPrivacy">
 	<ListBox>
 		{#each privacyStateList as privacyState}
@@ -120,20 +128,29 @@
 	</ListBox>
 </div>
 
-<div class="card p-4" data-popup="popupPrivacyInfo">
-	<ListBox>
-		{#each privacyStateList as privacyState}
-			<ListBoxItem
-				class="close-popup {privacyState.color}"
-				bind:group={selectedPrivacyState}
-				name="medium"
-				value={privacyState.key}
-				on:change={handleSelectPrivacyState}
-			>{privacyState.text}</ListBoxItem>
-		{/each}
-	</ListBox>
+<!-- Privacy State Info Popup -->
+<div class="card p-4 variant-filled-surface max-w-80" data-popup="popupPrivacyInfo">
+	<div class="flex flex-col items-center space-y-4">
+		<div class="flex flex-col items-center">
+			The privacy state of a device determines where the device data is visible and from where it can be controlled.
+		</div>
+		<div class="flex flex-col items-center">
+			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.LOCAL)?.color}">
+				{privacyStateList.find((x) => x.key === PrivacyState.LOCAL)?.text}
+			</div>
+			<div>The device can only be accessed via this web interface directly over the PrivacyHub.</div>
+		</div>
+		<div class="flex flex-col items-center">
+			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.color}">
+				{privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.text}
+			</div>
+			<div>The device can be accessed from third party hubs like an Alexa. Use the top right button to pair it.</div>
+		</div>
+	</div>
+	<div class="arrow variant-filled-surface" />
 </div>
 
+<!-- Proxy Selection Popup -->
 <div class="card p-4" data-popup="popupProxy">
 	<ListBox>
 		{#each Array(NUM_PROXIES + 1) as _, i}
@@ -148,6 +165,16 @@
 			</ListBoxItem>
 		{/each}
 	</ListBox>
+</div>
+
+<!-- Proxy Info Popup -->
+<div class="card p-4 variant-filled-surface max-w-80" data-popup="popupProxyInfo">
+	<div class="flex flex-col items-center space-y-4">
+		<div class="flex flex-col items-center">
+			When a device is connected to a proxy, the proxy can control and visualize the device's privacy state and show data flow from and to the device.
+		</div>
+	</div>
+	<div class="arrow variant-filled-surface" />
 </div>
 
 {#if $modalStore[0]}
@@ -169,7 +196,7 @@
 				</button>
 			{/if}
 			<header class='text-2xl font-bold'><i class="fa-solid fa-plug mr-2"></i>{device.formattedVendorAndProduct}</header>
-			{#if !showQrCode}
+			{#if !showQrCode && device.privacyState !== PrivacyState.LOCAL}
 				<button
 					class="btn-icon variant-ringed-tertiary !ml-auto"
 					on:click={() => showQrCode = true}
@@ -191,8 +218,8 @@
 				<div class="py-8" >
 					<slot/>
 				</div>
-				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500" use:popup={popupPrivacyInfo}>
-					<div>Privacy State</div>
+				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
+					<div>Privacy State <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupPrivacyInfo}></i></div>
 					<button class="btn variant-ghost-tertiary h-10 w-28 {privacyStateColor}" use:popup={popupPrivacy}>
 						{#if privacyStateLoading}
 							<LoadingSpinner classes="h-6" />
@@ -202,7 +229,7 @@
 					</button>
 				</div>
 				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
-					<div>Connected Proxy</div>
+					<div>Connected Proxy <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupProxyInfo}></i></div>
 					<button class="btn variant-ghost-tertiary h-10 w-28" use:popup={popupProxy}>
 						{#if proxyLoading}
 							<LoadingSpinner classes="h-6" />
