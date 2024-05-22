@@ -116,9 +116,10 @@
 </script>
 
 
-<div class="container relative h-full w-full flex items-center self-center justify-center">
+<div class="relative h-full w-full flex items-center self-center justify-center">
 
 	{#if $connectedStore !== HubConnectionStatus.CONNECTED}
+	<!--{#if true}-->
 		<div
 			class="absolute bg-surface-700 bg-opacity-60 z-10 h-full w-full flex items-center justify-center"
 			 class:bg-surface-900={!currentMode} class:bg-surface-100={currentMode}

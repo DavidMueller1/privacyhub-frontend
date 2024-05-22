@@ -131,20 +131,20 @@
 <!-- Privacy State Info Popup -->
 <div class="card p-4 variant-filled-surface max-w-80" data-popup="popupPrivacyInfo">
 	<div class="flex flex-col items-center space-y-4">
-		<div class="flex flex-col items-center">
+		<div class="flex flex-col items-center text-sm">
 			The privacy state of a device determines where the device data is visible and from where it can be controlled.
 		</div>
 		<div class="flex flex-col items-center">
 			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.LOCAL)?.color}">
 				{privacyStateList.find((x) => x.key === PrivacyState.LOCAL)?.text}
 			</div>
-			<div>The device can only be accessed via this web interface directly over the PrivacyHub.</div>
+			<div class="text-sm">The device can only be accessed via this web interface directly over the PrivacyHub.</div>
 		</div>
 		<div class="flex flex-col items-center">
 			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.color}">
 				{privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.text}
 			</div>
-			<div>The device can be accessed from third party hubs like an Alexa. Use the top right button to pair it.</div>
+			<div class="text-sm">The device can be accessed from third party hubs like an Alexa. Use the top right button to pair it.</div>
 		</div>
 	</div>
 	<div class="arrow variant-filled-surface" />
@@ -170,7 +170,7 @@
 <!-- Proxy Info Popup -->
 <div class="card p-4 variant-filled-surface max-w-80" data-popup="popupProxyInfo">
 	<div class="flex flex-col items-center space-y-4">
-		<div class="flex flex-col items-center">
+		<div class="flex flex-col items-center text-sm">
 			When a device is connected to a proxy, the proxy can control and visualize the device's privacy state and show data flow from and to the device.
 		</div>
 	</div>
