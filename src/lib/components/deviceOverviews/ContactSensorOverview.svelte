@@ -8,7 +8,8 @@
 
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
-		if (device.nodeId === data.nodeId) {
+		console.log('booleanState contact', data);
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpoint) {
 			device.state = data.state;
 		}
 	});

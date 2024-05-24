@@ -1,18 +1,15 @@
 <script lang="ts">
 	import ApiClient from '$lib/api/ApiClient.js';
-	import type BaseDevice from '$lib/api/devices/BaseDevice';
-	import Fa from 'svelte-fa';
-	import { getModalStore, type ModalSettings, SlideToggle } from '@skeletonlabs/skeleton';
+	import { type ModalSettings, SlideToggle } from '@skeletonlabs/skeleton';
 	import type OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 	import { socketStore } from '$lib/store/GeneralStore';
-	import OverviewIcon from '$lib/components/util/OverviewIcon.svelte';
 	import OverviewBase from '$lib/components/deviceOverviews/OverviewBase.svelte';
 
 	export let device: OnOffPluginUnit;
 
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
-		console.log('booleanState', data);
+		console.log('booleanState Plug', data);
 		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.state = data.state;
 		}

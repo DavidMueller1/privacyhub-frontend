@@ -32,7 +32,7 @@
 	// Privacy State
 	const privacyStateList = [
 		{ key: PrivacyState.LOCAL, text: 'Local', color: 'text-state-local' },
-		{ key: PrivacyState.THIRD_PARTY, text: 'Third Party', color: 'text-state-third-party' }
+		{ key: PrivacyState.THIRD_PARTY, text: 'Shared', color: 'text-state-third-party' }
 	];
 	let selectedPrivacyState: PrivacyState = device.privacyState;
 	let lastSelectedPrivacyState: PrivacyState = device.privacyState;
@@ -220,7 +220,7 @@
 				</div>
 				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
 					<div>Privacy State <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupPrivacyInfo}></i></div>
-					<button class="btn variant-ghost-tertiary h-10 w-28 {privacyStateColor}" use:popup={popupPrivacy}>
+					<button class="btn variant-ghost-tertiary h-10 w-24 {privacyStateColor}" use:popup={popupPrivacy}>
 						{#if privacyStateLoading}
 							<LoadingSpinner classes="h-6" />
 						{:else}
@@ -230,7 +230,7 @@
 				</div>
 				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
 					<div>Connected Proxy <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupProxyInfo}></i></div>
-					<button class="btn variant-ghost-tertiary h-10 w-28" use:popup={popupProxy}>
+					<button class="btn variant-ghost-tertiary h-10 w-24" use:popup={popupProxy}>
 						{#if proxyLoading}
 							<LoadingSpinner classes="h-6" />
 						{:else}

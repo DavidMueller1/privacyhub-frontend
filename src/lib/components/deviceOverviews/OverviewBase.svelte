@@ -10,6 +10,7 @@
 	export let icon: string;
 
 	let connectionString = '';
+	let connectionColor = '';
 
 	// Socket events
 	$socketStore.on('connectionStatus', (data) => {
@@ -32,7 +33,7 @@
 	// State Popup
 	const popupState: PopupSettings = {
 		event: 'hover',
-		target: 'popupState',
+		target: `popupState-${device.nodeId}-${device.endpointId}`,
 		placement: 'top'
 	};
 
@@ -45,18 +46,22 @@
 	}
 
 	const updateStateVisuals = (privacyState: PrivacyState, connectionStatus: ConnectionStatus) => {
+		console.log('updateStateVisuals', privacyState, connectionStatus);
 		if (connectionStatus === ConnectionStatus.DISCONNECTED) {
 			connectionString = 'DISCONNECTED';
 		} else {
 			switch (privacyState) {
 				case PrivacyState.LOCAL:
-					connectionString = 'LOCAL';
+					connectionString = 'Local';
+					connectionColor = 'text-state-local';
 					break;
 				case PrivacyState.THIRD_PARTY:
-					connectionString = 'THIRD PARTY';
+					connectionString = 'Shared';
+					connectionColor = 'text-state-third-party';
 					break;
 				default:
 					connectionString = 'UNKNOWN';
+					connectionColor = '';
 					break;
 			}
 		}
@@ -64,11 +69,11 @@
 	$: updateStateVisuals(device.privacyState, device.connectionStatus);
 </script>
 
-<div class="card p-2 variant-filled-surface w-40" data-popup="popupState">
+<div class="card p-2 variant-filled-surface w-40" data-popup="popupState-{device.nodeId}-{device.endpointId}">
 	<div class="flex flex-col items-center space-y-4">
 		<div class="flex flex-col items-center">
 			<div>State</div>
-			<div class="font-bold text-xl">{connectionString}</div>
+			<div class="font-bold text-xl {connectionColor}">{connectionString}</div>
 		</div>
 	</div>
 	<div class="arrow variant-filled-surface" />
