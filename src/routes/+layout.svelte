@@ -92,13 +92,13 @@
 						<img
 							src="/images/logo_dark.svg"
 							alt="PrivacyHub Logo"
-							class="w-28 lg:w-36 lg:px-4"
+							class="w-24 lg:w-36 lg:px-4"
 						/>
 					{:else}
 						<img
 							src="/images/logo_light.svg"
 							alt="PrivacyHub Logo"
-							class="w-28 lg:w-36 lg:px-4"
+							class="w-24 lg:w-36 lg:px-4"
 						/>
 					{/if}
 					<!--					<strong class="text-xl uppercase">PrivacyHub</strong>-->

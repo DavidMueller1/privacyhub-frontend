@@ -177,7 +177,8 @@
 			</span>
 		{:else}
 			{#if deviceList.length > 0}
-				<div class="w-full grid grid-cols-[repeat(auto-fit,_32%)] gap-4 m-auto p-4 justify-center">
+				<div class="w-full grid grid-cols-[repeat(auto-fit,_100%)] sm:grid-cols-[repeat(auto-fit,_48%)] 2xl:grid-cols-[repeat(auto-fit,_32%)] gap-4 m-auto p-4 justify-center">
+<!--				<div class="w-full grid grid-cols-[repeat(auto-fit,_32%)] gap-4 m-auto p-4 justify-center">-->
 					{#each deviceList as device}
 						<svelte:component this={device.getOverviewComponent()} device={device} />
 					{/each}

@@ -85,6 +85,6 @@
 >
 	<OverviewIcon icon={icon} connectionStatus={device.connectionStatus} privacyState={device.privacyState} popupSettings={popupState} />
 	<!--	<i class="fa-solid fa-satellite-dish {stateIconColor}" use:popup={popupState}></i>-->
-	<p class="text-left">{device.formattedVendorAndProduct}</p>
+	<p class="text-left max-h-[72px] text-ellipsis overflow-clip">{device.formattedVendorAndProduct}</p>
 	<slot/>
 </button>

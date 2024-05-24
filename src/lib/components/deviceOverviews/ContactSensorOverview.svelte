@@ -29,9 +29,9 @@
 >
 	{#if device.state}
 		<!--		<i class="fa-solid fa-check text-3xl text-green-500 ml-auto"></i>-->
-		<i class="fa-solid fa-circle text-3xl text-green-500 ml-auto"></i>
+		<i class="fa-solid fa-circle text-3xl text-green-500 !ml-auto"></i>
 	{:else}
 		<!--		<i class="fa-solid fa-times text-3xl text-red-500 ml-auto"></i>-->
-		<i class="fa-regular fa-circle text-3xl text-red-500 ml-auto"></i>
+		<i class="fa-regular fa-circle text-3xl text-red-500 !ml-auto"></i>
 	{/if}
 </OverviewBase>
