@@ -11,5 +11,9 @@ export default defineConfig({
 				greedy: [/^hljs-/]
 			}
 		})
-	]
+	],
+	server: {
+		host: '0.0.0.0',
+		port: 8080
+	}
 });

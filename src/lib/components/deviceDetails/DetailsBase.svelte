@@ -179,26 +179,26 @@
 
 {#if $modalStore[0]}
 	<div class="my-modal text-center card p-4 w-modal shadow-xl space-y-4 flex flex-col">
-		<div class="flex flex-row items-center space-x-4">
+		<div class="flex flex-row items-center">
 			{#if showQrCode}
 				<button
-					class="btn-icon variant-ringed-tertiary"
+					class="btn-icon variant-ringed-tertiary w-11 shrink-0"
 					on:click={() => showQrCode = false}
 				>
 					<i class="fa-solid fa-arrow-left"></i>
 				</button>
 			{:else}
 				<button
-					class="btn-icon variant-ringed-tertiary"
+					class="btn-icon variant-ringed-tertiary w-11 shrink-0"
 					on:click={() => modalStore.close()}
 				>
 					<i class="fa-solid fa-x"></i>
 				</button>
 			{/if}
-			<header class='text-2xl font-bold'><i class="fa-solid fa-plug mr-2"></i>{device.formattedVendorAndProduct}</header>
+			<header class='px-4 text-lg md:text-2xl font-bold flex-grow'><i class="fa-solid fa-plug mr-2"></i>{device.formattedVendorAndProduct}</header>
 			{#if !showQrCode && device.privacyState !== PrivacyState.LOCAL}
 				<button
-					class="btn-icon variant-ringed-tertiary !ml-auto"
+					class="btn-icon variant-ringed-tertiary w-11 shrink-0 !ml-auto"
 					on:click={() => showQrCode = true}
 				>
 					<i class="fa-solid fa-qrcode"></i>
