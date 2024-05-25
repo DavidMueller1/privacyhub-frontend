@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { getModalStore, type ModalSettings, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { socketStore } from '$lib/store/GeneralStore';
-	import type ContactSensor from '$lib/api/devices/ContactSensor';
 	import BaseDevice, { ConnectionStatus, PrivacyState } from '$lib/api/devices/BaseDevice';
 	import OverviewIcon from '$lib/components/util/OverviewIcon.svelte';
 

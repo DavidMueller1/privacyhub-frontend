@@ -12,7 +12,7 @@
 	const containerPadding = 40;
 	let containerWidth = 0;
 
-	const graphMarginLeft = 60;
+	const graphMarginLeft = 20;
 	const graphMarginRight = 60;
 
 
