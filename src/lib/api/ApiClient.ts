@@ -1,7 +1,10 @@
-import { readable } from 'svelte/store';
 import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 import OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 import ContactSensor from '$lib/api/devices/ContactSensor';
+import { AccessLevel } from '$lib/util/EnvChecker';
+import { getContext } from 'svelte';
+import { PUBLIC_LOCAL_BACKEND_URL, PUBLIC_ONLINE_BACKEND_URL } from '$env/static/public';
+
 
 // export type DeviceOverview = {
 // 	nodeId: string;
@@ -13,9 +16,27 @@ import ContactSensor from '$lib/api/devices/ContactSensor';
 
 
 export default abstract class ApiClient {
-	private static readonly BACKEND_URL = 'http://192.168.178.21:8000';
+	// private static readonly BACKEND_URL = 'http://192.168.178.21:8000';
 
-	static commissionNodeBLEThread = (pairingCode: string): Promise<void> => {
+	static getBackendUrl = (accessLevel: AccessLevel): string => {
+		console.log('Access Level:', accessLevel);
+		let backendUrl: string;
+		switch (accessLevel) {
+			case AccessLevel.PUBLIC:
+				backendUrl = PUBLIC_ONLINE_BACKEND_URL;
+				break;
+			case AccessLevel.PRIVATE:
+				backendUrl = PUBLIC_LOCAL_BACKEND_URL;
+				break;
+		}
+		console.log('Requested Backend URL:', backendUrl);
+		return backendUrl;
+	}
+
+
+	static commissionNodeBLEThread = (accessLevel: AccessLevel, pairingCode: string): Promise<void> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
+
 		const payload = {
 			pairingCode: pairingCode,
 			threadNetworkName: 'OpenThread-7a82',
@@ -24,7 +45,7 @@ export default abstract class ApiClient {
 		};
 
 		return new Promise<void>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/pairing/ble-thread`, {
+			fetch(`${backendUrl}/pairing/ble-thread`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -46,9 +67,11 @@ export default abstract class ApiClient {
 		});
 	};
 
-	static getNodes = (): Promise<BaseDevice[]> => {
+	static getNodes = (accessLevel: AccessLevel): Promise<BaseDevice[]> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
+
 		return new Promise<any>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/nodes`)
+			fetch(`${backendUrl}/nodes`)
 				.then((response) => {
 					if (!response.ok) {
 						reject(response.body);
@@ -82,7 +105,8 @@ export default abstract class ApiClient {
 										qrCode,
 										connectionStatus,
 										privacyState,
-										connectedProxy
+										connectedProxy,
+										accessLevel
 									);
 									device.initialize().then(() => {
 										nodes.push(device);
@@ -99,7 +123,8 @@ export default abstract class ApiClient {
 										qrCode,
 										connectionStatus,
 										privacyState,
-										connectedProxy
+										connectedProxy,
+										accessLevel
 									);
 									contactSensor.initialize().then(() => {
 										nodes.push(contactSensor);
@@ -117,7 +142,8 @@ export default abstract class ApiClient {
 										qrCode,
 										connectionStatus,
 										privacyState,
-										connectedProxy
+										connectedProxy,
+										accessLevel
 									);
 									unknownDevice.initialize().then(() => {
 										nodes.push(unknownDevice);
@@ -143,13 +169,14 @@ export default abstract class ApiClient {
 		});
 	};
 
-	static setOnOff = (nodeId: string, endpointId: string, state: boolean): Promise<void> => {
+	static setOnOff = (accessLevel: AccessLevel, nodeId: string, endpointId: string, state: boolean): Promise<void> => {
 		const payload = {
 			state: state
 		};
+		const backendUrl = this.getBackendUrl(accessLevel);
 
 		return new Promise<void>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/onOff`, {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/onOff`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -169,9 +196,10 @@ export default abstract class ApiClient {
 		});
 	};
 
-	static getOnOff = (nodeId: string, endpointId: string): Promise<boolean | undefined> => {
+	static getOnOff = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<boolean | undefined> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
 		return new Promise<boolean | undefined>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/onOff`)
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/onOff`)
 				.then((response) => {
 					if (!response.ok) {
 						reject(response.body);
@@ -188,13 +216,14 @@ export default abstract class ApiClient {
 		});
 	}
 
-	static updatePrivacyState = (nodeId: string, endpointId: string, privacyState: PrivacyState): Promise<void> => {
+	static updatePrivacyState = (accessLevel: AccessLevel, nodeId: string, endpointId: string, privacyState: PrivacyState): Promise<void> => {
 		const payload = {
 			privacyState: privacyState
 		};
+		const backendUrl = this.getBackendUrl(accessLevel);
 
 		return new Promise<void>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/privacyState`, {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/privacyState`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -214,13 +243,14 @@ export default abstract class ApiClient {
 		});
 	}
 
-	static updateConnectedProxy = (nodeId: string, endpointId: string, connectedProxy: number): Promise<void> => {
+	static updateConnectedProxy = (accessLevel: AccessLevel, nodeId: string, endpointId: string, connectedProxy: number): Promise<void> => {
 		const payload = {
 			connectedProxy: connectedProxy
 		};
+		const backendUrl = this.getBackendUrl(accessLevel);
 
 		return new Promise<void>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/connectedProxy`, {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/connectedProxy`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -240,9 +270,11 @@ export default abstract class ApiClient {
 		});
 	}
 
-	static getHistory<T>(nodeId: string, endpointId: string, from?: number, to?: number): Promise<T[]> {
+	static getHistory<T>(accessLevel: AccessLevel, nodeId: string, endpointId: string, from?: number, to?: number): Promise<T[]> {
+		const backendUrl = this.getBackendUrl(accessLevel);
+
 		return new Promise<T[]>((resolve, reject) => {
-			fetch(`${this.BACKEND_URL}/nodes/${nodeId}/${endpointId}/history?from=${from}&to=${to}`)
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/history?from=${from}&to=${to}`)
 				.then((response) => {
 					if (!response.ok) {
 						reject(response.body);

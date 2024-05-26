@@ -2,6 +2,7 @@ import BaseDevice, { ConnectionStatus, PrivacyState } from '$lib/api/devices/Bas
 import ApiClient from '$lib/api/ApiClient';
 import ContactSensorOverview from '$lib/components/deviceOverviews/ContactSensorOverview.svelte';
 import BooleanHistory from '$lib/components/deviceHistories/BooleanHistory.svelte';
+import type { AccessLevel } from '$lib/util/EnvChecker';
 
 export interface IReturnContactSensorState {
 	connectionStatus: ConnectionStatus;
@@ -21,7 +22,8 @@ export default class ContactSensor extends BaseDevice {
 		qrCode: string,
 		connectionStatus: ConnectionStatus,
 		privacyState: PrivacyState,
-		connectedProxy: number
+		connectedProxy: number,
+		accessLevel: AccessLevel
 	) {
 		super(
 			nodeId,
@@ -32,7 +34,8 @@ export default class ContactSensor extends BaseDevice {
 			qrCode,
 			connectionStatus,
 			privacyState,
-			connectedProxy
+			connectedProxy,
+			accessLevel
 		);
 		this.state = false;
 	}
@@ -51,7 +54,7 @@ export default class ContactSensor extends BaseDevice {
 
 	override getHistory = (): Promise<IReturnContactSensorState[]> => {
 		return new Promise<IReturnContactSensorState[]>((resolve, reject) => {
-			ApiClient.getHistory<IReturnContactSensorState>(this._nodeId, this._endpointId).then((data) => {
+			ApiClient.getHistory<IReturnContactSensorState>(this.accessLevel, this._nodeId, this._endpointId).then((data) => {
 				resolve(data);
 			}).catch((error) => {
 				reject(error);

@@ -1,14 +1,15 @@
 import { io } from 'socket.io-client';
 import { connectedStore, HubConnectionStatus, socketStore } from '$lib/store/GeneralStore';
 import { get } from 'svelte/store';
+import ApiClient from '$lib/api/ApiClient';
+import type { AccessLevel } from '$lib/util/EnvChecker';
 
-const BACKEND_URL = 'http://192.168.178.21:8000';
-export const connectSocket = () => {
+export const connectSocket = (accessLevel: AccessLevel, ) => {
 	if (get(socketStore) !== undefined) {
 		console.log('Socket already connected');
 		return;
 	}
-	const socket = io(BACKEND_URL);
+	const socket = io(ApiClient.getBackendUrl(accessLevel));
 
 	socket.on('connect', () => {
 		console.log('Connected to socket');

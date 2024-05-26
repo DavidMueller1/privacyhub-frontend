@@ -4,8 +4,10 @@
 	import type OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 	import { socketStore } from '$lib/store/GeneralStore';
 	import OverviewBase from '$lib/components/deviceOverviews/OverviewBase.svelte';
+	import type { AccessLevel } from '$lib/util/EnvChecker';
 
 	export let device: OnOffPluginUnit;
+	export let accessLevel: AccessLevel;
 
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
@@ -24,7 +26,7 @@
 
 	// UI events
 	const onOffStateChanged = () => {
-		ApiClient.setOnOff(device.nodeId, device.endpointId, !device.state)
+		ApiClient.setOnOff(accessLevel, device.nodeId, device.endpointId, !device.state)
 			.then(() => {
 				device.state = !device.state;
 			})

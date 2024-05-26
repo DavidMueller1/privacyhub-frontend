@@ -5,12 +5,14 @@
 	import ApiClient from '$lib/api/ApiClient';
 	import DetailsBase from '$lib/components/deviceDetails/DetailsBase.svelte';
 	import { socketStore } from '$lib/store/GeneralStore';
+	import type { AccessLevel } from '$lib/util/EnvChecker';
 
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: SvelteComponent;
+	export let accesLevel: AccessLevel;
 
-	// Socket events
+		// Socket events
 	$socketStore.on('booleanState', (data) => {
 		if (device.nodeId === data.nodeId) {
 			device.state = data.state;
@@ -23,7 +25,7 @@
 	if (!device) throw new Error('Device is required for this modal.');
 
 	const onOffStateChanged = () => {
-		ApiClient.setOnOff(device.nodeId, device.endpointId, !device.state)
+		ApiClient.setOnOff(accesLevel, device.nodeId, device.endpointId, !device.state)
 			.then(() => {
 				device.state = !device.state;
 			})
@@ -33,7 +35,7 @@
 	};
 </script>
 
-<DetailsBase device={device}>
+<DetailsBase device={device} accessLevel={accesLevel}>
 	<span class="flex justify-center items-center">
 		<button
 			class="btn-icon btn-icon-xxxl {device.state ? 'variant-filled-primary' : 'variant-ghost'}"

@@ -9,9 +9,11 @@
 	import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { socketStore } from '$lib/store/GeneralStore';
+	import type { AccessLevel } from '$lib/util/EnvChecker';
 
 	// Props
 	export let device: BaseDevice;
+	export let accessLevel: AccessLevel;
 
 	const NUM_PROXIES = 2;
 
@@ -40,7 +42,7 @@
 
 	const handleSelectPrivacyState = () => {
 		privacyStateLoading = true;
-		ApiClient.updatePrivacyState(device.nodeId, device.endpointId, selectedPrivacyState).then(() => {
+		ApiClient.updatePrivacyState(accessLevel, device.nodeId, device.endpointId, selectedPrivacyState).then(() => {
 			lastSelectedPrivacyState = selectedPrivacyState;
 			device.privacyState = selectedPrivacyState;
 			privacyStateLoading = false;
@@ -67,7 +69,7 @@
 	let lastSelectedProxy: number = device.connectedProxy;
 	const handleSelectProxy = () => {
 		proxyLoading = true;
-		ApiClient.updateConnectedProxy(device.nodeId, device.endpointId, selectedProxy).then(() => {
+		ApiClient.updateConnectedProxy(accessLevel, device.nodeId, device.endpointId, selectedProxy).then(() => {
 			lastSelectedProxy = selectedProxy;
 			proxyLoading = false;
 		}).catch(() => {

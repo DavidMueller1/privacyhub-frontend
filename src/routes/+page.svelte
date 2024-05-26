@@ -10,6 +10,8 @@
 	import BaseDevice from '$lib/api/devices/BaseDevice';
 	import { connectedStore, HubConnectionStatus, socketStore } from '$lib/store/GeneralStore';
 
+	export let data: PageData;
+
 	const modalStore = getModalStore();
 
 	let isLoading = true;
@@ -42,7 +44,7 @@
 		console.log('Adding device with pairing code:', pairingCode);
 		modalStore.trigger(loadingModal);
 
-		ApiClient.commissionNodeBLEThread(pairingCode)
+		ApiClient.commissionNodeBLEThread(data.accessLevel, pairingCode)
 			.then(() => {
 				console.log('Device added.');
 				modalStore.close();
@@ -74,7 +76,7 @@
 	const numberOfTestDevices = 0;
 	const getDeviceList = () => {
 		isLoading = true;
-		ApiClient.getNodes()
+		ApiClient.getNodes(data.accessLevel)
 			.then((nodes) => {
 				deviceList = nodes;
 				// if (deviceList.length < numberOfTestDevices) {
@@ -180,7 +182,7 @@
 				<div class="w-full grid grid-cols-[repeat(auto-fit,_100%)] sm:grid-cols-[repeat(auto-fit,_48%)] 2xl:grid-cols-[repeat(auto-fit,_32%)] gap-4 m-auto p-4 justify-center">
 <!--				<div class="w-full grid grid-cols-[repeat(auto-fit,_32%)] gap-4 m-auto p-4 justify-center">-->
 					{#each deviceList as device}
-						<svelte:component this={device.getOverviewComponent()} device={device} />
+						<svelte:component this={device.getOverviewComponent()} device={device} accessLevel={data.accessLevel} />
 					{/each}
 				</div>
 			{:else}

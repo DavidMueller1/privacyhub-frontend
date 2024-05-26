@@ -3,6 +3,7 @@ import type { SvelteComponent } from 'svelte';
 import BaseDeviceHistory from '$lib/components/deviceHistories/BaseDeviceHistory.svelte';
 import { HubConnectionStatus } from '$lib/store/GeneralStore';
 import ApiClient from '$lib/api/ApiClient';
+import type { AccessLevel } from '$lib/util/EnvChecker';
 
 export enum ConnectionStatus {
 	CONNECTED,
@@ -28,6 +29,8 @@ export default class BaseDevice {
 	protected _manualPairingCode: string;
 	protected _qrCode: string;
 
+	protected accessLevel: AccessLevel;
+
 	connectionStatus: ConnectionStatus;
 	privacyState: PrivacyState;
 	connectedProxy: number;
@@ -41,7 +44,8 @@ export default class BaseDevice {
 		qrCode: string,
 		connectionStatus: ConnectionStatus,
 		privacyState: PrivacyState,
-		connectedProxy: number
+		connectedProxy: number,
+		accessLevel: AccessLevel
 	) {
 		this._nodeId = nodeId;
 		this._endpointId = endpointId;
@@ -52,6 +56,7 @@ export default class BaseDevice {
 		this.connectionStatus = connectionStatus;
 		this.privacyState = privacyState;
 		this.connectedProxy = connectedProxy;
+		this.accessLevel = accessLevel;
 	}
 
 	initialize = (): Promise<void> => {
@@ -62,7 +67,7 @@ export default class BaseDevice {
 
 	getHistory = (): Promise<IReturnBaseDeviceState[]> => {
 		return new Promise<IReturnBaseDeviceState[]>((resolve, reject) => {
-			ApiClient.getHistory<IReturnBaseDeviceState>(this._nodeId, this._endpointId).then((data) => {
+			ApiClient.getHistory<IReturnBaseDeviceState>(this.accessLevel, this._nodeId, this._endpointId).then((data) => {
 				resolve(data);
 			}).catch((error) => {
 				reject(error);

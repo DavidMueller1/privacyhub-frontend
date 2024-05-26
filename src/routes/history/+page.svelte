@@ -84,7 +84,7 @@
 	style="padding-left: {containerPadding}px; padding-right: {containerPadding}px;"
 >
 	{#if data.accessLevel === AccessLevel.PRIVATE}
-		<DeviceSelection on:select={handleDeviceSelection} />
+		<DeviceSelection accessLevel={data.accessLevel} on:select={handleDeviceSelection} />
 		<div class="text-center flex flex-col items-center">
 			<h2 class="h2">Device</h2>
 			<div class="flex flex-row w-full items-center justify-between">
@@ -108,6 +108,7 @@
 			<svelte:component
 				this={historyComponent}
 				device={currentDevice}
+				accessLevel={data.accessLevel}
 				width={containerWidth}
 				marginLeft={graphMarginLeft}
 				marginRight={graphMarginRight}

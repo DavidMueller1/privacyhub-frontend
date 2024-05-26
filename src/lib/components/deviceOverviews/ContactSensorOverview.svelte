@@ -3,8 +3,10 @@
 	import { socketStore } from '$lib/store/GeneralStore';
 	import type ContactSensor from '$lib/api/devices/ContactSensor';
 	import OverviewBase from '$lib/components/deviceOverviews/OverviewBase.svelte';
+	import type { AccessLevel } from '$lib/util/EnvChecker';
 
 	export let device: ContactSensor;
+	export let accessLevel: AccessLevel;
 
 	// Socket events
 	$socketStore.on('booleanState', (data) => {

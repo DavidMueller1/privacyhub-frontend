@@ -4,10 +4,12 @@
 	import type OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 	import DetailsBase from '$lib/components/deviceDetails/DetailsBase.svelte';
 	import { socketStore } from '$lib/store/GeneralStore';
+	import type { AccessLevel } from '$lib/util/EnvChecker';
 
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: SvelteComponent;
+	export let accesLevel: AccessLevel;
 
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
@@ -22,7 +24,7 @@
 	if (!device) throw new Error('Device is required for this modal.');
 </script>
 
-<DetailsBase device={device}>
+<DetailsBase device={device} accessLevel={accesLevel}>
 	<span class="flex flex-col justify-center items-center">
 		{#if device.state}
 			<!--		<i class="fa-solid fa-check text-3xl text-green-500 ml-auto"></i>-->

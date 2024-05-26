@@ -41,7 +41,7 @@
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 
-	connectSocket();
+	connectSocket(data.accessLevel);
 
 	initializeStores();
 	const drawerStore = getDrawerStore();

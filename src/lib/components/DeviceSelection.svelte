@@ -4,27 +4,29 @@
 	import BaseDevice from '$lib/api/devices/BaseDevice';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import type { AccessLevel } from '$lib/util/EnvChecker';
 
 	const modalStore = getModalStore();
 	const dispatch = createEventDispatcher<{ select:{ device: BaseDevice } }>();
 
 	export let isLoading = true;
+	export let accessLevel: AccessLevel;
 
 	let deviceList: BaseDevice[] = [];
 
 	let selectedDevice: BaseDevice;
 
-	const numberOfTestDevices = 0;
+	// const numberOfTestDevices = 0;
 	const getDeviceList = () => {
 		isLoading = true;
-		ApiClient.getNodes()
+		ApiClient.getNodes(accessLevel)
 			.then((nodes) => {
 				deviceList = nodes;
-				if (deviceList.length < numberOfTestDevices) {
-					for (let i = deviceList.length; i < numberOfTestDevices; i++) {
-						deviceList.push(new BaseDevice(i.toString(), "0", "Test", "Test"));
-					}
-				}
+				// if (deviceList.length < numberOfTestDevices) {
+				// 	for (let i = deviceList.length; i < numberOfTestDevices; i++) {
+				// 		deviceList.push(new BaseDevice(i.toString(), "0", "Test", "Test"));
+				// 	}
+				// }
 				selectedDevice = deviceList[0];
 				handleSelect();
 				isLoading = false;
