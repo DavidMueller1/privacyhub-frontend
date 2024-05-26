@@ -21,6 +21,9 @@
 				case PrivacyState.THIRD_PARTY:
 					stateIconColor = 'text-state-third-party';
 					break;
+				case PrivacyState.ONLINE:
+					stateIconColor = 'text-state-online';
+					break;
 				default:
 					stateIconColor = '';
 					break;

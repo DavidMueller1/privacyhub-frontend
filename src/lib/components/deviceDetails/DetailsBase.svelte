@@ -32,7 +32,8 @@
 	// Privacy State
 	const privacyStateList = [
 		{ key: PrivacyState.LOCAL, text: 'Local', color: 'text-state-local' },
-		{ key: PrivacyState.THIRD_PARTY, text: 'Shared', color: 'text-state-third-party' }
+		{ key: PrivacyState.THIRD_PARTY, text: 'Shared', color: 'text-state-third-party' },
+		{ key: PrivacyState.ONLINE, text: 'Online', color: 'text-state-online' },
 	];
 	let selectedPrivacyState: PrivacyState = device.privacyState;
 	let lastSelectedPrivacyState: PrivacyState = device.privacyState;
@@ -138,13 +139,23 @@
 			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.LOCAL)?.color}">
 				{privacyStateList.find((x) => x.key === PrivacyState.LOCAL)?.text}
 			</div>
-			<div class="text-sm">The device can only be accessed via this web interface directly over the PrivacyHub.</div>
+			<div class="text-sm">The device can only be accessed via the local web interface at
+				<a class="text-neutral-400" href="http://privacyhub:8080">http://privacyhub:8080</a>
+				in the same network as the PrivacyHub.</div>
 		</div>
 		<div class="flex flex-col items-center">
 			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.color}">
 				{privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.text}
 			</div>
 			<div class="text-sm">The device can be accessed from third party hubs like an Alexa. Use the top right button to pair it.</div>
+		</div>
+		<div class="flex flex-col items-center">
+			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.ONLINE)?.color}">
+				{privacyStateList.find((x) => x.key === PrivacyState.ONLINE)?.text}
+			</div>
+			<div class="text-sm">In addition to the other states the device can be accessed online at
+				<a class="text-neutral-400" href="https://privacyhub.ngrok.app/">https://privacyhub.ngrok.app</a>
+			</div>
 		</div>
 	</div>
 	<div class="arrow variant-filled-surface" />

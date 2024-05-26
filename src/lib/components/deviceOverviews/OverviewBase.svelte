@@ -58,6 +58,10 @@
 					connectionString = 'Shared';
 					connectionColor = 'text-state-third-party';
 					break;
+				case PrivacyState.ONLINE:
+					connectionString = 'Online';
+					connectionColor = 'text-state-online';
+					break;
 				default:
 					connectionString = 'UNKNOWN';
 					connectionColor = '';

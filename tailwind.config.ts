@@ -20,6 +20,7 @@ export default {
 				'disconnected-dark': '#7f2d2d',
 				'state-local': '#4cb5dc',
 				'state-third-party': '#f1d743',
+				'state-online': '#55e057',
 			},
 			flexGrow: {
 
