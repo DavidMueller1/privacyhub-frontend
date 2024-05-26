@@ -9,9 +9,7 @@
 	import { nodes } from '../../.svelte-kit/generated/client/app';
 	import BaseDevice from '$lib/api/devices/BaseDevice';
 	import { connectedStore, HubConnectionStatus, socketStore } from '$lib/store/GeneralStore';
-
-	console.log("HOST");
-	console.log(window.location.host);
+	import { onMount } from 'svelte';
 
 	const modalStore = getModalStore();
 
@@ -114,6 +112,11 @@
 	let currentMode = getModeUserPrefers();
 	modeCurrent.subscribe((value) => {
 		currentMode = value;
+	});
+
+	onMount(() => {
+		console.log("HOST");
+		console.log(window.location.host);
 	});
 
 </script>
