@@ -1,5 +1,8 @@
-<script>
+<script lang="ts">
 	import { getDrawerStore, getModeUserPrefers, LightSwitch, modeCurrent } from '@skeletonlabs/skeleton';
+	import { AccessLevel } from '$lib/util/EnvChecker.js';
+
+	export let accessLevel: AccessLevel;
 
 	const drawerStore = getDrawerStore();
 	const drawerClose = () => {
@@ -21,12 +24,14 @@
 				<span>Dashboard</span>
 			</a>
 		</li>
-		<li>
-			<a href="/history" on:click={drawerClose}>
-				<i class="fa-solid fa-square-poll-vertical text-4xl w-9"></i>
-				<span>History</span>
-			</a>
-		</li>
+		{#if accessLevel === AccessLevel.PRIVATE }
+			<li>
+				<a href="/history" on:click={drawerClose}>
+					<i class="fa-solid fa-square-poll-vertical text-4xl w-9"></i>
+					<span>History</span>
+				</a>
+			</li>
+		{/if}
 		<li>
 			<a href="/about" on:click={drawerClose}>
 				<i class="fa-solid fa-circle-question text-4xl w-9"></i>

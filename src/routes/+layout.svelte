@@ -38,7 +38,6 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
-	import Navigation from '$lib/navigation/Navigation.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 
@@ -60,6 +59,7 @@
 	import { AccessLevel, getAccessLevel } from '$lib/util/EnvChecker';
 	import { onMount } from 'svelte';
 	import type { LayoutData } from '../../.svelte-kit/types/src/routes/$types';
+	import Navigation from '$lib/navigation/Navigation.svelte';
 
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal },
@@ -75,7 +75,7 @@
 </script>
 
 <Drawer>
-	<Navigation />
+	<Navigation accessLevel={data.accessLevel} />
 </Drawer>
 
 <Modal components={modalRegistry} />
@@ -118,16 +118,16 @@
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
 		<div class="flex flex-col">
-			<Navigation />
+			<Navigation accessLevel={data.accessLevel} />
 		</div>
 	</svelte:fragment>
 	<!-- Page Route Content -->
 	<slot />
-	{#if data.accessLevel === AccessLevel.PUBLIC}
-		PUBLIC
-	{:else if data.accessLevel === AccessLevel.PRIVATE}
-		PRIVATE
-	{:else}
-		UNKNOWN
-	{/if}
+	<!--{#if data.accessLevel === AccessLevel.PUBLIC}-->
+	<!--	PUBLIC-->
+	<!--{:else if data.accessLevel === AccessLevel.PRIVATE}-->
+	<!--	PRIVATE-->
+	<!--{:else}-->
+	<!--	UNKNOWN-->
+	<!--{/if}-->
 </AppShell>

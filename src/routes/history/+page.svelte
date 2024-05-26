@@ -7,6 +7,9 @@
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import DateTimeInput from '$lib/components/util/DateTimeInput.svelte';
 	import TopAxis from '$lib/components/deviceHistories/common/TopAxis.svelte';
+	import { AccessLevel } from '$lib/util/EnvChecker';
+
+	export let data: PageData;
 
 	let containerBinding: HTMLElement;
 	const containerPadding = 40;
@@ -80,36 +83,41 @@
 	class="box-border h-full w-full flex justify-center items-center"
 	style="padding-left: {containerPadding}px; padding-right: {containerPadding}px;"
 >
-	<DeviceSelection on:select={handleDeviceSelection} />
-	<div class="text-center flex flex-col items-center">
-		<h2 class="h2">Device</h2>
-		<div class="flex flex-row w-full items-center justify-between">
-			<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
-			<button class="btn variant-ghost-tertiary h-10 mx-8" use:popup={popupClick}>
-				{#if currentDevice}
-					{currentDevice.formattedVendorAndProduct}
-				{:else}
-					<LoadingSpinner classes="h-6 w-6" />
-				{/if}
-			</button>
-			<DateTimeInput date={endDate} on:dateUpdate={inputEndDateUpdated} />
+	{#if data.accessLevel === AccessLevel.PRIVATE}
+		<DeviceSelection on:select={handleDeviceSelection} />
+		<div class="text-center flex flex-col items-center">
+			<h2 class="h2">Device</h2>
+			<div class="flex flex-row w-full items-center justify-between">
+				<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
+				<button class="btn variant-ghost-tertiary h-10 mx-8" use:popup={popupClick}>
+					{#if currentDevice}
+						{currentDevice.formattedVendorAndProduct}
+					{:else}
+						<LoadingSpinner classes="h-6 w-6" />
+					{/if}
+				</button>
+				<DateTimeInput date={endDate} on:dateUpdate={inputEndDateUpdated} />
+			</div>
+			<TopAxis
+				width={containerWidth}
+				marginLeft={graphMarginLeft}
+				marginRight={graphMarginRight}
+				bind:timestampStart={timestampStart}
+				bind:timestampEnd={timestampEnd}
+			/>
+			<svelte:component
+				this={historyComponent}
+				device={currentDevice}
+				width={containerWidth}
+				marginLeft={graphMarginLeft}
+				marginRight={graphMarginRight}
+				bind:timestampStart={timestampStart}
+				bind:timestampEnd={timestampEnd}
+			/>
 		</div>
-		<TopAxis
-			width={containerWidth}
-			marginLeft={graphMarginLeft}
-			marginRight={graphMarginRight}
-			bind:timestampStart={timestampStart}
-			bind:timestampEnd={timestampEnd}
-		/>
-		<svelte:component
-			this={historyComponent}
-			device={currentDevice}
-			width={containerWidth}
-			marginLeft={graphMarginLeft}
-			marginRight={graphMarginRight}
-			bind:timestampStart={timestampStart}
-			bind:timestampEnd={timestampEnd}
-		/>
-	</div>
+	{:else}
+		Device history is only available in the local application
+	{/if}
+
 </div>
 
