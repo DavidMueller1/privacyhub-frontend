@@ -9,6 +9,9 @@
 	import { nodes } from '../../.svelte-kit/generated/client/app';
 	import BaseDevice from '$lib/api/devices/BaseDevice';
 	import { connectedStore, HubConnectionStatus, socketStore } from '$lib/store/GeneralStore';
+	import { isLocal } from '$lib/util/EnvChecker';
+
+	console.log('isLocal:', isLocal);
 
 	const modalStore = getModalStore();
 
