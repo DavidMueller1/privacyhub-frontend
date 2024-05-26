@@ -11,7 +11,7 @@
 		type ModalComponent,
 		modeCurrent,
 		getModeUserPrefers,
-		getModeAutoPrefers
+		getModeAutoPrefers, type DrawerStore
 	} from '@skeletonlabs/skeleton';
 
 	// Highlight JS
@@ -25,11 +25,15 @@
 
 	import '$lib/styles/app.css';
 
+
 	hljs.registerLanguage('xml', xml); // for HTML
 	hljs.registerLanguage('css', css);
 	hljs.registerLanguage('javascript', javascript);
 	hljs.registerLanguage('typescript', typescript);
 	storeHighlightJs.set(hljs);
+
+	// export let accessLevel: AccessLevel;
+	export let data: LayoutData;
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
@@ -37,10 +41,10 @@
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
-	initializeStores();
 
 	connectSocket();
 
+	initializeStores();
 	const drawerStore = getDrawerStore();
 
 	const drawerOpen = () => {
@@ -53,6 +57,9 @@
 	import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
 	import OnOffPluginUnitDetails from '$lib/components/deviceDetails/OnOffPluginUnitDetails.svelte';
 	import ContactSensorDetails from '$lib/components/deviceDetails/ContactSensorDetails.svelte';
+	import { AccessLevel, getAccessLevel } from '$lib/util/EnvChecker';
+	import { onMount } from 'svelte';
+	import type { LayoutData } from '../../.svelte-kit/types/src/routes/$types';
 
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal },
@@ -116,4 +123,11 @@
 	</svelte:fragment>
 	<!-- Page Route Content -->
 	<slot />
+	{#if data.accessLevel === AccessLevel.PUBLIC}
+		PUBLIC
+	{:else if data.accessLevel === AccessLevel.PRIVATE}
+		PRIVATE
+	{:else}
+		UNKNOWN
+	{/if}
 </AppShell>
