@@ -10,22 +10,24 @@
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: SvelteComponent;
-	export let accesLevel: AccessLevel;
 
 		// Socket events
 	$socketStore.on('booleanState', (data) => {
-		if (device.nodeId === data.nodeId) {
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.state = data.state;
 		}
 	});
 
 	const modalStore = getModalStore();
 
+	const accessLevel: AccessLevel = $modalStore[0].meta.accessLevel;
+	if (accessLevel === undefined) throw new Error('AccessLevel is required for this modal.');
+
 	const device: OnOffPluginUnit = $modalStore[0].meta.device;
 	if (!device) throw new Error('Device is required for this modal.');
 
 	const onOffStateChanged = () => {
-		ApiClient.setOnOff(accesLevel, device.nodeId, device.endpointId, !device.state)
+		ApiClient.setOnOff(accessLevel, device.nodeId, device.endpointId, !device.state)
 			.then(() => {
 				device.state = !device.state;
 			})
@@ -35,7 +37,7 @@
 	};
 </script>
 
-<DetailsBase device={device} accessLevel={accesLevel}>
+<DetailsBase device={device} accessLevel={accessLevel}>
 	<span class="flex justify-center items-center">
 		<button
 			class="btn-icon btn-icon-xxxl {device.state ? 'variant-filled-primary' : 'variant-ghost'}"

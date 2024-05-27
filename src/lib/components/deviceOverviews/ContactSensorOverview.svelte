@@ -11,7 +11,7 @@
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
 		console.log('booleanState contact', data);
-		if (device.nodeId === data.nodeId && device.endpointId === data.endpoint) {
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.state = data.state;
 		}
 	});
@@ -20,7 +20,7 @@
 	const detailsModalSettings: ModalSettings = {
 		type: 'component',
 		component: 'contactSensorDetails',
-		meta: { device: device },
+		meta: { device: device, accessLevel: accessLevel },
 	};
 </script>
 

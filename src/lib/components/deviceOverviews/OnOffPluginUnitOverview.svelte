@@ -21,7 +21,7 @@
 	const detailsModalSettings: ModalSettings = {
 		type: 'component',
 		component: 'onOffPluginUnitDetails',
-		meta: { device: device },
+		meta: { device: device, accessLevel: accessLevel },
 	};
 
 	// UI events

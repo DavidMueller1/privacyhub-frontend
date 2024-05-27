@@ -69,9 +69,11 @@ export default abstract class ApiClient {
 
 	static getNodes = (accessLevel: AccessLevel): Promise<BaseDevice[]> => {
 		const backendUrl = this.getBackendUrl(accessLevel);
+		const url = new URL(`${backendUrl}/nodes`);
+		url.searchParams.append('accessLevel', accessLevel.toString());
 
 		return new Promise<any>((resolve, reject) => {
-			fetch(`${backendUrl}/nodes`)
+			fetch(url.toString())
 				.then((response) => {
 					if (!response.ok) {
 						reject(response.body);

@@ -14,14 +14,14 @@
 	// Socket events
 	$socketStore.on('connectionStatus', (data) => {
 		console.log('connectionStatus', data);
-		if (device.nodeId === data.nodeId) {
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.connectionStatus = data.connectionStatus;
 		}
 	});
 
 	$socketStore.on('privacyState', (data) => {
 		console.log('privacyState', data);
-		if (device.nodeId === data.nodeId) {
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.privacyState = data.privacyState;
 		}
 	});

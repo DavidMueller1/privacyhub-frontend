@@ -24,7 +24,7 @@
 	// Sockets
 	$socketStore.on('privacyState', (data) => {
 		console.log('privacyState', data);
-		if (device.nodeId === data.nodeId) {
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			selectedPrivacyState = data.privacyState;
 			lastSelectedPrivacyState = data.privacyState;
 			device.privacyState = data.privacyState;

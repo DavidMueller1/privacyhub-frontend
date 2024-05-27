@@ -11,6 +11,7 @@
 	import { connectedStore, HubConnectionStatus, socketStore } from '$lib/store/GeneralStore';
 
 	export let data: PageData;
+	console.log('Page data:', data);
 
 	const modalStore = getModalStore();
 
