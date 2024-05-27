@@ -1,15 +1,14 @@
 <script lang="ts">
-	import { onMount, type SvelteComponent } from 'svelte';
+	import { onMount } from 'svelte';
 	import SvgQR from '@svelte-put/qr/svg/QR.svelte';
 
 	// Stores
 	import { getModalStore, ListBox, ListBoxItem, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import type OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 	import ApiClient from '$lib/api/ApiClient';
 	import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { socketStore } from '$lib/store/GeneralStore';
-	import type { AccessLevel } from '$lib/util/EnvChecker';
+	import { AccessLevel } from '$lib/util/EnvChecker';
 
 	// Props
 	export let device: BaseDevice;
@@ -46,6 +45,9 @@
 			lastSelectedPrivacyState = selectedPrivacyState;
 			device.privacyState = selectedPrivacyState;
 			privacyStateLoading = false;
+			if (accessLevel !== AccessLevel.PRIVATE && selectedPrivacyState !== PrivacyState.ONLINE) {
+				location.reload();
+			}
 		}).catch(() => {
 			console.error('Failed to update privacy state');
 			selectedPrivacyState = lastSelectedPrivacyState;

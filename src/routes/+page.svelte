@@ -9,6 +9,7 @@
 	import { nodes } from '../../.svelte-kit/generated/client/app';
 	import BaseDevice from '$lib/api/devices/BaseDevice';
 	import { connectedStore, HubConnectionStatus, socketStore } from '$lib/store/GeneralStore';
+	import { AccessLevel } from '$lib/util/EnvChecker';
 
 	export let data: PageData;
 	console.log('Page data:', data);
@@ -189,7 +190,7 @@
 			{:else}
 				<div class="space-y-10 text-center flex flex-col items-center">
 					<h2 class="h2">Dashboard</h2>
-					<p class="text-lg">No devices paired yet.</p>
+					<p class="text-lg">No devices paired yet{data.accessLevel !== AccessLevel.PRIVATE ? " or no device in online access state" : ""}.</p>
 				</div>
 			{/if}
 			<div class="fixed bottom-4 right-4">
