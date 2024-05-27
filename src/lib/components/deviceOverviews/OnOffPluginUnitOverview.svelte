@@ -26,7 +26,7 @@
 
 	// UI events
 	const onOffStateChanged = () => {
-		ApiClient.setOnOff(accessLevel, device.nodeId, device.endpointId, !device.state)
+		ApiClient.setOnOff(accessLevel, device.nodeId, device.endpointId, device.state)
 			.then(() => {
 				device.state = !device.state;
 			})
