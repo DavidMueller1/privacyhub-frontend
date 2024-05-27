@@ -9,10 +9,13 @@
 	export let device: OnOffPluginUnit;
 	export let accessLevel: AccessLevel;
 
+	let deviceState = device.state;
+
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
 		console.log('booleanState Plug', data);
 		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+			deviceState = data.state;
 			device.state = data.state;
 		}
 	});
@@ -26,10 +29,10 @@
 
 	// UI events
 	const onOffStateChanged = () => {
-		console.log('======device.state', device.state);
-		ApiClient.setOnOff(accessLevel, device.nodeId, device.endpointId, device.state)
+		console.log('======device.state', deviceState);
+		ApiClient.setOnOff(accessLevel, device.nodeId, device.endpointId, deviceState)
 			.then(() => {
-				// device.state = !device.state;
+				device.state = deviceState;
 			})
 			.catch((error) => {
 				console.error('Error setting device enabled:', error.toString());
@@ -44,7 +47,7 @@
 >
 	<SlideToggle
 		name={device.nodeId}
-		checked={device.state}
+		checked={deviceState}
 		active="bg-primary-500"
 		class="!ml-auto slide-toggle"
 		on:click={(event) => event.stopPropagation()}
