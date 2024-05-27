@@ -32,7 +32,7 @@
 				device.state = !device.state;
 			})
 			.catch((error) => {
-				console.error('Error setting device enabled:', error.message);
+				console.error('Error setting device enabled:', error.toString());
 			});
 	};
 </script>
