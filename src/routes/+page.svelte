@@ -193,12 +193,14 @@
 					<p class="text-lg">No devices paired yet{data.accessLevel !== AccessLevel.PRIVATE ? " or no device in online access state" : ""}.</p>
 				</div>
 			{/if}
-			<div class="fixed bottom-4 right-4">
-				<button class="btn variant-filled-primary" on:click={openModal}>
-					<i class="fa-solid fa-plus"></i>
-					<span>Add device</span>
-				</button>
-			</div>
+			{#if data.accessLevel === AccessLevel.PRIVATE}
+				<div class="fixed bottom-4 right-4">
+					<button class="btn variant-filled-primary" on:click={openModal}>
+						<i class="fa-solid fa-plus"></i>
+						<span>Add device</span>
+					</button>
+				</div>
+			{/if}
 		{/if}
 	{/if}
 </div>

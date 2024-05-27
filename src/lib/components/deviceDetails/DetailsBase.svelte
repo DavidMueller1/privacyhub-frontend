@@ -14,7 +14,7 @@
 	export let device: BaseDevice;
 	export let accessLevel: AccessLevel;
 
-	const NUM_PROXIES = 2;
+	const NUM_PROXIES = 3;
 
 	let showQrCode = false;
 
