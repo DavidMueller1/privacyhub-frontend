@@ -292,4 +292,32 @@ export default abstract class ApiClient {
 				});
 		});
 	}
+
+	static sendProxyLocation = (accessLevel: AccessLevel, proxyId: number, row: number, col: number): Promise<void> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
+		const payload = {
+			row: row,
+			col: col
+		};
+
+		return new Promise<void>((resolve, reject) => {
+			fetch(`${backendUrl}/proxy/${proxyId}/updatepos`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			})
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					resolve();
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+	}
 }
