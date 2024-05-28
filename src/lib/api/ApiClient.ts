@@ -2,8 +2,8 @@ import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 import OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 import ContactSensor from '$lib/api/devices/ContactSensor';
 import { AccessLevel } from '$lib/util/EnvChecker';
-import { getContext } from 'svelte';
-import { PUBLIC_LOCAL_BACKEND_URL, PUBLIC_ONLINE_BACKEND_URL } from '$env/static/public';
+import { PUBLIC_ONLINE_BACKEND_URL } from '$env/static/public';
+import { BACKEND_URL } from '$lib/util/BackendUrl';
 
 
 // export type DeviceOverview = {
@@ -26,7 +26,7 @@ export default abstract class ApiClient {
 				backendUrl = PUBLIC_ONLINE_BACKEND_URL;
 				break;
 			case AccessLevel.PRIVATE:
-				backendUrl = PUBLIC_LOCAL_BACKEND_URL;
+				backendUrl = BACKEND_URL;
 				break;
 		}
 		console.log('Requested Backend URL:', backendUrl);
