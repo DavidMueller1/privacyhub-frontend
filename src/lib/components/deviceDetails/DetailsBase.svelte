@@ -301,7 +301,7 @@
 					</button>
 				</div>
 				{#if selectedProxy !== 0}
-					<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
+					<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-200">
 						<div>Proxy Location <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupProxyLocationInfo}></i></div>
 						<div class="flex flex-row space-x-2">
 							<input

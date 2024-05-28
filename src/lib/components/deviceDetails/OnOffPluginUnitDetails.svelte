@@ -29,7 +29,7 @@
 	const onOffStateChanged = () => {
 		ApiClient.setOnOff(accessLevel, device.nodeId, device.endpointId, !device.state)
 			.then(() => {
-				device.state = !device.state;
+				// device.state = !device.state;
 			})
 			.catch((error) => {
 				console.error('Error setting device enabled:', error.toString());
