@@ -110,12 +110,47 @@
 		closeQuery: '.close-popup'
 	}
 
+	const popupProxyLocationInfo: PopupSettings = {
+		event: 'hover',
+		target: 'popupProxyLocationInfo',
+		placement: 'top',
+		closeQuery: '.close-popup'
+	}
+
 	onMount(() => {
 		console.log("MANUAL PAIRING CODE");
 		console.log(device.manualPairingCode);
 		console.log("QR CODE");
 		console.log(device.qrCode);
 	});
+
+	let rowValue = "";
+	const updateRow = () => {
+		rowValue = rowValue.replace(/[^0-9]/g, '');
+		if (rowValue.length > 2) {
+			rowValue = rowValue.substring(0, 2);
+		}
+	};
+
+	let colValue = "";
+	const updateCol = () => {
+		colValue = colValue.replace(/[^0-9]/g, '');
+		if (colValue.length > 2) {
+			colValue = colValue.substring(0, 2);
+		}
+	};
+
+	let proxyLocationLoading = false;
+
+	const handleSendProxyLocation = async () => {
+		proxyLocationLoading = true;
+		ApiClient.sendProxyLocation(accessLevel, selectedProxy, Number(rowValue), Number(colValue)).then(() => {
+			proxyLocationLoading = false;
+		}).catch(() => {
+			console.error('Failed to send proxy location');
+			proxyLocationLoading = false;
+		});
+	};
 </script>
 
 
@@ -193,6 +228,17 @@
 	<div class="arrow variant-filled-surface" />
 </div>
 
+<!-- Proxy Location Info Popup -->
+<div class="card p-4 variant-filled-surface max-w-80" data-popup="popupProxyLocationInfo">
+	<div class="flex flex-col items-center space-y-4">
+		<div class="flex flex-col items-center text-sm">
+			This option can be used to manually override the position of a Proxy on the Dashboard.
+			For each field the number must be between 1 and 16.
+		</div>
+	</div>
+	<div class="arrow variant-filled-surface" />
+</div>
+
 {#if $modalStore[0]}
 	<div class="my-modal text-center card p-4 w-modal shadow-xl space-y-4 flex flex-col">
 		<div class="flex flex-row items-center">
@@ -254,6 +300,32 @@
 						{/if}
 					</button>
 				</div>
+				{#if selectedProxy !== 0}
+					<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
+						<div>Proxy Location <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupProxyLocationInfo}></i></div>
+						<div class="flex flex-row space-x-2">
+							<input
+									class="input w-14 text-center"
+									placeholder="Row"
+									bind:value={rowValue}
+									on:input={updateRow}
+							>
+							<input
+									class="input w-14 text-center"
+									placeholder="Col"
+									bind:value={colValue}
+									on:input={updateCol}
+							>
+							<button class="btn variant-filled-primary w-11" on:click={handleSendProxyLocation}>
+								{#if proxyLocationLoading}
+									<LoadingSpinner classes="h-6" />
+								{:else}
+									<i class="fa-solid fa-chevron-right"></i>
+								{/if}
+							</button>
+						</div>
+					</div>
+				{/if}
 			</div>
 		{/if}
 	</div>
