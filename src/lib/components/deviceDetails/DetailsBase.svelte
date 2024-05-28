@@ -13,6 +13,7 @@
 	// Props
 	export let device: BaseDevice;
 	export let accessLevel: AccessLevel;
+	export let icon: string;
 
 	const NUM_PROXIES = 3;
 
@@ -210,7 +211,7 @@
 					<i class="fa-solid fa-x"></i>
 				</button>
 			{/if}
-			<header class='px-4 text-lg md:text-2xl font-bold flex-grow'><i class="fa-solid fa-plug mr-2"></i>{device.formattedVendorAndProduct}</header>
+			<header class='px-4 text-lg md:text-2xl font-bold flex-grow'><i class="fa-solid {icon} mr-2"></i>{device.formattedVendorAndProduct}</header>
 			{#if !showQrCode && device.privacyState !== PrivacyState.LOCAL}
 				<button
 					class="btn-icon variant-ringed-tertiary w-11 shrink-0 !ml-auto"

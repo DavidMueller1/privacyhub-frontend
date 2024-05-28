@@ -26,7 +26,7 @@
 	if (!device) throw new Error('Device is required for this modal.');
 </script>
 
-<DetailsBase device={device} accessLevel={accessLevel}>
+<DetailsBase device={device} accessLevel={accessLevel} icon="fa-satellite-dish">
 	<span class="flex flex-col justify-center items-center">
 		{#if device.state}
 			<!--		<i class="fa-solid fa-check text-3xl text-green-500 ml-auto"></i>-->

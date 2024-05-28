@@ -37,7 +37,7 @@
 	};
 </script>
 
-<DetailsBase device={device} accessLevel={accessLevel}>
+<DetailsBase device={device} accessLevel={accessLevel} icon="fa-plug">
 	<span class="flex justify-center items-center">
 		<button
 			class="btn-icon btn-icon-xxxl {device.state ? 'variant-filled-primary' : 'variant-ghost'}"
