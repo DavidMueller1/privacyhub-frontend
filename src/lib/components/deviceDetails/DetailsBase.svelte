@@ -291,7 +291,7 @@
 					</button>
 				</div>
 				<Accordion class="mt-4 pt-4 border-t border-neutral-500">
-					<AccordionItem open>
+					<AccordionItem>
 						<svelte:fragment slot="lead">
 							<i class="fa-solid fa-gear"></i>
 						</svelte:fragment>
