@@ -3,7 +3,7 @@
 	import SvgQR from '@svelte-put/qr/svg/QR.svelte';
 
 	// Stores
-	import { getModalStore, ListBox, ListBoxItem, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore, ListBox, ListBoxItem, popup, type PopupSettings, Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import ApiClient from '$lib/api/ApiClient';
 	import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
@@ -290,42 +290,54 @@
 						{/if}
 					</button>
 				</div>
-				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
-					<div>Connected Proxy <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupProxyInfo}></i></div>
-					<button class="btn variant-ghost-tertiary h-10 w-24" use:popup={popupProxy}>
-						{#if proxyLoading}
-							<LoadingSpinner classes="h-6" />
-						{:else}
-							{selectedProxy === 0 ? "None" : `Proxy ${selectedProxy}`}
-						{/if}
-					</button>
-				</div>
-				{#if selectedProxy !== 0}
-					<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-200">
-						<div>Proxy Location <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupProxyLocationInfo}></i></div>
-						<div class="flex flex-row space-x-2">
-							<input
-									class="input w-14 text-center"
-									placeholder="Row"
-									bind:value={rowValue}
-									on:input={updateRow}
-							>
-							<input
-									class="input w-14 text-center"
-									placeholder="Col"
-									bind:value={colValue}
-									on:input={updateCol}
-							>
-							<button class="btn variant-filled-primary w-11" on:click={handleSendProxyLocation}>
-								{#if proxyLocationLoading}
-									<LoadingSpinner classes="h-6" />
-								{:else}
-									<i class="fa-solid fa-chevron-right"></i>
-								{/if}
-							</button>
-						</div>
-					</div>
-				{/if}
+				<Accordion class="mt-4 pt-4 border-t border-neutral-500">
+					<AccordionItem open>
+						<svelte:fragment slot="lead">
+							<i class="fa-solid fa-gear"></i>
+						</svelte:fragment>
+						<svelte:fragment slot="summary">
+							Proxy settings
+						</svelte:fragment>
+						<svelte:fragment slot="content">
+							<div class="flex flex-row items-center justify-between pt-4">
+								<div>Connected Proxy <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupProxyInfo}></i></div>
+								<button class="btn variant-ghost-tertiary h-10 w-24" use:popup={popupProxy}>
+									{#if proxyLoading}
+										<LoadingSpinner classes="h-6" />
+									{:else}
+										{selectedProxy === 0 ? "None" : `Proxy ${selectedProxy}`}
+									{/if}
+								</button>
+							</div>
+							{#if selectedProxy !== 0}
+								<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-700">
+									<div>Proxy Location <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupProxyLocationInfo}></i></div>
+									<div class="flex flex-row space-x-2">
+										<input
+											class="input w-14 text-center"
+											placeholder="Row"
+											bind:value={rowValue}
+											on:input={updateRow}
+										>
+										<input
+											class="input w-14 text-center"
+											placeholder="Col"
+											bind:value={colValue}
+											on:input={updateCol}
+										>
+										<button class="btn variant-filled-primary w-11" on:click={handleSendProxyLocation}>
+											{#if proxyLocationLoading}
+												<LoadingSpinner classes="h-6" />
+											{:else}
+												<i class="fa-solid fa-chevron-right"></i>
+											{/if}
+										</button>
+									</div>
+								</div>
+							{/if}
+						</svelte:fragment>
+					</AccordionItem>
+				</Accordion>
 			</div>
 		{/if}
 	</div>
