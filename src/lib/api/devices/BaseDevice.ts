@@ -12,8 +12,8 @@ export enum ConnectionStatus {
 
 export enum PrivacyState {
 	LOCAL,
-	THIRD_PARTY,
 	ONLINE,
+	ONLINE_SHARED,
 }
 
 export interface IReturnBaseDeviceState {

@@ -54,13 +54,13 @@
 					connectionString = 'Local';
 					connectionColor = 'text-state-local';
 					break;
-				case PrivacyState.THIRD_PARTY:
-					connectionString = 'Shared';
-					connectionColor = 'text-state-third-party';
-					break;
 				case PrivacyState.ONLINE:
 					connectionString = 'Online';
 					connectionColor = 'text-state-online';
+					break;
+				case PrivacyState.ONLINE_SHARED:
+					connectionString = 'Online-Shared';
+					connectionColor = 'text-state-online-shared';
 					break;
 				default:
 					connectionString = 'UNKNOWN';

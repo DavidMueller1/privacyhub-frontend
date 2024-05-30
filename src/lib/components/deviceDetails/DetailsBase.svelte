@@ -34,8 +34,8 @@
 	// Privacy State
 	const privacyStateList = [
 		{ key: PrivacyState.LOCAL, text: 'Local', color: 'text-state-local' },
-		{ key: PrivacyState.THIRD_PARTY, text: 'Shared', color: 'text-state-third-party' },
 		{ key: PrivacyState.ONLINE, text: 'Online', color: 'text-state-online' },
+		{ key: PrivacyState.ONLINE_SHARED, text: 'Online-Shared', color: 'text-state-online-shared' },
 	];
 	let selectedPrivacyState: PrivacyState = device.privacyState;
 	let lastSelectedPrivacyState: PrivacyState = device.privacyState;
@@ -184,18 +184,18 @@
 				in the same network as the PrivacyHub.</div>
 		</div>
 		<div class="flex flex-col items-center">
-			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.color}">
-				{privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.text}
-			</div>
-			<div class="text-sm">The device can be accessed from third party hubs like an Alexa. Use the top right button to pair it.</div>
-		</div>
-		<div class="flex flex-col items-center">
 			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.ONLINE)?.color}">
 				{privacyStateList.find((x) => x.key === PrivacyState.ONLINE)?.text}
 			</div>
 			<div class="text-sm">In addition to the other states the device can be accessed online at
 				<a class="text-neutral-400" href="https://privacyhub.ngrok.app/">https://privacyhub.ngrok.app</a>
 			</div>
+		</div>
+		<div class="flex flex-col items-center">
+			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.ONLINE_SHARED)?.color}">
+				{privacyStateList.find((x) => x.key === PrivacyState.ONLINE_SHARED)?.text}
+			</div>
+			<div class="text-sm">The device can be accessed from third party hubs like an Alexa. Use the top right button to pair it.</div>
 		</div>
 	</div>
 	<div class="arrow variant-filled-surface" />
@@ -282,7 +282,7 @@
 				</div>
 				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
 					<div>Privacy State <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupPrivacyInfo}></i></div>
-					<button class="btn variant-ghost-tertiary h-10 w-24 {privacyStateColor}" use:popup={popupPrivacy}>
+					<button class="btn variant-ghost-tertiary h-10 w-28 {privacyStateColor}" use:popup={popupPrivacy}>
 						{#if privacyStateLoading}
 							<LoadingSpinner classes="h-6" />
 						{:else}

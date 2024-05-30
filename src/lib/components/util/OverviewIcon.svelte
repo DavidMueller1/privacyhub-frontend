@@ -18,11 +18,11 @@
 				case PrivacyState.LOCAL:
 					stateIconColor = 'text-state-local';
 					break;
-				case PrivacyState.THIRD_PARTY:
-					stateIconColor = 'text-state-third-party';
-					break;
 				case PrivacyState.ONLINE:
 					stateIconColor = 'text-state-online';
+					break;
+				case PrivacyState.ONLINE_SHARED:
+					stateIconColor = 'text-state-online-shared';
 					break;
 				default:
 					stateIconColor = '';
