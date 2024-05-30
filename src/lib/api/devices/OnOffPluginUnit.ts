@@ -82,7 +82,9 @@ export default class OnOffPluginUnit extends BaseDevice {
 	override getHistoryComponentMappings = (): any => {
 		const mappings: HistoryAttributeMapping[] = [
 			{ attributeValue: true, text: 'ON', color: '#3c8eae' },
-			{ attributeValue: false, text: 'OFF', color: '#3d3e46' },
+			// { attributeValue: true, text: 'ON', color: '#97b14b' },
+			{ attributeValue: false, text: 'OFF', color: '#e0e0e0' },
+			// { attributeValue: false, text: 'OFF', color: '#ad5151' },
 		];
 		return mappings;
 	}
