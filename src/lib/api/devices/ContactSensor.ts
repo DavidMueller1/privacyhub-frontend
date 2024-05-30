@@ -1,8 +1,9 @@
 import BaseDevice, { ConnectionStatus, PrivacyState } from '$lib/api/devices/BaseDevice';
 import ApiClient from '$lib/api/ApiClient';
 import ContactSensorOverview from '$lib/components/deviceOverviews/ContactSensorOverview.svelte';
-import BooleanHistory from '$lib/components/deviceHistories/BooleanHistory.svelte';
 import type { AccessLevel } from '$lib/util/EnvChecker';
+import type { HistoryAttributeMapping } from '$lib/components/deviceHistories/HistoryUtils';
+import AttributeHistory from '$lib/components/deviceHistories/AttributeHistory.svelte';
 
 export interface IReturnContactSensorState {
 	connectionStatus: ConnectionStatus;
@@ -67,6 +68,19 @@ export default class ContactSensor extends BaseDevice {
 	}
 
 	override getHistoryComponent = () => {
-		return BooleanHistory;
+		return AttributeHistory;
+	}
+
+	override getHistoryComponentTitle = (): string => {
+		return 'Contact State';
+	}
+
+	override getHistoryComponentAttributeName = (): string => {
+		return 'booleanState';
+	}
+
+	override getHistoryComponentMappings = (): any => {
+		const mappings: HistoryAttributeMapping[] = []; // TODO
+		return mappings;
 	}
 }

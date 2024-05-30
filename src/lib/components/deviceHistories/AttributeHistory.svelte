@@ -3,11 +3,17 @@
 	import { ConnectionStatus } from '$lib/api/devices/BaseDevice';
 	import OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-	import { centerEvent, getTimestampDifference } from '$lib/components/deviceHistories/HistoryUtils';
+	import {
+		centerEvent,
+		getTimestampDifference,
+		type HistoryAttributeMapping
+	} from '$lib/components/deviceHistories/HistoryUtils';
 	import type ContactSensor from '$lib/api/devices/ContactSensor';
 	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
+	import type { AccessLevel } from '$lib/util/EnvChecker';
 
 	export let device: OnOffPluginUnit | ContactSensor;
+	export let accessLevel: AccessLevel;
 
 	export let width = 640;
 	export let height = 150;
@@ -16,11 +22,14 @@
 	export let marginRight = 20;
 	export let marginLeft = 45;
 
-	export let title = 'On / Off State';
-	export let trueString = 'ON';
-	export let trueColor = '#3c8eae';
-	export let falseString = 'OFF';
-	export let falseColor = '#3d3e46';
+	export let title: string;
+	export let attributeName: string;
+	export let attributeMapping: HistoryAttributeMapping[];
+
+	// export let trueString = 'ON';
+	// export let trueColor = '#3c8eae';
+	// export let falseString = 'OFF';
+	// export let falseColor = '#3d3e46';
 
 	let isLoading = true;
 
@@ -33,14 +42,14 @@
 	export let timestampStart: number = 0;
 	export let timestampEnd: number = 0;
 
-	let booleanAttributeName: string = '';
-	$: booleanAttributeName = device instanceof OnOffPluginUnit ? 'onOffState' : 'booleanState';
+	// let booleanAttributeName: string = '';
+	// $: booleanAttributeName = device instanceof OnOffPluginUnit ? 'onOffState' : 'booleanState';
 
 
 	// Get the history data of the device
 	let data: {
 		connectionStatus: ConnectionStatus;
-		booleanState: boolean;
+		attributeVal: any;
 		timestampStart: number;
 		timestampEnd: number;
 	}[] = [];
@@ -55,7 +64,7 @@
 
 			const dataTemp: {
 				connectionStatus: ConnectionStatus;
-				booleanState: boolean;
+				attributeVal: any;
 				timestamp: number;
 			}[] = [];
 			data = [];
@@ -64,14 +73,14 @@
 			history.forEach((entry, index) => {
 				const dataObject = {
 					connectionStatus: entry.connectionStatus,
-					booleanState: entry[booleanAttributeName],
+					attributeVal: entry[attributeName],
 					timestamp: entry.timestamp
 				};
 
 				// Remove duplicate entries
 				if (
 					dataTemp.length > 0
-					&& dataTemp[dataTemp.length - 1].booleanState === dataObject.booleanState
+					&& dataTemp[dataTemp.length - 1].attributeVal === dataObject.attributeVal
 					&& dataTemp[dataTemp.length - 1].connectionStatus === dataObject.connectionStatus
 				) {
 					return;
@@ -85,7 +94,7 @@
 				const timestampEnd = dataTemp[index + 1]?.timestamp ?? Date.now();
 				const dataObject = {
 					connectionStatus: entry.connectionStatus,
-					booleanState: entry.booleanState,
+					attributeVal: entry.attributeVal,
 					timestampStart: entry.timestamp,
 					timestampEnd: timestampEnd
 				};
@@ -171,11 +180,15 @@
 			<div class="flex flex-col items-center">
 				<div
 					class="font-bold text-xl"
-				>{entry.booleanState ? trueString : falseString}</div>
+				>{attributeMapping.find(mapping => mapping.attributeValue === entry.attributeVal)?.text}</div>
 <!--				style="color: {entry.booleanState ? trueColor : falseColor}"-->
 				<div class="flex flex-row align-middle">
 					<div>from</div>
 					<div>{new Date(entry.timestampStart).toLocaleString()}</div>
+				</div>
+				<div class="flex flex-row align-middle">
+					<div>until</div>
+					<div>{new Date(entry.timestampEnd).toLocaleString()}</div>
 				</div>
 			</div>
 		</div>
@@ -214,7 +227,7 @@
 							y={marginTop}
 							width={x(entry.timestampEnd) - x(entry.timestampStart)}
 							height={height - marginBottom - marginTop}
-							fill={entry.booleanState ? trueColor : falseColor}
+							fill={attributeMapping.find(mapping => mapping.attributeValue === entry.attributeVal)?.color}
 							use:popup={popupDetailList[index]}
 						/>
 					{/if}

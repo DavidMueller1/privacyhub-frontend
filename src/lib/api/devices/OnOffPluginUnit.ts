@@ -1,8 +1,9 @@
 import BaseDevice, { ConnectionStatus, PrivacyState } from '$lib/api/devices/BaseDevice';
 import ApiClient from '$lib/api/ApiClient';
 import OnOffPluginUnitOverview from '$lib/components/deviceOverviews/OnOffPluginUnitOverview.svelte';
-import BooleanHistory from '$lib/components/deviceHistories/BooleanHistory.svelte';
 import type { AccessLevel } from '$lib/util/EnvChecker';
+import AttributeHistory from '$lib/components/deviceHistories/AttributeHistory.svelte';
+import type { HistoryAttributeMapping } from '$lib/components/deviceHistories/HistoryUtils';
 
 export interface IReturnOnOffPluginUnitState {
 	connectionStatus: ConnectionStatus;
@@ -67,6 +68,22 @@ export default class OnOffPluginUnit extends BaseDevice {
 	}
 
 	override getHistoryComponent = () => {
-		return BooleanHistory;
+		return AttributeHistory;
+	}
+
+	override getHistoryComponentTitle = (): string => {
+		return 'On / Off State';
+	}
+
+	override getHistoryComponentAttributeName = (): string => {
+		return 'onOffState';
+	}
+
+	override getHistoryComponentMappings = (): any => {
+		const mappings: HistoryAttributeMapping[] = [
+			{ attributeValue: true, text: 'ON', color: '#3c8eae' },
+			{ attributeValue: false, text: 'OFF', color: '#3d3e46' },
+		];
+		return mappings;
 	}
 }

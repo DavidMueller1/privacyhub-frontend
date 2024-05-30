@@ -83,6 +83,18 @@ export default class BaseDevice {
 		return BaseDeviceHistory;
 	}
 
+	getHistoryComponentTitle = (): string => {
+		return '';
+	}
+
+	getHistoryComponentAttributeName = (): string => {
+		return '';
+	}
+
+	getHistoryComponentMappings = (): any => {
+		return [];
+	}
+
 	get nodeId(): string {
 		return this._nodeId;
 	}

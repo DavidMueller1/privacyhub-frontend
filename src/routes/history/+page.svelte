@@ -112,6 +112,9 @@
 				width={containerWidth}
 				marginLeft={graphMarginLeft}
 				marginRight={graphMarginRight}
+				title={currentDevice?.getHistoryComponentTitle()}
+				attributeName={currentDevice?.getHistoryComponentAttributeName()}
+				attributeMapping={currentDevice?.getHistoryComponentMappings()}
 				bind:timestampStart={timestampStart}
 				bind:timestampEnd={timestampEnd}
 			/>

@@ -1,5 +1,11 @@
 import * as d3 from 'd3';
 
+export interface HistoryAttributeMapping {
+	attributeValue: any;
+	text: string;
+	color: string;
+}
+
 export const getTimestampDifference = (
 	delta: number,
 	timestampStart: number,
