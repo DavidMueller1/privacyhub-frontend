@@ -15,7 +15,7 @@
 	console.log('Page data:', data);
 
 	// Reload device list in online frontend when privacy state changes
-	$socketStore.on('onlinePrivacyStateChange', (data) => {
+	$socketStore.on('onlinePrivacyStateChange', (socketData) => {
 		console.log('onlinePrivacyStateChange');
 		if (data.accessLevel !== AccessLevel.PRIVATE) {
 			$socketStore.removeAllListeners('connectionStatus');
