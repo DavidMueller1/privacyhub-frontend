@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as d3 from 'd3';
-	import { ConnectionStatus } from '$lib/api/devices/BaseDevice';
+	import BaseDevice, { ConnectionStatus } from '$lib/api/devices/BaseDevice';
 	import OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import {
@@ -12,7 +12,7 @@
 	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
 	import type { AccessLevel } from '$lib/util/EnvChecker';
 
-	export let device: OnOffPluginUnit | ContactSensor;
+	export let device: BaseDevice;
 	export let accessLevel: AccessLevel;
 
 	export let width = 640;
@@ -61,6 +61,8 @@
 	const loadData = () => {
 		device.getHistory().then(history => {
 			isLoading = true;
+			console.log("HISTORY");
+			console.log(history);
 
 			const dataTemp: {
 				connectionStatus: ConnectionStatus;
@@ -101,7 +103,7 @@
 
 				popupDetailList.push({
 					event: 'hover',
-					target: `popupDetails-${index}`,
+					target: `popupDetails-${title}-${index}`,
 					placement: 'top'
 				});
 
@@ -175,7 +177,7 @@
 </script>
 
 {#each data as entry, index}
-	<div class="card p-2 variant-filled-surface w-40" data-popup="popupDetails-{index}">
+	<div class="card p-2 variant-filled-surface w-40" data-popup="popupDetails-{title}-{index}">
 		<div class="flex flex-col items-center space-y-4">
 			<div class="flex flex-col items-center">
 				<div

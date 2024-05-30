@@ -3,11 +3,14 @@
 	import * as d3 from 'd3';
 	import DeviceSelection from '$lib/components/DeviceSelection.svelte';
 	import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
-	import type BaseDevice from '$lib/api/devices/BaseDevice';
+	import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import DateTimeInput from '$lib/components/util/DateTimeInput.svelte';
 	import TopAxis from '$lib/components/deviceHistories/common/TopAxis.svelte';
 	import { AccessLevel } from '$lib/util/EnvChecker';
+	import Spacer from '$lib/components/deviceHistories/common/Spacer.svelte';
+	import AttributeHistory from '$lib/components/deviceHistories/AttributeHistory.svelte';
+	import type { HistoryAttributeMapping } from '$lib/components/deviceHistories/HistoryUtils';
 
 	export let data: PageData;
 
@@ -63,6 +66,12 @@
 	onMount(() => {
 		handleResize();
 	});
+
+	const privacyStateAttributeMapping: HistoryAttributeMapping[] = [
+		{ attributeValue: PrivacyState.LOCAL, text: 'Local', color: '#4cb5dc' },
+		{ attributeValue: PrivacyState.ONLINE, text: 'Online', color: '#55e057' },
+		{ attributeValue: PrivacyState.ONLINE_SHARED, text: 'Online-Shared', color: '#f1d743' },
+	];
 </script>
 
 <style>
@@ -115,6 +124,26 @@
 				title={currentDevice?.getHistoryComponentTitle()}
 				attributeName={currentDevice?.getHistoryComponentAttributeName()}
 				attributeMapping={currentDevice?.getHistoryComponentMappings()}
+				bind:timestampStart={timestampStart}
+				bind:timestampEnd={timestampEnd}
+			/>
+			<Spacer
+				width={containerWidth}
+				height={20}
+				marginLeft={graphMarginLeft}
+				marginRight={graphMarginRight}
+				bind:timestampStart={timestampStart}
+				bind:timestampEnd={timestampEnd}
+			/>
+			<AttributeHistory
+				device={currentDevice}
+				accessLevel={data.accessLevel}
+				width={containerWidth}
+				marginLeft={graphMarginLeft}
+				marginRight={graphMarginRight}
+				title="Privacy State"
+				attributeName="privacyState"
+				attributeMapping={privacyStateAttributeMapping}
 				bind:timestampStart={timestampStart}
 				bind:timestampEnd={timestampEnd}
 			/>
