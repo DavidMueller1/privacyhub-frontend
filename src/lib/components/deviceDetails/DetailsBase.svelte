@@ -181,13 +181,13 @@
 			</div>
 			<div class="text-sm">The device can only be accessed via the local web interface at
 				<a class="text-neutral-400" href="http://privacyhub:8080">http://privacyhub:8080</a>
-				in the same network as the PrivacyHub.</div>
+				in the same network as the PrivacyHub. While this is the most restrictive state, it offers the highest amout of privacy.</div>
 		</div>
 		<div class="flex flex-col items-center">
 			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.ONLINE)?.color}">
 				{privacyStateList.find((x) => x.key === PrivacyState.ONLINE)?.text}
 			</div>
-			<div class="text-sm">In addition to the other states the device can be accessed online at
+			<div class="text-sm">In this state, the device can be accessed online at
 				<a class="text-neutral-400" href="https://privacyhub.ngrok.app/">https://privacyhub.ngrok.app</a>
 			</div>
 		</div>
@@ -195,7 +195,7 @@
 			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.ONLINE_SHARED)?.color}">
 				{privacyStateList.find((x) => x.key === PrivacyState.ONLINE_SHARED)?.text}
 			</div>
-			<div class="text-sm">The device can be accessed from third party hubs like an Alexa. Use the top right button to pair it.</div>
+			<div class="text-sm">In addition to the other states the device can be accessed from third party hubs like an Alexa. Use the top right button to pair it. This state provides the most features, but carries the most security risks.</div>
 		</div>
 	</div>
 	<div class="arrow variant-filled-surface" />
@@ -258,7 +258,7 @@
 				</button>
 			{/if}
 			<header class='px-4 text-lg md:text-2xl font-bold flex-grow'><i class="fa-solid {icon} mr-2"></i>{device.formattedVendorAndProduct}</header>
-			{#if !showQrCode && device.privacyState !== PrivacyState.LOCAL}
+			{#if !showQrCode && device.privacyState === PrivacyState.ONLINE_SHARED}
 				<button
 					class="btn-icon variant-ringed-tertiary w-11 shrink-0 !ml-auto"
 					on:click={() => showQrCode = true}
