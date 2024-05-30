@@ -77,6 +77,49 @@
 		{ attributeValue: PrivacyState.ONLINE, text: 'Online', color: '#55e057' },
 		{ attributeValue: PrivacyState.ONLINE_SHARED, text: 'Online-Shared', color: '#f1d743' },
 	];
+
+	// Set default timeranges
+	const setRangeToday = () => {
+		const today = new Date();
+		timestampStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+		timestampEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59).getTime();
+	}
+
+	const setRangeYesterday = () => {
+		const yesterday = new Date();
+		yesterday.setDate(yesterday.getDate() - 1);
+		timestampStart = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate()).getTime();
+		timestampEnd = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 23, 59, 59).getTime();
+	}
+
+	const setRangeThisWeek = () => {
+		const today = new Date();
+		const day = today.getDay();
+		const diff = today.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+		timestampStart = new Date(today.setDate(diff)).getTime();
+		timestampEnd = new Date(today.setDate(diff + 6)).getTime();
+	}
+
+	const setRangeLastWeek = () => {
+		const today = new Date();
+		const day = today.getDay();
+		const diff = today.getDate() - day + (day == 0 ? -6 : 1) - 7; // adjust when day is sunday
+		timestampStart = new Date(today.setDate(diff)).getTime();
+		timestampEnd = new Date(today.setDate(diff + 6)).getTime();
+	}
+
+	const setRangeThisMonth = () => {
+		const today = new Date();
+		timestampStart = new Date(today.getFullYear(), today.getMonth(), 1).getTime();
+		timestampEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59).getTime();
+	}
+
+	const setRangeLastMonth = () => {
+		const today = new Date();
+		timestampStart = new Date(today.getFullYear(), today.getMonth() - 1, 1).getTime();
+		timestampEnd = new Date(today.getFullYear(), today.getMonth(), 0, 23, 59, 59).getTime();
+	}
+
 </script>
 
 <style>
@@ -94,7 +137,7 @@
 
 <div
 	bind:this={containerBinding}
-	class="box-border h-full w-full flex justify-center items-center"
+	class="box-border h-full w-full flex justify-center {showNoDevicesInfo ? 'items-center' : ''}"
 	style="padding-left: {containerPadding}px; padding-right: {containerPadding}px;"
 >
 	{#if showNoDevicesInfo}
@@ -104,9 +147,56 @@
 	{:else}
 		<!--{#if data.accessLevel === AccessLevel.PRIVATE}-->
 		<DeviceSelection accessLevel={data.accessLevel} on:select={handleDeviceSelection} />
-		<div class="text-center flex flex-col items-center">
-			<h2 class="h2">Device</h2>
-			<div class="flex flex-row w-full items-center justify-between">
+		<div class="text-center flex flex-col items-center pt-4">
+			<h2 class="h1 mb-8">Device History</h2>
+			<div class="mb-4 flex flex-col items-center space-y-2 md:hidden">
+				<div class="flex flex-row space-x-2">
+					<button class="btn variant-filled-primary" on:click={setRangeToday}>
+						Today
+					</button>
+					<button class="btn variant-filled-primary" on:click={setRangeYesterday}>
+						Yesterday
+					</button>
+				</div>
+				<div class="flex flex-row space-x-2">
+					<button class="btn variant-filled-primary" on:click={setRangeThisWeek}>
+						This week
+					</button>
+					<button class="btn variant-filled-primary" on:click={setRangeLastWeek}>
+						Last week
+					</button>
+				</div>
+				<div class="flex flex-row space-x-2">
+					<button class="btn variant-filled-primary" on:click={setRangeThisMonth}>
+						This month
+					</button>
+					<button class="btn variant-filled-primary" on:click={setRangeLastMonth}>
+						Last month
+					</button>
+				</div>
+			</div>
+			<div class="mb-4 hidden md:flex flex-row space-x-2">
+				<button class="btn variant-filled-primary" on:click={setRangeToday}>
+					Today
+				</button>
+				<button class="btn variant-filled-primary" on:click={setRangeYesterday}>
+					Yesterday
+				</button>
+				<button class="btn variant-filled-primary" on:click={setRangeThisWeek}>
+					This week
+				</button>
+				<button class="btn variant-filled-primary" on:click={setRangeLastWeek}>
+					Last week
+				</button>
+				<button class="btn variant-filled-primary" on:click={setRangeThisMonth}>
+					This month
+				</button>
+				<button class="btn variant-filled-primary" on:click={setRangeLastMonth}>
+					Last month
+				</button>
+			</div>
+			<h2 class="h3 mb-2">Selected device:</h2>
+			<div class="flex flex-row w-full justify-between">
 				<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
 				<button class="btn variant-ghost-tertiary h-10 mx-8" use:popup={popupClick}>
 					{#if currentDevice}
