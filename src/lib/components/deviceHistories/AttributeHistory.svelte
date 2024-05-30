@@ -91,6 +91,8 @@
 				dataTemp.push(dataObject);
 			});
 
+			popupDetailList = [];
+
 			// Calculate the start and end of the data
 			dataTemp.forEach((entry, index) => {
 				const timestampEnd = dataTemp[index + 1]?.timestamp ?? Date.now();
@@ -103,7 +105,7 @@
 
 				popupDetailList.push({
 					event: 'hover',
-					target: `popupDetails-${title}-${index}`,
+					target: `popupDetails-${device.nodeId}-${device.endpointId}-${title}-${index}`,
 					placement: 'top'
 				});
 
@@ -177,7 +179,7 @@
 </script>
 
 {#each data as entry, index}
-	<div class="card p-2 variant-filled-surface w-40" data-popup="popupDetails-{title}-{index}">
+	<div class="card p-2 variant-filled-surface w-40" data-popup="popupDetails-{device.nodeId}-{device.endpointId}-{title}-{index}">
 		<div class="flex flex-col">
 			<div
 				class="font-bold text-xl"
