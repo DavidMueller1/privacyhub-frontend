@@ -92,7 +92,7 @@
 	class="box-border h-full w-full flex justify-center items-center"
 	style="padding-left: {containerPadding}px; padding-right: {containerPadding}px;"
 >
-	{#if data.accessLevel === AccessLevel.PRIVATE}
+	<!--{#if data.accessLevel === AccessLevel.PRIVATE}-->
 		<DeviceSelection accessLevel={data.accessLevel} on:select={handleDeviceSelection} />
 		<div class="text-center flex flex-col items-center">
 			<h2 class="h2">Device</h2>
@@ -148,9 +148,9 @@
 				bind:timestampEnd={timestampEnd}
 			/>
 		</div>
-	{:else}
-		Device history is only available in the local application
-	{/if}
+	<!--{:else}-->
+	<!--	Device history is only available in the local application-->
+	<!--{/if}-->
 
 </div>
 
