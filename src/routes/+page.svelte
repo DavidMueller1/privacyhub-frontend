@@ -14,6 +14,17 @@
 	export let data: PageData;
 	console.log('Page data:', data);
 
+	// Reload device list in online frontend when privacy state changes
+	$socketStore.on('onlinePrivacyStateChange', (data) => {
+		console.log('onlinePrivacyStateChange');
+		if (data.accessLevel !== AccessLevel.PRIVATE) {
+			$socketStore.removeAllListeners('connectionStatus');
+			$socketStore.removeAllListeners('privacyState');
+			$socketStore.removeAllListeners('booleanState');
+			getDeviceList();
+		}
+	});
+
 	const modalStore = getModalStore();
 
 	let isLoading = true;
