@@ -34,10 +34,15 @@
 		closeQuery: '.close-popup'
 	}
 
+	let isLoading = true;
+	let showNoDevicesInfo = false;
+
 	let currentDevice: BaseDevice | undefined = undefined;
 
 	const handleDeviceSelection = (event: CustomEvent<{ device: BaseDevice }>) => {
+		isLoading = false;
 		currentDevice = event.detail.device;
+		showNoDevicesInfo = currentDevice === undefined;
 	}
 
 	let historyComponent = null;
@@ -92,7 +97,12 @@
 	class="box-border h-full w-full flex justify-center items-center"
 	style="padding-left: {containerPadding}px; padding-right: {containerPadding}px;"
 >
-	<!--{#if data.accessLevel === AccessLevel.PRIVATE}-->
+	{#if showNoDevicesInfo}
+		<div class="space-y-10 text-center flex flex-col items-center">
+			<p class="text-lg">No devices paired yet{data.accessLevel !== AccessLevel.PRIVATE ? " or no device in online access state" : ""}.</p>
+		</div>
+	{:else}
+		<!--{#if data.accessLevel === AccessLevel.PRIVATE}-->
 		<DeviceSelection accessLevel={data.accessLevel} on:select={handleDeviceSelection} />
 		<div class="text-center flex flex-col items-center">
 			<h2 class="h2">Device</h2>
@@ -148,9 +158,9 @@
 				bind:timestampEnd={timestampEnd}
 			/>
 		</div>
-	<!--{:else}-->
-	<!--	Device history is only available in the local application-->
-	<!--{/if}-->
-
+		<!--{:else}-->
+		<!--	Device history is only available in the local application-->
+		<!--{/if}-->
+	{/if}
 </div>
 
