@@ -4,7 +4,7 @@
 	import OnOffPluginUnit from '$lib/api/devices/OnOffPluginUnit';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import {
-		centerEvent,
+		centerEvent, formatTimestamp, getFormattedDuration,
 		getTimestampDifference,
 		type HistoryAttributeMapping
 	} from '$lib/components/deviceHistories/HistoryUtils';
@@ -178,23 +178,26 @@
 
 {#each data as entry, index}
 	<div class="card p-2 variant-filled-surface w-40" data-popup="popupDetails-{title}-{index}">
-		<div class="flex flex-col items-center space-y-4">
-			<div class="flex flex-col items-center">
-				<div
-					class="font-bold text-xl"
-				>{attributeMapping.find(mapping => mapping.attributeValue === entry.attributeVal)?.text}</div>
-<!--				style="color: {entry.booleanState ? trueColor : falseColor}"-->
-				<div class="flex flex-row align-middle">
-					<div>from</div>
-					<div>{new Date(entry.timestampStart).toLocaleString()}</div>
-				</div>
-				<div class="flex flex-row align-middle">
-					<div>until</div>
-					<div>{new Date(entry.timestampEnd).toLocaleString()}</div>
-				</div>
+		<div class="flex flex-col">
+			<div
+				class="font-bold text-xl"
+				style="color: {attributeMapping.find(mapping => mapping.attributeValue === entry.attributeVal)?.color}"
+			>
+				{attributeMapping.find(mapping => mapping.attributeValue === entry.attributeVal)?.text}
 			</div>
-		</div>
-		<div class="arrow variant-filled-surface" />
+			<div class="flex flex-row justify-between pt-2">
+				<div>from</div>
+				<div class="text-right">{formatTimestamp(entry.timestampStart)}</div>
+			</div>
+			<div class="flex flex-row justify-between pt-1 border-t border-t-neutral-400">
+				<div>until</div>
+				<div class="text-right">{formatTimestamp(entry.timestampEnd)}</div>
+			</div>
+			<div class="flex flex-row justify-between pt-1 border-t border-t-neutral-400">
+				<div>duration</div>
+				<div class="text-right">{getFormattedDuration(entry.timestampStart, entry.timestampEnd)}</div>
+			</div>
+		<div class="arrow variant-filled-surface" /></div>
 	</div>
 {/each}
 

@@ -28,3 +28,31 @@ export const centerEvent = (event, target) => {
 	}
 	return [width / 2, height / 2];
 }
+
+export const formatTimestamp = (timestamp: number): string => {
+	const date = new Date(timestamp);
+	const padZero = (num: number) => num.toString().padStart(2, '0');
+
+	const day = padZero(date.getDate());
+	const month = padZero(date.getMonth() + 1); // Months are zero-based in JavaScript
+	const year = date.getFullYear();
+
+	const hours = padZero(date.getHours());
+	const minutes = padZero(date.getMinutes());
+	const seconds = padZero(date.getSeconds());
+
+	return `${day}.${month}.${year}, ${hours}:${minutes}:${seconds}`;
+}
+
+export const getFormattedDuration = (start: number, end: number): string => {
+	const duration = end - start;
+	const seconds = Math.floor(duration / 1000);
+	const minutes = Math.floor(seconds / 60);
+	const hours = Math.floor(minutes / 60);
+
+	const formattedSeconds = seconds % 60;
+	const formattedMinutes = minutes % 60;
+	const formattedHours = hours % 24;
+
+	return `${formattedHours}h ${formattedMinutes}m ${formattedSeconds}s`;
+}
