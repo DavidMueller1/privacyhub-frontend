@@ -75,9 +75,11 @@
 
 </script>
 
-<svg bind:this={viewBoxBinding} class="mt-0" width={width} height={height}>
-	<polygon points="{marginLeft - arrowWidth / 2},{arrowMarginTop} {marginLeft + arrowWidth / 2},{arrowMarginTop} {marginLeft},{marginTop - arrowMarginBottom}" fill="#ffffff40" />
-	<polygon points="{width - marginRight - arrowWidth / 2},{arrowMarginTop} {width - marginRight + arrowWidth / 2},{arrowMarginTop} {width - marginRight},{marginTop - arrowMarginBottom}" fill="#ffffff40" />
+<svg bind:this={viewBoxBinding} style="margin-top: -7px" width={width} height={height}>
+	<polygon points="{marginLeft - arrowWidth / 2},{arrowMarginTop} {marginLeft + arrowWidth / 2},{arrowMarginTop} {marginLeft},{marginTop - arrowMarginBottom}" fill="#272b38" />
+<!--	<path d="M{marginLeft - arrowWidth / 2},{arrowMarginTop} L{marginLeft},{marginTop - arrowMarginBottom} L{marginLeft + arrowWidth / 2},{arrowMarginTop}" stroke="#ffffff" stroke-width="1" fill="None" />-->
+	<polygon points="{width - marginRight - arrowWidth / 2},{arrowMarginTop} {width - marginRight + arrowWidth / 2},{arrowMarginTop} {width - marginRight},{marginTop - arrowMarginBottom}" fill="#272b38" />
+<!--	<path d="M{width - marginRight - arrowWidth / 2},{arrowMarginTop} L{width - marginRight},{marginTop - arrowMarginBottom} L{width - marginRight + arrowWidth / 2},{arrowMarginTop}" stroke="#ffffff" stroke-width="1" fill="None" />-->
 	<g bind:this={xAxisBinding} class="text-base" transform="translate(0,{marginTop})" />
 	<g bind:this={xAxisGridBinding} transform="translate(0,{marginTop})" />
 	<!--	<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />-->

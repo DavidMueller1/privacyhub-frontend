@@ -213,22 +213,12 @@
 			</g>
 			<g bind:this={xAxisGridBinding} transform="translate(0,{height})" />
 			<g bind:this={yAxisBinding} class="text-lg" transform="translate({marginLeft},0)" />
-			<g>
-				<text
-					x={width - 30}
-					y={height / 2}
-					text-anchor="middle"
-					alignment-baseline="middle"
-					fill="#ffffff"
-					transform="rotate(90, {width - 30}, {height / 2})"
-				>{title}</text>
-			</g>
 			<g fill="none">
-				<clipPath id="clip">
-					<rect x={marginLeft} y={0} width={width - marginLeft - marginRight} height={height} />
-				</clipPath>
 				{#each data as entry, index}
 					{#if entry.connectionStatus === ConnectionStatus.CONNECTED}
+<!--						<clipPath id="clip">-->
+<!--							<rect x={marginLeft} y={0} width={width - marginLeft - marginRight} height={height} />-->
+<!--						</clipPath>-->
 						<rect
 							x={x(entry.timestampStart)}
 							y={marginTop}
@@ -237,9 +227,22 @@
 							fill={attributeMapping.find(mapping => mapping.attributeValue === entry.attributeVal)?.color}
 							use:popup={popupDetailList[index]}
 						/>
+<!--						<use href="#chart-rect-{index}" clip-path="url(#clip)" stroke="#3c8eae" stroke-width="4" />-->
 					{/if}
 				{/each}
-				<use href="#chart-path" clip-path="url(#clip)" stroke="#3c8eae" stroke-width="4" />
+			</g>
+			<g>
+				<text
+					x={width - 30}
+					y={height / 2}
+					text-anchor="middle"
+					alignment-baseline="middle"
+					fill="#ffffff"
+					paint-order="stroke"
+					stroke="#25262e"
+					stroke-width="5px"
+					transform="rotate(90, {width - 30}, {height / 2})"
+				>{title}</text>
 			</g>
 <!--			<g fill="none">-->
 <!--				<clipPath id="clip">-->

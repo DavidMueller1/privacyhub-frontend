@@ -156,7 +156,7 @@
 
 	.container-dark {
 		background: #272b38;
-        border: 1px solid #d1d1d1;
+        /*border: 1px solid #d1d1d1;*/
 	}
 
 	.input-light {
