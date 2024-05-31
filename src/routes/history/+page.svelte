@@ -203,26 +203,26 @@
 			<!-- Default buttons mobile -->
 			<div class="mb-4 flex flex-col items-center space-y-2 md:hidden">
 				<div class="flex flex-row space-x-2">
-					<button class="btn variant-filled-primary" on:click={setRangeToday}>
+					<button class="btn variant-filled-primary w-32" on:click={setRangeToday}>
 						Today
 					</button>
-					<button class="btn variant-filled-primary" on:click={setRangeYesterday}>
+					<button class="btn variant-filled-primary w-32" on:click={setRangeYesterday}>
 						Yesterday
 					</button>
 				</div>
 				<div class="flex flex-row space-x-2">
-					<button class="btn variant-filled-primary" on:click={setRangeThisWeek}>
+					<button class="btn variant-filled-primary w-32" on:click={setRangeThisWeek}>
 						This week
 					</button>
-					<button class="btn variant-filled-primary" on:click={setRangeLastWeek}>
+					<button class="btn variant-filled-primary w-32" on:click={setRangeLastWeek}>
 						Last week
 					</button>
 				</div>
 				<div class="flex flex-row space-x-2">
-					<button class="btn variant-filled-primary" on:click={setRangeThisMonth}>
+					<button class="btn variant-filled-primary w-32" on:click={setRangeThisMonth}>
 						This month
 					</button>
-					<button class="btn variant-filled-primary" on:click={setRangeLastMonth}>
+					<button class="btn variant-filled-primary w-32" on:click={setRangeLastMonth}>
 						Last month
 					</button>
 				</div>
