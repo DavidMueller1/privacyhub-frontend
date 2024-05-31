@@ -6,12 +6,11 @@
 		initializeStores,
 		getDrawerStore,
 		Drawer,
-		LightSwitch,
 		Modal,
 		type ModalComponent,
 		modeCurrent,
 		getModeUserPrefers,
-		getModeAutoPrefers, type DrawerStore
+		setModeCurrent
 	} from '@skeletonlabs/skeleton';
 
 	// Highlight JS
@@ -56,10 +55,9 @@
 	import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
 	import OnOffPluginUnitDetails from '$lib/components/deviceDetails/OnOffPluginUnitDetails.svelte';
 	import ContactSensorDetails from '$lib/components/deviceDetails/ContactSensorDetails.svelte';
-	import { AccessLevel, getAccessLevel } from '$lib/util/EnvChecker';
-	import { onMount } from 'svelte';
 	import type { LayoutData } from '../../.svelte-kit/types/src/routes/$types';
 	import Navigation from '$lib/navigation/Navigation.svelte';
+	import { onMount } from 'svelte';
 
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal },
@@ -71,6 +69,9 @@
 	let currentMode = getModeUserPrefers();
 	modeCurrent.subscribe((value) => {
 		currentMode = value;
+	});
+	onMount(() => {
+		setModeCurrent(false);
 	});
 </script>
 

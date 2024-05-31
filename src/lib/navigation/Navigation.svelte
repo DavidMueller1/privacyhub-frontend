@@ -40,7 +40,7 @@
 		</li>
 	</ul>
 </nav>
-<!--Align bottom-->
-<div class="align-bottom p-4">
-	<LightSwitch />
-</div>
+<!--&lt;!&ndash;Align bottom&ndash;&gt;-->
+<!--<div class="align-bottom p-4">-->
+<!--	<LightSwitch />-->
+<!--</div>-->
