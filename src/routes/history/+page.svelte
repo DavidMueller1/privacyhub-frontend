@@ -11,6 +11,7 @@
 	import Spacer from '$lib/components/deviceHistories/common/Spacer.svelte';
 	import AttributeHistory from '$lib/components/deviceHistories/AttributeHistory.svelte';
 	import type { HistoryAttributeMapping } from '$lib/components/deviceHistories/HistoryUtils';
+	import InfoPopup from '$lib/components/util/InfoPopup.svelte';
 
 	export let data: PageData;
 
@@ -78,7 +79,16 @@
 		{ attributeValue: PrivacyState.ONLINE_SHARED, text: 'Online-Shared', color: '#f1d743' },
 	];
 
-	// Set default timeranges
+
+	const popupOnlineInfo: PopupSettings = {
+		event: 'hover',
+		target: 'popupOnlineInfo',
+		placement: 'bottom',
+		closeQuery: '.close-popup'
+	}
+
+
+	// Set default time ranges
 	const setRangeToday = () => {
 		const today = new Date();
 		timestampStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
@@ -135,6 +145,11 @@
 
 <svelte:window on:resize={handleResize} />
 
+<!-- Online Info Popup -->
+<InfoPopup dataPopup="popupOnlineInfo" icon="fa-shield-halved">
+	In the online frontend you can only see the history of devices that are currently in the online access state.<br>In addition to that, the history data is limited to the time periods when the device was in the online access state.
+</InfoPopup>
+
 <div
 	bind:this={containerBinding}
 	class="box-border h-full w-full flex justify-center {showNoDevicesInfo ? 'items-center' : ''}"
@@ -148,7 +163,15 @@
 		<!--{#if data.accessLevel === AccessLevel.PRIVATE}-->
 		<DeviceSelection accessLevel={data.accessLevel} on:select={handleDeviceSelection} />
 		<div class="text-center flex flex-col items-center pt-4">
-			<h2 class="h1 mb-8">Device History</h2>
+			<h2 class="h1 mb-8 flex">
+				{#if data.accessLevel === AccessLevel.PUBLIC}
+					Online
+				{/if}
+				Device History
+				{#if data.accessLevel === AccessLevel.PUBLIC}
+					<i class="fa-solid fa-circle-question text-sm ml-2 h-5" use:popup={popupOnlineInfo}></i>
+				{/if}
+			</h2>
 			<!-- Default buttons mobile -->
 			<div class="mb-4 flex flex-col items-center space-y-2 md:hidden">
 				<div class="flex flex-row space-x-2">
@@ -258,6 +281,9 @@
 				bind:timestampStart={timestampStart}
 				bind:timestampEnd={timestampEnd}
 			/>
+			<div class="text-neutral-500 mt-4">
+				Zoom or drag the graph to change the time range.
+			</div>
 		</div>
 		<!--{:else}-->
 		<!--	Device history is only available in the local application-->
