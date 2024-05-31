@@ -338,7 +338,7 @@
 				bind:timestampStart={timestampStart}
 				bind:timestampEnd={timestampEnd}
 			/>
-			<div class="text-neutral-500 mt-4">
+			<div class="text-neutral-500 my-4">
 				Zoom or drag the graph to change the time range.
 			</div>
 		</div>
