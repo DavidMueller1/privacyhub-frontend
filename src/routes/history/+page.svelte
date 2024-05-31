@@ -93,9 +93,9 @@
 	});
 
 	const privacyStateAttributeMapping: HistoryAttributeMapping[] = [
-		{ attributeValue: PrivacyState.LOCAL, text: 'Local', color: '#4cb5dc' },
-		{ attributeValue: PrivacyState.ONLINE, text: 'Online', color: '#55e057' },
-		{ attributeValue: PrivacyState.ONLINE_SHARED, text: 'Online-Shared', color: '#f1d743' },
+		{ attributeValue: PrivacyState.LOCAL, text: 'Local', color: '#70b853' },
+		{ attributeValue: PrivacyState.ONLINE, text: 'Online', color: '#f2a641' },
+		{ attributeValue: PrivacyState.ONLINE_SHARED, text: 'Online-Shared', color: '#e05c49' },
 	];
 
 
