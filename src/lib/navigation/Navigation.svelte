@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getDrawerStore, getModeUserPrefers, LightSwitch, modeCurrent } from '@skeletonlabs/skeleton';
+	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { AccessLevel } from '$lib/util/EnvChecker.js';
 
 	export let accessLevel: AccessLevel;
@@ -8,12 +8,6 @@
 	const drawerClose = () => {
 		drawerStore.close();
 	};
-
-	// Set the current mode
-	let currentMode = getModeUserPrefers();
-	modeCurrent.subscribe((value) => {
-		currentMode = value;
-	});
 </script>
 
 <nav class="list-nav grow">

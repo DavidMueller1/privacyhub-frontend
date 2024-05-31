@@ -149,6 +149,7 @@
 		<DeviceSelection accessLevel={data.accessLevel} on:select={handleDeviceSelection} />
 		<div class="text-center flex flex-col items-center pt-4">
 			<h2 class="h1 mb-8">Device History</h2>
+			<!-- Default buttons mobile -->
 			<div class="mb-4 flex flex-col items-center space-y-2 md:hidden">
 				<div class="flex flex-row space-x-2">
 					<button class="btn variant-filled-primary" on:click={setRangeToday}>
@@ -175,6 +176,7 @@
 					</button>
 				</div>
 			</div>
+			<!-- Default buttons desktop -->
 			<div class="mb-4 hidden md:flex flex-row space-x-2">
 				<button class="btn variant-filled-primary" on:click={setRangeToday}>
 					Today
@@ -195,17 +197,26 @@
 					Last month
 				</button>
 			</div>
-			<h2 class="h3 mb-2">Selected device:</h2>
+			<!-- Device and time selection desktop -->
 			<div class="flex flex-row w-full justify-between">
-				<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
-				<button class="btn variant-ghost-tertiary h-10 mx-8" use:popup={popupClick}>
-					{#if currentDevice}
-						{currentDevice.formattedVendorAndProduct}
-					{:else}
-						<LoadingSpinner classes="h-6 w-6" />
-					{/if}
-				</button>
-				<DateTimeInput date={endDate} on:dateUpdate={inputEndDateUpdated} />
+				<div>
+					<h2 class="h3 mb-2">From:</h2>
+					<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
+				</div>
+				<div>
+					<h2 class="h3 mb-2">Selected device:</h2>
+					<button class="btn variant-ghost-tertiary h-10 mx-8" use:popup={popupClick}>
+						{#if currentDevice}
+							{currentDevice.formattedVendorAndProduct}
+						{:else}
+							<LoadingSpinner classes="h-6 w-6" />
+						{/if}
+					</button>
+				</div>
+				<div>
+					<h2 class="h3 mb-2">Until:</h2>
+					<DateTimeInput date={endDate} on:dateUpdate={inputEndDateUpdated} />
+				</div>
 			</div>
 			<TopAxis
 				width={containerWidth}
