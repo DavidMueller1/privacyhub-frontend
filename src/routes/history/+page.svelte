@@ -45,7 +45,6 @@
 			graphTicks = 5;
 		}
 		containerWidth = containerBinding.clientWidth - containerPadding * 2;
-		console.log(`Resized to ${containerWidth}`);
 	}
 
 	const popupClick: PopupSettings = {

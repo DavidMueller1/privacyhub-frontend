@@ -29,41 +29,64 @@
 	const arrowMarginBottom = 9;
 
 
-	// Event for panning the xAxis
-	const dragEvent = (event, d) => {
-		const panDistance = getTimestampDifference(
-			event.dx,
-			timestampStart,
-			timestampEnd,
-			width,
-			marginLeft,
-			marginRight
-		)
-		timestampStart -= panDistance;
-		timestampEnd -= panDistance;
-	};
+	// // Event for panning the xAxis
+	// const dragEvent = (event, d) => {
+	// 	const panDistance = getTimestampDifference(
+	// 		event.dx,
+	// 		timestampStart,
+	// 		timestampEnd,
+	// 		width,
+	// 		marginLeft,
+	// 		marginRight
+	// 	)
+	// 	timestampStart -= panDistance;
+	// 	timestampEnd -= panDistance;
+	// };
+
+	let lastTransform = d3.zoomIdentity;
 
 	// Event for zooming the xAxis
 	const zoomEvent = (event, d) => {
-		const localCenter = centerEvent(event, viewBoxBinding, width, height);
-		const localX = localCenter[0] - marginLeft;
-		const graphWidth = width - marginLeft - marginRight;
-		const zoomDelta = event.sourceEvent.deltaY;
+		const transform = event.transform;
+		const kFactor = transform.k / lastTransform.k;
 
-		const timestampDifference = timestampEnd - timestampStart;
+		// Check if zoom event
+		if (kFactor === 1) {
+			// Pan
+			const panDistance = getTimestampDifference(
+				event.sourceEvent.movementX,
+				timestampStart,
+				timestampEnd,
+				width,
+				marginLeft,
+				marginRight
+			)
+			timestampStart -= panDistance;
+			timestampEnd -= panDistance;
+		} else {
+			// Zoom
+			const localCenter = centerEvent(event, viewBoxBinding, width, height);
+			const localX = localCenter[0] - marginLeft;
+			const graphWidth = width - marginLeft - marginRight;
+			const zoomDelta = event.sourceEvent.deltaY;
 
-		// Calculate the new timestamp difference
-		const targetTimestampDifference = timestampDifference + zoomDelta * timestampDifference / 1000;
+			const timestampDifference = timestampEnd - timestampStart;
 
-		const differenceToCurrent = targetTimestampDifference - timestampDifference;
+			// Calculate the new timestamp difference
+			const targetTimestampDifference = timestampDifference + zoomDelta * timestampDifference / 1000;
 
-		// "Zoom" around the mouse position
-		const distanceStart = localX / graphWidth * differenceToCurrent;
-		const distanceEnd = (graphWidth - localX) / graphWidth * differenceToCurrent;
+			const differenceToCurrent = targetTimestampDifference - timestampDifference;
 
-		// Update the timestamps
-		timestampStart = timestampStart - distanceStart;
-		timestampEnd = timestampEnd + distanceEnd;
+			// "Zoom" around the mouse position
+			const distanceStart = localX / graphWidth * differenceToCurrent;
+			const distanceEnd = (graphWidth - localX) / graphWidth * differenceToCurrent;
+
+			// Update the timestamps
+			timestampStart = timestampStart - distanceStart;
+			timestampEnd = timestampEnd + distanceEnd;
+		}
+
+		lastTransform = transform;
 	};
 
 	// The D3 Magic
@@ -71,7 +94,7 @@
 	$: d3.select(xAxisBinding).call(d3.axisTop(x).ticks(ticks));
 	$: d3.select(xAxisGridBinding).call(d3.axisBottom(x).tickSize(height - marginTop).tickFormat('').ticks(ticks)) && d3.select(xAxisGridBinding).selectAll('path').remove() && d3.select(xAxisGridBinding).selectAll('line').attr('stroke', '#ffffff33');
 
-	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
+	// $: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
 	$: d3.select(viewBoxBinding).call(d3.zoom().on('zoom', zoomEvent));
 
 </script>
