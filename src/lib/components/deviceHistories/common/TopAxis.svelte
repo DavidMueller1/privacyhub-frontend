@@ -53,8 +53,9 @@
 		// Check if zoom event
 		if (kFactor === 1) {
 			// Pan
+			const dx = transform.x - lastTransform.x;
 			const panDistance = getTimestampDifference(
-				event.sourceEvent.movementX,
+				dx,
 				timestampStart,
 				timestampEnd,
 				width,
@@ -68,7 +69,7 @@
 			const localCenter = centerEvent(event, viewBoxBinding, width, height);
 			const localX = localCenter[0] - marginLeft;
 			const graphWidth = width - marginLeft - marginRight;
-			const zoomDelta = event.sourceEvent.deltaY;
+			const zoomDelta = (kFactor - 1) * -700;
 
 			const timestampDifference = timestampEnd - timestampStart;
 
