@@ -13,6 +13,7 @@
 	export let marginBottom = 30;
 	export let marginRight = 45;
 	export let marginLeft = 45;
+	export let ticks: number = 10;
 
 	// Bindings
 	let viewBoxBinding: HTMLElement;
@@ -67,8 +68,8 @@
 
 	// The D3 Magic
 	$: x = d3.scaleTime([timestampStart, timestampEnd], [marginLeft, width - marginRight]);
-	$: d3.select(xAxisBinding).call(d3.axisTop(x));
-	$: d3.select(xAxisGridBinding).call(d3.axisBottom(x).tickSize(height - marginTop).tickFormat('').ticks(10)) && d3.select(xAxisGridBinding).selectAll('path').remove() && d3.select(xAxisGridBinding).selectAll('line').attr('stroke', '#ffffff33');
+	$: d3.select(xAxisBinding).call(d3.axisTop(x).ticks(ticks));
+	$: d3.select(xAxisGridBinding).call(d3.axisBottom(x).tickSize(height - marginTop).tickFormat('').ticks(ticks)) && d3.select(xAxisGridBinding).selectAll('path').remove() && d3.select(xAxisGridBinding).selectAll('line').attr('stroke', '#ffffff33');
 
 	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
 	$: d3.select(viewBoxBinding).call(d3.zoom().on('zoom', zoomEvent));

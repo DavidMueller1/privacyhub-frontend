@@ -5,6 +5,7 @@ import typography from '@tailwindcss/typography';
 import { skeleton } from '@skeletonlabs/tw-plugin';
 import { Private } from './src/Private';
 
+/** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: 'class',
 	content: [

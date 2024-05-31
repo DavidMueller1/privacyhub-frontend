@@ -12,18 +12,38 @@
 	import AttributeHistory from '$lib/components/deviceHistories/AttributeHistory.svelte';
 	import type { HistoryAttributeMapping } from '$lib/components/deviceHistories/HistoryUtils';
 	import InfoPopup from '$lib/components/util/InfoPopup.svelte';
+	import theme from 'tailwindcss/defaultTheme';
 
 	export let data: PageData;
 
 	let containerBinding: HTMLElement;
-	const containerPadding = 40;
+	const containerPaddingDesktop = 40;
+	const containerPaddingMobile = 16;
+	let containerPadding = containerPaddingDesktop;
 	let containerWidth = 0;
 
-	const graphMarginLeft = 20;
-	const graphMarginRight = 60;
+	let graphMarginLeft = 20;
+	let graphMarginRight = 60;
+
+	let graphTicks = 10;
+
+	console.log(theme.screens.md)
+	// Change container padding at md: breakpoint
+
 
 
 	const handleResize = () => {
+		if (window.innerWidth > parseInt(theme.screens.md)) {
+			containerPadding = containerPaddingDesktop;
+			graphMarginLeft = 20;
+			graphMarginRight = 60;
+			graphTicks = 10;
+		} else {
+			containerPadding = containerPaddingMobile;
+			graphMarginLeft = 20;
+			graphMarginRight = 20;
+			graphTicks = 5;
+		}
 		containerWidth = containerBinding.clientWidth - containerPadding * 2;
 		console.log(`Resized to ${containerWidth}`);
 	}
@@ -163,14 +183,23 @@
 		<!--{#if data.accessLevel === AccessLevel.PRIVATE}-->
 		<DeviceSelection accessLevel={data.accessLevel} on:select={handleDeviceSelection} />
 		<div class="text-center flex flex-col items-center pt-4">
-			<h2 class="h1 mb-8 flex">
-				{#if data.accessLevel === AccessLevel.PUBLIC}
-					Online
-				{/if}
-				Device History
-				{#if data.accessLevel === AccessLevel.PUBLIC}
-					<i class="fa-solid fa-circle-question text-sm ml-2 h-5" use:popup={popupOnlineInfo}></i>
-				{/if}
+			<h2 class="h1 mb-8 flex flex-col items-center sm:flex-row">
+				<div>
+					{#if data.accessLevel === AccessLevel.PUBLIC}
+						Online
+					{/if}
+					Device
+				</div>
+				<div class="hidden sm:block">
+					&nbsp;
+				</div>
+				<div class="flex flex-row">
+					History
+					{#if data.accessLevel === AccessLevel.PUBLIC}
+						<i class="fa-solid fa-circle-question text-sm ml-2 h-5" use:popup={popupOnlineInfo}></i>
+					{/if}
+				</div>
+
 			</h2>
 			<!-- Default buttons mobile -->
 			<div class="mb-4 flex flex-col items-center space-y-2 md:hidden">
@@ -220,8 +249,32 @@
 					Last month
 				</button>
 			</div>
+			<!-- Device and time selection mobile -->
+			<div class="flex flex-col w-full justify-between md:hidden">
+				<div class="mb-4">
+					<h2 class="h3 mb-2">Selected device:</h2>
+					<button class="btn variant-ghost-tertiary h-10 mx-8" use:popup={popupClick}>
+						{#if currentDevice}
+							{currentDevice.formattedVendorAndProduct}
+						{:else}
+							<LoadingSpinner classes="h-6 w-6" />
+						{/if}
+					</button>
+				</div>
+				<div class="flex flex-row justify-between">
+					<div>
+						<h2 class="h3 mb-2">From:</h2>
+						<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
+					</div>
+
+					<div>
+						<h2 class="h3 mb-2">Until:</h2>
+						<DateTimeInput date={endDate} on:dateUpdate={inputEndDateUpdated} />
+					</div>
+				</div>
+			</div>
 			<!-- Device and time selection desktop -->
-			<div class="flex flex-row w-full justify-between">
+			<div class="hidden md:flex flex-row w-full justify-between">
 				<div>
 					<h2 class="h3 mb-2">From:</h2>
 					<DateTimeInput date={startDate} on:dateUpdate={inputStartDateUpdated} />
@@ -245,6 +298,7 @@
 				width={containerWidth}
 				marginLeft={graphMarginLeft}
 				marginRight={graphMarginRight}
+				ticks={graphTicks}
 				bind:timestampStart={timestampStart}
 				bind:timestampEnd={timestampEnd}
 			/>
@@ -255,6 +309,7 @@
 				width={containerWidth}
 				marginLeft={graphMarginLeft}
 				marginRight={graphMarginRight}
+				ticks={graphTicks}
 				title={currentDevice?.getHistoryComponentTitle()}
 				attributeName={currentDevice?.getHistoryComponentAttributeName()}
 				attributeMapping={currentDevice?.getHistoryComponentMappings()}
@@ -266,6 +321,7 @@
 				height={20}
 				marginLeft={graphMarginLeft}
 				marginRight={graphMarginRight}
+				ticks={graphTicks}
 				bind:timestampStart={timestampStart}
 				bind:timestampEnd={timestampEnd}
 			/>
@@ -275,6 +331,7 @@
 				width={containerWidth}
 				marginLeft={graphMarginLeft}
 				marginRight={graphMarginRight}
+				ticks={graphTicks}
 				title="Privacy State"
 				attributeName="privacyState"
 				attributeMapping={privacyStateAttributeMapping}

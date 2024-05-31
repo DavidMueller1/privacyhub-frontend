@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import BaseDevice from '$lib/api/devices/BaseDevice';
 	import { getModeUserPrefers, modeCurrent } from '@skeletonlabs/skeleton';
 
 	export let classes: string = '';
@@ -193,7 +192,7 @@
 	}
 </style>
 
-<div class="flex flex-col w-40 px-2 rounded-xl {classes}" class:container-light={currentMode} class:container-dark={!currentMode}>
+<div class="flex flex-col w-32 md:w-40 px-2 rounded-xl {classes}" class:container-light={currentMode} class:container-dark={!currentMode}>
 	<div class="flex flex-row w-full items-end">
 		<input
 			class="rounded-tl-3xl"
@@ -251,7 +250,7 @@
 	</div>
 	<div
 		class="flex flex-row w-full items-end text-2xl"
-		style="border-top: 1px solid #d1d1d1;"
+		style="border-top: 1px solid #737373;"
 	>
 		<input
 			class="rounded-bl-3xl text-2xl py-1"

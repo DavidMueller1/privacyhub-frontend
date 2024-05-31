@@ -22,6 +22,8 @@
 	export let marginRight = 20;
 	export let marginLeft = 45;
 
+	export let ticks: number = 10;
+
 	export let title: string;
 	export let attributeName: string;
 	export let attributeMapping: HistoryAttributeMapping[];
@@ -170,7 +172,7 @@
 	$: x = d3.scaleTime([timestampStart, timestampEnd], [marginLeft, width - marginRight]);
 	$: y = d3.scaleLinear([0, 1], [height - marginBottom, marginTop]);
 	// $: d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')));
-	$: d3.select(xAxisGridBinding).call(d3.axisBottom(x).tickSize(-height).tickFormat('').ticks(10)) && d3.select(xAxisGridBinding).selectAll('path').remove() && d3.select(xAxisGridBinding).selectAll('line').attr('stroke', '#ffffff33');
+	$: d3.select(xAxisGridBinding).call(d3.axisBottom(x).tickSize(-height).tickFormat('').ticks(ticks)) && d3.select(xAxisGridBinding).selectAll('path').remove() && d3.select(xAxisGridBinding).selectAll('line').attr('stroke', '#ffffff33');
 	// $: d3.select(yAxisBinding).call(d3.axisLeft(y).tickValues([0, 1]).tickFormat(d => d ? 'ON' : 'OFF')) && d3.select(yAxisBinding).selectAll('path').remove() && d3.select(yAxisBinding).selectAll('line').remove();
 
 	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
