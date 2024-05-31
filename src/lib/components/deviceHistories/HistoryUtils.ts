@@ -21,7 +21,7 @@ export const getTimestampDifference = (
 }
 
 // center the action (handles multitouch)
-export const centerEvent = (event, target) => {
+export const centerEvent = (event, target, width, height) => {
 	if (event.sourceEvent) {
 		const p = d3.pointers(event, target);
 		return [d3.mean(p, d => d[0]), d3.mean(p, d => d[1])];

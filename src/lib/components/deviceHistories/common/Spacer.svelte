@@ -45,7 +45,7 @@
 
 	// Event for zooming the xAxis
 	const zoomEvent = (event, d) => {
-		const localCenter = centerEvent(event, viewBoxBinding);
+		const localCenter = centerEvent(event, viewBoxBinding, width, height);
 		const localX = localCenter[0] - marginLeft;
 		const graphWidth = width - marginLeft - marginRight;
 		const zoomDelta = event.sourceEvent.deltaY;
