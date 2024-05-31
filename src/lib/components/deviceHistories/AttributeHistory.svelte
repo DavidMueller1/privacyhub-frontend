@@ -106,7 +106,7 @@
 				popupDetailList.push({
 					event: 'hover',
 					target: `popupDetails-${device.nodeId}-${device.endpointId}-${title}-${index}`,
-					placement: 'top'
+					placement: 'top',
 				});
 
 				data.push(dataObject);
@@ -222,7 +222,8 @@
 				<div>duration</div>
 				<div class="text-right">{getFormattedDuration(entry.timestampStart, entry.timestampEnd)}</div>
 			</div>
-		<div class="arrow variant-filled-surface" /></div>
+		</div>
+<!--		<div class="arrow variant-filled-surface" />-->
 	</div>
 {/each}
 
