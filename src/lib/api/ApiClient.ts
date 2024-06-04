@@ -4,6 +4,7 @@ import ContactSensor from '$lib/api/devices/ContactSensor';
 import { AccessLevel } from '$lib/util/EnvChecker';
 import { PUBLIC_ONLINE_BACKEND_URL } from '$env/static/public';
 import { BACKEND_URL } from '$lib/util/BackendUrl';
+import ExtendedColorLight from '$lib/api/devices/ExtendedColorLight';
 
 
 // export type DeviceOverview = {
@@ -97,8 +98,8 @@ export default abstract class ApiClient {
 							console.log("NODE");
 							console.log(node);
 							switch (type) {
-								case 'OnOffPluginUnit': // TODO Better way to handle this
-									const device = new OnOffPluginUnit(
+								case 'ExtendedColorLight': // TODO Better way to handle this
+									const extendedColorLight = new ExtendedColorLight(
 										nodeId,
 										endpointId,
 										vendor,
@@ -110,8 +111,26 @@ export default abstract class ApiClient {
 										connectedProxy,
 										accessLevel
 									);
-									device.initialize().then(() => {
-										nodes.push(device);
+									extendedColorLight.initialize().then(() => {
+										nodes.push(extendedColorLight);
+										resolve();
+									});
+									break;
+								case 'OnOffPluginUnit': // TODO Better way to handle this
+									const onOffPluginUnit = new OnOffPluginUnit(
+										nodeId,
+										endpointId,
+										vendor,
+										product,
+										manualPairingCode,
+										qrCode,
+										connectionStatus,
+										privacyState,
+										connectedProxy,
+										accessLevel
+									);
+									onOffPluginUnit.initialize().then(() => {
+										nodes.push(onOffPluginUnit);
 										resolve();
 									});
 									break;
@@ -198,6 +217,36 @@ export default abstract class ApiClient {
 		});
 	};
 
+	static setColorHSV = (accessLevel: AccessLevel, nodeId: string, endpointId: string, hue: number, saturation: number, value: number): Promise<void> => {
+		const payload = {
+			hue: hue,
+			saturation: saturation,
+			value: value
+		};
+		const backendUrl = this.getBackendUrl(accessLevel);
+
+		return new Promise<void>((resolve, reject) => {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/colorHSV`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			})
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					resolve();
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+
+	}
+
 	static getOnOff = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<boolean | undefined> => {
 		const backendUrl = this.getBackendUrl(accessLevel);
 		return new Promise<boolean | undefined>((resolve, reject) => {
@@ -216,6 +265,27 @@ export default abstract class ApiClient {
 					reject(error.toString());
 				});
 		});
+	}
+
+	static getColorHSV = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<{ hue: number, saturation: number, value: number }> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
+		return new Promise<{ hue: number, saturation: number, value: number }>((resolve, reject) => {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/colorHSV`)
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					resolve({ hue: data.hue, saturation: data.saturation, value: data.value });
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+
 	}
 
 	static updatePrivacyState = (accessLevel: AccessLevel, nodeId: string, endpointId: string, privacyState: PrivacyState): Promise<void> => {

@@ -1,10 +1,5 @@
 <script lang="ts">
 	import * as d3 from 'd3';
-	import BaseDevice from '$lib/api/devices/BaseDevice';
-	import OnOffPluginUnit, { type IReturnOnOffPluginUnitState } from '$lib/api/devices/OnOffPluginUnit';
-	import { error } from '@sveltejs/kit';
-	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-	import { onMount } from 'svelte';
 	import { centerEvent, getTimestampDifference } from '$lib/components/deviceHistories/HistoryUtils';
 
 	export let width = 640;
