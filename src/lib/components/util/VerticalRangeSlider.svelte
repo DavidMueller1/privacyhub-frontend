@@ -36,6 +36,11 @@
 		updateCurrentValue(touch.pageY);
 	};
 
+	const dragStart = (event, d) => {
+		percentageVisible = true;
+		updateCurrentValue(event.y);
+	};
+
 	const valueChanged = (event, d) => {
 		percentageVisible = false;
 		console.log('valueChanged', currentValue);
@@ -58,9 +63,9 @@
 	$: handleScaling = d3.scaleLinear([minValue, maxValue], [height - cornerRadius, cornerRadius]);
 	$: upperScaling = d3.scaleLinear([minValue, maxValue], [height - cornerRadius * 2, 0]);
 	$: heightScaling = d3.scaleLinear([minValue, maxValue], [cornerRadius * 2, height]);
-	$: d3.select(viewBoxBinding).on('mousedown', clickEvent);
-	$: d3.select(viewBoxBinding).on('touchstart', touchEvent);
-	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent).on('end', valueChanged));
+	// $: d3.select(viewBoxBinding).on('mousedown', clickEvent);
+	// $: d3.select(viewBoxBinding).on('touchstart', touchEvent);
+	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent).on('start', dragStart).on('end', valueChanged));
 
 	const darkenColor = (color: string, lightness: number, saturationFactor: number) => {
 		let c = d3.hsl(d3.color(color));
