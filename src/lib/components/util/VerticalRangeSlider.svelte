@@ -54,6 +54,7 @@
 	$: upperScaling = d3.scaleLinear([minValue, maxValue], [height - cornerRadius * 2, 0]);
 	$: heightScaling = d3.scaleLinear([minValue, maxValue], [cornerRadius * 2, height]);
 	$: d3.select(viewBoxBinding).on('mousedown', clickEvent);
+	$: d3.select(viewBoxBinding).on('touchstart', clickEvent);
 	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent).on('end', valueChanged));
 
 	const darkenColor = (color: string, lightness: number, saturationFactor: number) => {

@@ -55,7 +55,13 @@ export default class ExtendedColorLight extends BaseDevice {
 		return new Promise<void>((resolve, reject) => {
 			ApiClient.getOnOff(this.accessLevel, this.nodeId, this.endpointId).then((state) => {
 				this.state = state || false;
-				resolve();
+				ApiClient.getLightLevel(this.accessLevel, this.nodeId, this.endpointId).then((lightLevel) => {
+					this.value = lightLevel;
+					resolve();
+				}).catch((error) => {
+					console.error('Error getting light level:', error);
+					reject(error.toString());
+				});
 				// ApiClient.getColorHSV(this.accessLevel, this.nodeId, this.endpointId).then((color) => {
 				// 	this.hue = color.hue;
 				// 	this.saturation = color.saturation;

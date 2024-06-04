@@ -316,6 +316,28 @@ export default abstract class ApiClient {
 		});
 	}
 
+
+	static getLightLevel = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<number> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
+		return new Promise<number>((resolve, reject) => {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/lightLevel`)
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					resolve(data.level);
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+	}
+
+
 	static updatePrivacyState = (accessLevel: AccessLevel, nodeId: string, endpointId: string, privacyState: PrivacyState): Promise<void> => {
 		const payload = {
 			privacyState: privacyState
