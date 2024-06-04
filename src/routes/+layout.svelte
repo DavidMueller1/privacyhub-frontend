@@ -55,6 +55,7 @@
 	import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
 	import OnOffPluginUnitDetails from '$lib/components/deviceDetails/OnOffPluginUnitDetails.svelte';
 	import ContactSensorDetails from '$lib/components/deviceDetails/ContactSensorDetails.svelte';
+	import ExtendedColorLightDetails from '$lib/components/deviceDetails/ExtendedColorLightDetails.svelte';
 	import type { LayoutData } from '../../.svelte-kit/types/src/routes/$types';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { onMount } from 'svelte';
@@ -62,7 +63,8 @@
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal },
 		onOffPluginUnitDetails: { ref: OnOffPluginUnitDetails },
-		contactSensorDetails: {ref: ContactSensorDetails }
+		contactSensorDetails: {ref: ContactSensorDetails },
+		extendedColorLightDetails: { ref: ExtendedColorLightDetails }
 	};
 
 	// Set the current mode

@@ -4,6 +4,7 @@ import OnOffPluginUnitOverview from '$lib/components/deviceOverviews/OnOffPlugin
 import type { AccessLevel } from '$lib/util/EnvChecker';
 import AttributeHistory from '$lib/components/deviceHistories/AttributeHistory.svelte';
 import type { HistoryAttributeMapping } from '$lib/components/deviceHistories/HistoryUtils';
+import ExtendedColorLightOverview from '$lib/components/deviceOverviews/ExtendedColorLightOverview.svelte';
 
 export interface IReturnExtendedColorLightState {
 	connectionStatus: ConnectionStatus;
@@ -82,7 +83,7 @@ export default class ExtendedColorLight extends BaseDevice {
 	}
 
 	override getOverviewComponent = () => {
-		return OnOffPluginUnitOverview;
+		return ExtendedColorLightOverview;
 	}
 
 	override getHistoryComponent = () => {
