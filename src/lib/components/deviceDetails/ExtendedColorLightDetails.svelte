@@ -7,15 +7,24 @@
 	import { socketStore } from '$lib/store/GeneralStore';
 	import type { AccessLevel } from '$lib/util/EnvChecker';
 	import VerticalRangeSlider from '$lib/components/util/VerticalRangeSlider.svelte';
+	import type ExtendedColorLight from '$lib/api/devices/ExtendedColorLight';
 
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: SvelteComponent;
 
-		// Socket events
+	// Socket events
 	$socketStore.on('booleanState', (data) => {
+		console.log('booleanState Light', data);
 		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.state = data.state;
+		}
+	});
+
+	$socketStore.on('lightLevel', (data) => {
+		console.log('lightLevel', data);
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+			device.value = data.value;
 		}
 	});
 
@@ -24,13 +33,22 @@
 	const accessLevel: AccessLevel = $modalStore[0].meta.accessLevel;
 	if (accessLevel === undefined) throw new Error('AccessLevel is required for this modal.');
 
-	const device: OnOffPluginUnit = $modalStore[0].meta.device;
+	const device: ExtendedColorLight = $modalStore[0].meta.device;
 	if (!device) throw new Error('Device is required for this modal.');
 
 	const onOffStateChanged = () => {
 		ApiClient.setOnOff(accessLevel, device.nodeId, device.endpointId, !device.state)
 			.then(() => {
 				// device.state = !device.state;
+			})
+			.catch((error) => {
+				console.error('Error setting device enabled:', error.toString());
+			});
+	};
+	const onLightLevelChanged = (value: number) => {
+		ApiClient.setLightLevel(accessLevel, device.nodeId, device.endpointId, value)
+			.then(() => {
+				device.value = value;
 			})
 			.catch((error) => {
 				console.error('Error setting device enabled:', error.toString());
@@ -45,9 +63,10 @@
 			width={80}
 			height={250}
 			minValue={0}
-			maxValue={1}
-			currentValue={0.3}
+			maxValue={254}
+			currentValue={device.value}
 			color="#F1B74BFF"
+			onValueChange={onLightLevelChanged}
 		/>
 		<button
 			class="btn-icon btn-icon-xl {device.state ? 'variant-filled-primary' : 'variant-ghost'}"

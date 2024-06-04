@@ -217,6 +217,28 @@ export default abstract class ApiClient {
 		});
 	};
 
+
+	static getOnOff = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<boolean | undefined> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
+		return new Promise<boolean | undefined>((resolve, reject) => {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/onOff`)
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					resolve(data.state);
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+	}
+
+
 	static setColorHSV = (accessLevel: AccessLevel, nodeId: string, endpointId: string, hue: number, saturation: number, value: number): Promise<void> => {
 		const payload = {
 			hue: hue,
@@ -247,26 +269,6 @@ export default abstract class ApiClient {
 
 	}
 
-	static getOnOff = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<boolean | undefined> => {
-		const backendUrl = this.getBackendUrl(accessLevel);
-		return new Promise<boolean | undefined>((resolve, reject) => {
-			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/onOff`)
-				.then((response) => {
-					if (!response.ok) {
-						reject(response.body);
-					}
-					return response.json();
-				})
-				.then((data) => {
-					resolve(data.state);
-				})
-				.catch((error) => {
-					console.error('Error:', error);
-					reject(error.toString());
-				});
-		});
-	}
-
 	static getColorHSV = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<{ hue: number, saturation: number, value: number }> => {
 		const backendUrl = this.getBackendUrl(accessLevel);
 		return new Promise<{ hue: number, saturation: number, value: number }>((resolve, reject) => {
@@ -285,7 +287,33 @@ export default abstract class ApiClient {
 					reject(error.toString());
 				});
 		});
+	}
 
+	static setLightLevel = (accessLevel: AccessLevel, nodeId: string, endpointId: string, level: number): Promise<void> => {
+		const payload = {
+			level: level
+		};
+		const backendUrl = this.getBackendUrl(accessLevel);
+
+		return new Promise<void>((resolve, reject) => {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/lightLevel`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			})
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					resolve();
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
 	}
 
 	static updatePrivacyState = (accessLevel: AccessLevel, nodeId: string, endpointId: string, privacyState: PrivacyState): Promise<void> => {
