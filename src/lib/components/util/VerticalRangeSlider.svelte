@@ -68,7 +68,7 @@
 
 </script>
 
-<svg bind:this={viewBoxBinding} class="" width={realWidth} height={height}>
+<svg bind:this={viewBoxBinding} width={realWidth} height={height}>
 	<g>
 		{#if percentageVisible}
 			<rect
@@ -103,6 +103,7 @@
 			<!--			>{(currentValue / maxValue * 100).toFixed(0)}%</text>-->
 		{/if}
 		<rect
+			class="cursor-pointer"
 			x={percentageContainerWidth}
 			y="0"
 			width={width}
@@ -111,6 +112,7 @@
 			rx={cornerRadius}
 		/>
 		<rect
+			class="cursor-pointer"
 			x={percentageContainerWidth}
 			y={upperScaling(currentValue)}
 			width={width}
@@ -119,6 +121,7 @@
 			rx="20"
 		/>
 		<rect
+			class="cursor-pointer"
 			x={handlePadding + percentageContainerWidth}
 			y={handleScaling(currentValue) - handleHeight / 2}
 			width={width - handlePadding * 2}
