@@ -83,11 +83,11 @@
 </div>
 
 <button
-	class="card flex items-center space-x-8 px-8 h-20 hover:cursor-pointer"
+	class="card flex items-center px-8 h-20 hover:cursor-pointer"
 	on:click={openDetailsModal}
 >
 	<OverviewIcon icon={icon} connectionStatus={device.connectionStatus} privacyState={device.privacyState} popupSettings={popupState} />
 	<!--	<i class="fa-solid fa-satellite-dish {stateIconColor}" use:popup={popupState}></i>-->
-	<p class="text-left max-h-[72px] text-ellipsis overflow-clip">{device.formattedVendorAndProduct}</p>
+	<p class="text-left max-h-[72px] text-ellipsis overflow-clip ml-8 mr-4">{device.formattedVendorAndProduct}</p>
 	<slot/>
 </button>

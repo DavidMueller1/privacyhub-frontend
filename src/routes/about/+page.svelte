@@ -19,7 +19,7 @@ import StateGraphic from '$lib/components/util/StateGraphic.svelte';
 	</div>
 	<div class="flex flex-col items-center xl:flex-row xl:items-start my-4 xl:space-x-4">
 <!--		<div class="bg-red-500 shrink-0 grow-0 h-32" style="width: 500px"></div>-->
-		<StateGraphic classString="w-auto sm:w-[400px] shrink-0 grow-0" width={400} />
+		<StateGraphic classString="w-auto sm:w-[380px] shrink-0 grow-0" width={380} />
 		<div class="flex-grow-1 mt-4 xl:mt-0">
 			<h3 class="h3 mb-2">States</h3>
 			<div class="mb-2">In <span class="text-state-local font-bold text-xl">Local mode</span> all devices are only visible from within the home network. While this poses the least security and privacy vulnerabilities, it also offers the most limited feature set.</div>
