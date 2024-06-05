@@ -19,6 +19,7 @@
 
 	// Bindings
 	let viewBoxBinding: HTMLElement;
+	let graphicBinding: HTMLElement;
 	let selectorDrag = false;
 
 	// The current value of the slider
@@ -31,13 +32,13 @@
 
 	const dragStart = (event, d) => {
 		selectorDrag = true;
-		updateCurrentValues(event.x - 180, event.y);
+		updateCurrentValues(event.x, event.y);
 	};
 
 	// Event for changing
 	const dragEvent = (event, d) => {
 		selectorDrag = true;
-		updateCurrentValues(event.x - 180, event.y);
+		updateCurrentValues(event.x, event.y);
 	};
 
 	const valueChanged = (event, d) => {
@@ -70,7 +71,7 @@
 	// $: heightScaling = d3.scaleLinear([minValue, maxValue], [cornerRadius * 2, height]);
 	// $: d3.select(viewBoxBinding).on('mousedown', clickEvent);
 	// $: d3.select(viewBoxBinding).on('touchstart', touchEvent);
-	$: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent).on('start', dragStart).on('end', valueChanged));
+	$: d3.select(graphicBinding).call(d3.drag().on('drag', dragEvent).on('start', dragStart).on('end', valueChanged));
 
 	const updateColorAndSelector = () => {
 		const hueForColor = Math.round(currentHue * 360);
@@ -105,34 +106,36 @@
 </style>
 
 <svg bind:this={viewBoxBinding} width={size} height={size}>
-	<defs>
-		<!-- Define a circular mask to get the circular shape for the gradient -->
-		<mask id="circle-mask">
-			<rect width="100%" height="100%" fill="black" />
-			<circle cx={size / 2} cy={size / 2} r={circleSize / 2} fill="white" />
-		</mask>
-		<radialGradient id="white-gradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-			<stop offset="0%" stop-color="white" />
-			<stop offset="100%" stop-color="#00000000" />
-		</radialGradient>
-		<filter id="my-filter" x="-1" y="-1" width="200" height="200" >
-			<feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" />
-			<feColorMatrix result="matrixOut" in="offOut" type="matrix" values=" 0.49 0 0 0 0 0 0.49 0 0 0 0 0 0.49 0 0 0 0 0 0.5 0" />
-			<feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="8" />
-			<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-		</filter>
-	</defs>
-	<foreignObject width={size} height={size} mask="url(#circle-mask)">
-		<div class="conic-gradient"></div>
-	</foreignObject>
-	<circle class="cursor-pointer" cx={size / 2} cy={size / 2} r={circleSize / 2} fill="url(#white-gradient)" />
-	<circle
-		class="cursor-pointer"
-		cx={selectorPosX}
-		cy={selectorPosY}
-		r={selectorDrag ? selectorDragSize / 2 : selectorSize / 2}
-		fill={color}
-		stroke="white"
-		stroke-width="2"
-	/>
+	<g bind:this={graphicBinding}>
+		<defs>
+			<!-- Define a circular mask to get the circular shape for the gradient -->
+			<mask id="circle-mask">
+				<rect width="100%" height="100%" fill="black" />
+				<circle cx={size / 2} cy={size / 2} r={circleSize / 2} fill="white" />
+			</mask>
+			<radialGradient id="white-gradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+				<stop offset="0%" stop-color="white" />
+				<stop offset="100%" stop-color="#00000000" />
+			</radialGradient>
+			<filter id="my-filter" x="-1" y="-1" width="200" height="200" >
+				<feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" />
+				<feColorMatrix result="matrixOut" in="offOut" type="matrix" values=" 0.49 0 0 0 0 0 0.49 0 0 0 0 0 0.49 0 0 0 0 0 0.5 0" />
+				<feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="8" />
+				<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+			</filter>
+		</defs>
+		<foreignObject width={size} height={size} mask="url(#circle-mask)">
+			<div class="conic-gradient"></div>
+		</foreignObject>
+		<circle class="cursor-pointer" cx={size / 2} cy={size / 2} r={circleSize / 2} fill="url(#white-gradient)" />
+		<circle
+			class="cursor-pointer"
+			cx={selectorPosX}
+			cy={selectorPosY}
+			r={selectorDrag ? selectorDragSize / 2 : selectorSize / 2}
+			fill={color}
+			stroke="white"
+			stroke-width="2"
+		/>
+	</g>
 </svg>
