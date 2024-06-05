@@ -32,6 +32,12 @@
 				<span>About</span>
 			</a>
 		</li>
+		<li>
+			<a href="/settings" on:click={drawerClose}>
+				<i class="fa-solid fa-gear text-4xl w-9"></i>
+				<span>Settings</span>
+			</a>
+		</li>
 	</ul>
 </nav>
 <!--&lt;!&ndash;Align bottom&ndash;&gt;-->
