@@ -79,6 +79,8 @@
 			});
 	};
 
+	let currentColor = '#F1B74BFF'
+
 	const selectColorWheel = () => {
 		showColorWheel = true;
 	};
@@ -95,7 +97,7 @@
 				size={250}
 				currentHue={device.hue / 254}
 				currentSaturation={device.saturation / 254}
-				color="#F1B74BFF"
+				bind:color={currentColor}
 				onValuesChange={onHueSaturationChanged}
 			/>
 		{:else}
@@ -106,7 +108,7 @@
 				minValue={0}
 				maxValue={254}
 				currentValue={device.value}
-				color="#F1B74BFF"
+				color={currentColor}
 				onValueChange={onLightLevelChanged}
 			/>
 		{/if}
