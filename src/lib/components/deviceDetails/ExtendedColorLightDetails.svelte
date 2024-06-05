@@ -124,7 +124,8 @@
 				class="btn-icon btn-icon-lg mx-2 {showColorWheel ? 'variant-filled-tertiary' : 'variant-ghost'}"
 				on:click={selectColorWheel}
 			>
-				<ColorWheelIcon size={20} id="2" />
+				<i class="fa-solid fa-palette"></i>
+<!--				<ColorWheelIcon size={20} id="2" />-->
 			</button>
 			<button
 				class="btn-icon btn-icon-lg {!showColorWheel ? 'variant-filled-tertiary' : 'variant-ghost'}"
