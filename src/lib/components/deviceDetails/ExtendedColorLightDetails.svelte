@@ -9,12 +9,13 @@
 	import VerticalRangeSlider from '$lib/components/util/VerticalRangeSlider.svelte';
 	import type ExtendedColorLight from '$lib/api/devices/ExtendedColorLight';
 	import ColorPicker from '$lib/components/util/ColorPicker.svelte';
+	import ColorWheelIcon from '$lib/components/util/ColorWheelIcon.svelte';
 
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: SvelteComponent;
 
-	let showColorPicker = true;
+	let showColorWheel = true;
 
 	// Socket events
 	$socketStore.on('booleanState', (data) => {
@@ -28,6 +29,14 @@
 		console.log('lightLevel', data);
 		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
 			device.value = data.value;
+		}
+	});
+
+	$socketStore.on('colorHueSaturation', (data) => {
+		console.log('colorHueSaturation', data);
+		if (device.nodeId === data.nodeId && device.endpointId === data.endpointId) {
+			device.hue = data.hue;
+			device.saturation = data.saturation;
 		}
 	});
 
@@ -69,11 +78,19 @@
 				console.error('Error setting device enabled:', error.toString());
 			});
 	};
+
+	const selectColorWheel = () => {
+		showColorWheel = true;
+	};
+
+	const selectLevelControl = () => {
+		showColorWheel = false;
+	};
 </script>
 
 <DetailsBase device={device} accessLevel={accessLevel} icon="fa-lightbulb">
 	<div class="flex flex-col justify-center items-center space-y-4">
-		{#if showColorPicker}
+		{#if showColorWheel}
 			<ColorPicker
 				size={250}
 				currentHue={device.hue / 254}
@@ -93,9 +110,27 @@
 				onValueChange={onLightLevelChanged}
 			/>
 		{/if}
-		<button
-			class="btn-icon btn-icon-xl {device.state ? 'variant-filled-primary' : 'variant-ghost'}"
-			on:click={onOffStateChanged}
-		><i class="fa-solid fa-power-off"></i></button>
+		<div class="flex flex-row bg-neutral-400 bg-opacity-10 rounded-full items-center">
+			<button
+				class="btn-icon btn-icon-lg mr-2 {device.state ? 'variant-filled-primary' : 'variant-ghost'}"
+				on:click={onOffStateChanged}
+			>
+				<i class="fa-solid fa-power-off"></i>
+			</button>
+			<div class="h-10 w-[1px] bg-neutral-500"></div>
+			<button
+				class="btn-icon btn-icon-lg mx-2 {showColorWheel ? 'variant-filled-tertiary' : 'variant-ghost'}"
+				on:click={selectColorWheel}
+			>
+				<ColorWheelIcon size={20} id="2" />
+			</button>
+			<button
+				class="btn-icon btn-icon-lg {!showColorWheel ? 'variant-filled-tertiary' : 'variant-ghost'}"
+				on:click={selectLevelControl}
+			>
+				<i class="fa-solid fa-circle-half-stroke"></i>
+			</button>
+		</div>
+
 	</div>
 </DetailsBase>
