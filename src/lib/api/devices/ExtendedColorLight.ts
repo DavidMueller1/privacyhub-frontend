@@ -57,7 +57,15 @@ export default class ExtendedColorLight extends BaseDevice {
 				this.state = state || false;
 				ApiClient.getLightLevel(this.accessLevel, this.nodeId, this.endpointId).then((lightLevel) => {
 					this.value = lightLevel;
-					resolve();
+
+					ApiClient.getColorHueSaturation(this.accessLevel, this.nodeId, this.endpointId).then((color) => {
+						this.hue = color.hue;
+						this.saturation = color.saturation;
+						resolve();
+					}).catch((error) => {
+						console.error('Error getting color hue saturation:', error);
+						reject(error.toString());
+					});
 				}).catch((error) => {
 					console.error('Error getting light level:', error);
 					reject(error.toString());

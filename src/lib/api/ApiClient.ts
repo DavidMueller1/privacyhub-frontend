@@ -239,16 +239,15 @@ export default abstract class ApiClient {
 	}
 
 
-	static setColorHSV = (accessLevel: AccessLevel, nodeId: string, endpointId: string, hue: number, saturation: number, value: number): Promise<void> => {
+	static setColorHueSaturation = (accessLevel: AccessLevel, nodeId: string, endpointId: string, hue: number, saturation: number): Promise<void> => {
 		const payload = {
 			hue: hue,
-			saturation: saturation,
-			value: value
+			saturation: saturation
 		};
 		const backendUrl = this.getBackendUrl(accessLevel);
 
 		return new Promise<void>((resolve, reject) => {
-			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/colorHSV`, {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/colorHueSaturation`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -269,10 +268,10 @@ export default abstract class ApiClient {
 
 	}
 
-	static getColorHSV = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<{ hue: number, saturation: number, value: number }> => {
+	static getColorHueSaturation = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<{ hue: number, saturation: number }> => {
 		const backendUrl = this.getBackendUrl(accessLevel);
-		return new Promise<{ hue: number, saturation: number, value: number }>((resolve, reject) => {
-			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/colorHSV`)
+		return new Promise<{ hue: number, saturation: number }>((resolve, reject) => {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/colorHueSaturation`)
 				.then((response) => {
 					if (!response.ok) {
 						reject(response.body);
@@ -280,7 +279,7 @@ export default abstract class ApiClient {
 					return response.json();
 				})
 				.then((data) => {
-					resolve({ hue: data.hue, saturation: data.saturation, value: data.value });
+					resolve({ hue: data.hue, saturation: data.saturation });
 				})
 				.catch((error) => {
 					console.error('Error:', error);
