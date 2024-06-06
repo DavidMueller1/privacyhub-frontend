@@ -59,12 +59,14 @@
 	import type { LayoutData } from '../../.svelte-kit/types/src/routes/$types';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { onMount } from 'svelte';
+	import AddDeviceModal from '$lib/components/util/AddDeviceModal.svelte';
 
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal },
+		addDeviceModal: { ref: AddDeviceModal },
 		onOffPluginUnitDetails: { ref: OnOffPluginUnitDetails },
 		contactSensorDetails: {ref: ContactSensorDetails },
-		extendedColorLightDetails: { ref: ExtendedColorLightDetails }
+		extendedColorLightDetails: { ref: ExtendedColorLightDetails },
 	};
 
 	// Set the current mode

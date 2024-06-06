@@ -29,18 +29,18 @@
 
 	let isLoading = true;
 
-	const codeModal: ModalSettings = {
-		type: 'prompt',
-		title: 'Enter Pairing Code',
-		body: 'Provide the pairing code for the device you want to add and make sure it is powered on.',
-		valueAttr: { type: 'text', minlength: 11, maxlength: 11, required: true },
-		// Returns the updated response value
-		response: (value: string) => {
-			if (value) {
-				addDevice(value);
-			}
-		}
-	};
+	// const codeModal: ModalSettings = {
+	// 	type: 'prompt',
+	// 	title: 'Enter Pairing Code',
+	// 	body: 'Provide the pairing code for the device you want to add and make sure it is powered on.',
+	// 	valueAttr: { type: 'text', minlength: 11, maxlength: 11, required: true },
+	// 	// Returns the updated response value
+	// 	response: (value: string) => {
+	// 		if (value) {
+	// 			addDevice(value);
+	// 		}
+	// 	}
+	// };
 
 	const loadingModal: ModalSettings = {
 		type: 'component',
@@ -51,13 +51,11 @@
 		valueAttr: { type: 'text', minlength: 11, maxlength: 11, required: true }
 	};
 
-	const openModal = () => modalStore.trigger(codeModal);
-
-	const addDevice = (pairingCode: string) => {
+	const addDevice = (pairingCode: string, useThread: boolean) => {
 		console.log('Adding device with pairing code:', pairingCode);
 		modalStore.trigger(loadingModal);
 
-		ApiClient.commissionNodeBLEThread(data.accessLevel, pairingCode)
+		ApiClient.commissionNodeBLE(data.accessLevel, pairingCode, useThread)
 			.then(() => {
 				console.log('Device added.');
 				modalStore.close();
@@ -78,12 +76,20 @@
 				const errorModal: ModalSettings = {
 					type: 'alert',
 					title: 'Error Adding Device',
-					body: 'There was an error adding the device:<br>' + error,
+					body: 'There was an error adding the device:<br>' + error.toString(),
 					buttonTextCancel: 'Close'
 				};
 				modalStore.trigger(errorModal);
 			});
 	};
+
+	const addDeviceModalSettings: ModalSettings = {
+		type: 'component',
+		component: 'addDeviceModal',
+		meta: { pairDeviceCallback: addDevice },
+	};
+
+	const openModal = () => modalStore.trigger(addDeviceModalSettings);
 
 	let deviceList: BaseDevice[] = [];
 	const numberOfTestDevices = 0;
@@ -129,7 +135,6 @@
 	});
 
 </script>
-
 
 <div class="relative h-full w-full flex items-center self-center justify-center">
 

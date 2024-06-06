@@ -35,18 +35,15 @@ export default abstract class ApiClient {
 	}
 
 
-	static commissionNodeBLEThread = (accessLevel: AccessLevel, pairingCode: string): Promise<void> => {
+	static commissionNodeBLE = (accessLevel: AccessLevel, pairingCode: string, useThread: boolean): Promise<void> => {
 		const backendUrl = this.getBackendUrl(accessLevel);
 
 		const payload = {
-			pairingCode: pairingCode,
-			threadNetworkName: 'OpenThread-7a82',
-			threadNetworkOperationalDataset:
-				'0e080000000000010000000300001635060004001fffe00208817262e4e69f05d30708fde8a979e6a3e2ad05105c9a9dcfd995fdb17372f7e6c67ffb9b030f4f70656e5468726561642d3761383201027a820410eba8b6f97ba68feacfb9ed8a8bcac55a0c0402a0f7f8'
+			pairingCode: pairingCode
 		};
 
 		return new Promise<void>((resolve, reject) => {
-			fetch(`${backendUrl}/pairing/ble-thread`, {
+			fetch(`${backendUrl}/pairing/ble-${useThread ? 'thread' : 'wifi'}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -55,13 +52,15 @@ export default abstract class ApiClient {
 			})
 				// .then(response => response.json())
 				.then((data) => {
-					if (!data.ok) {
-						reject(data.body);
+					if (data.ok) {
+						console.log('Success:', data);
+						resolve();
+						return;
 					}
-					console.log('Success:', data);
-					resolve();
-				})
-				.catch((error) => {
+					return data.text();
+				}).then((errorData) => {
+					reject(errorData);
+				}).catch((error) => {
 					console.error('Error:', error);
 					reject(error.toString());
 				});
