@@ -3,7 +3,16 @@
 	import SvgQR from '@svelte-put/qr/svg/QR.svelte';
 
 	// Stores
-	import { getModalStore, ListBox, ListBoxItem, popup, type PopupSettings, Accordion, AccordionItem } from '@skeletonlabs/skeleton';
+	import {
+		getModalStore,
+		ListBox,
+		ListBoxItem,
+		popup,
+		type PopupSettings,
+		Accordion,
+		AccordionItem,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
 	import ApiClient from '$lib/api/ApiClient';
 	import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
@@ -151,6 +160,31 @@
 			proxyLocationLoading = false;
 		});
 	};
+
+	const handleResetVirtualDevice = async () => {
+		ApiClient.resetVirtualDevice(accessLevel, device.nodeId, device.endpointId).then(() => {
+			location.reload();
+		}).catch(() => {
+			console.error('Failed to reset virtual device');
+		});
+	};
+
+	const resetModal: ModalSettings = {
+		type: 'confirm',
+		title: 'Reset Virtual Device',
+		body: 'Do you want to reset the virtual device?<br>This will only reset the virtual device used for connecting to third party hubs.<br>No PrivacyHub data will be lost.',
+		buttonTextConfirm: 'Reset',
+		response: (response) => {
+			if (response) {
+				handleResetVirtualDevice();
+			}
+		}
+	};
+
+	const showResetModal = () => {
+		modalStore.close();
+		modalStore.trigger(resetModal);
+	};
 </script>
 
 
@@ -274,6 +308,11 @@
 				</span>
 				<SvgQR class="w-60" data={device.qrCode} />
 				<span class="text-gray-600">{device.manualPairingCode}</span>
+				<span class="text-lg mb-4">
+					If you are having trouble pairing the device to a hub, try
+					<a class="underline text-primary-500" on:click={showResetModal}>resetting the virtual device</a>
+					. This will not erase any data on the PrivacyHub.
+				</span>
 			</span>
 		{:else}
 			<div class="flex flex-col">

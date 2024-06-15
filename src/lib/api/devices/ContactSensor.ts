@@ -41,17 +41,17 @@ export default class ContactSensor extends BaseDevice {
 		this.state = false;
 	}
 
-	// override initialize = (): Promise<void> => {
-	// 	return new Promise<void>((resolve, reject) => {
-	// 		ApiClient.getOnOff(this.nodeId, this.endpointId).then((state) => {
-	// 			this.state = state || false;
-	// 			resolve();
-	// 		}).catch((error) => {
-	// 			console.error('Error:', error);
-	// 			reject(error.toString());
-	// 		});
-	// 	});
-	// }
+	override initialize = (): Promise<void> => {
+		return new Promise<void>((resolve, reject) => {
+			ApiClient.getBooleanState(this.accessLevel, this.nodeId, this.endpointId).then((state) => {
+				this.state = state || false;
+				resolve();
+			}).catch((error) => {
+				console.error('Error:', error);
+				reject(error.toString());
+			});
+		});
+	}
 
 	override getHistory = (): Promise<IReturnContactSensorState[]> => {
 		return new Promise<IReturnContactSensorState[]>((resolve, reject) => {

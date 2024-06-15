@@ -189,6 +189,27 @@ export default abstract class ApiClient {
 		});
 	};
 
+	static getBooleanState = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<boolean> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
+		return new Promise<boolean>((resolve, reject) => {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/booleanState`)
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					resolve(data.booleanState);
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+	}
+
+
 	static setOnOff = (accessLevel: AccessLevel, nodeId: string, endpointId: string, state: boolean): Promise<void> => {
 		const payload = {
 			state: state
@@ -388,6 +409,25 @@ export default abstract class ApiClient {
 					reject(error.toString());
 				});
 		});
+	}
+
+	static resetVirtualDevice = (accessLevel: AccessLevel, nodeId: string, endpointId: string): Promise<void> => {
+		const backendUrl = this.getBackendUrl(accessLevel);
+
+		return new Promise<void>((resolve, reject) => {
+			fetch(`${backendUrl}/nodes/${nodeId}/${endpointId}/resetVirtualDevice`)
+				.then((response) => {
+					if (!response.ok) {
+						reject(response.body);
+					}
+					resolve();
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					reject(error.toString());
+				});
+		});
+
 	}
 
 	static getHistory<T>(accessLevel: AccessLevel, nodeId: string, endpointId: string, from?: number, to?: number): Promise<T[]> {
