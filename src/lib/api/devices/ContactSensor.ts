@@ -81,8 +81,8 @@ export default class ContactSensor extends BaseDevice {
 
 	override getHistoryComponentMappings = (): any => {
 		const mappings: HistoryAttributeMapping[] = [
-			{ attributeValue: true, text: 'Closed', color: '#e0e0e0' },
-			{ attributeValue: false, text: 'Open', color: '#3c8eae' },
+			{ attributeValue: true, text: 'Closed', color: '#3c8eae' },
+			{ attributeValue: false, text: 'Open', color: '#e0e0e0' },
 		];
 		return mappings;
 	}
