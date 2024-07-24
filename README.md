@@ -18,3 +18,16 @@ The frontend of PrivacyHub is a web application built with Svelte, designed to p
 ## Running the application
 
 `npm run dev`
+
+## Usage
+### Accessing the Interface
+- **Local Mode**: Access the interface within your home network by navigating to the local IP address of the PrivacyHub.
+- **Online Mode**: Access remotely via the URL provided by the NGROK service.
+
+### Privacy States
+- **Local**: Device accessible only within the local network.
+- **Online**: Device accessible from anywhere with an internet connection.
+- **Online-Shared**: Device can be paired with third-party hubs (e.g., Amazon Alexa).
+
+### Data Visualization
+The frontend uses D3.js for displaying historical data. Navigate to the "History" section to view detailed plots and interact with the data.
