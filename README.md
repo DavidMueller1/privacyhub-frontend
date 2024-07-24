@@ -1,38 +1,20 @@
-# create-svelte
+# PrivacyHub Frontend
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+Welcome to the frontend repository for PrivacyHub, a smart home control hub focused on enhancing user privacy.
 
-## Creating a project
+## Overview
+The frontend of PrivacyHub is a web application built with Svelte, designed to provide an intuitive and interactive user interface for managing smart home devices. It allows users to control their devices, visualize data, and adjust privacy settings in real-time.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Key Features
+- Local and Online Access: Control your devices from within your home network or remotely via the internet.
+- Privacy States: Manage device access with three privacy states—Local, Online, and Online-Shared.
+- Data Visualization: View historical data of your device states and interactions.
+- Responsive Design: Access the interface from various devices including desktops, tablets, and smartphones.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Installing dependencies
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+`npm install`
 
-## Developing
+## Running the application
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+`npm run dev`
