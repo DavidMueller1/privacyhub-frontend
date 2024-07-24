@@ -12,8 +12,8 @@ export enum ConnectionStatus {
 
 export enum PrivacyState {
 	LOCAL,
-	THIRD_PARTY,
 	ONLINE,
+	ONLINE_SHARED,
 }
 
 export interface IReturnBaseDeviceState {
@@ -81,6 +81,18 @@ export default class BaseDevice {
 
 	getHistoryComponent: any = () => {
 		return BaseDeviceHistory;
+	}
+
+	getHistoryComponentTitle = (): string => {
+		return '';
+	}
+
+	getHistoryComponentAttributeName = (): string => {
+		return '';
+	}
+
+	getHistoryComponentMappings = (): any => {
+		return [];
 	}
 
 	get nodeId(): string {

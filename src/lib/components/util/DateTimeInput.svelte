@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import BaseDevice from '$lib/api/devices/BaseDevice';
 	import { getModeUserPrefers, modeCurrent } from '@skeletonlabs/skeleton';
 
 	export let classes: string = '';
@@ -59,12 +58,12 @@
 		}
 
 		date = new Date(
-			Number(year),
-			Number(month) - 1,
-			Number(day),
-			Number(hours),
-			Number(minutes),
-			Number(seconds)
+			parseInt(year),
+			parseInt(month) - 1,
+			parseInt(day),
+			parseInt(hours),
+			parseInt(minutes),
+			parseInt(seconds)
 		);
 		dispatch('dateUpdate', { newDate: date })
 
@@ -106,7 +105,7 @@
 		hours = hours.slice(0, 2);
 	}
 
-	$: if (Number(hours) > 23) {
+	$: if (parseInt(hours) > 23) {
 		hours = "23";
 	}
 
@@ -114,7 +113,7 @@
 		minutes = minutes.slice(0, 2);
 	}
 
-	$: if (Number(minutes) > 59) {
+	$: if (parseInt(minutes) > 59) {
 		minutes = "59";
 	}
 
@@ -122,12 +121,29 @@
 		seconds = seconds.slice(0, 2);
 	}
 
-	$: if (Number(seconds) > 59) {
+	$: if (parseInt(seconds) > 59) {
 		seconds = "59";
 	}
 
 	const highlightOnClick = (event) => {
 		event.target.select();
+	}
+
+	const handleEnter = (event) => {
+		if (event.key === "Enter") {
+			// Focus the next input
+			const inputs = document.querySelectorAll('input');
+			const currentInput = document.activeElement;
+			if (!currentInput || !(currentInput instanceof HTMLInputElement)) {
+				return;
+			}
+			const currentIndex = Array.from(inputs).indexOf(currentInput);
+			if (currentIndex < inputs.length - 1) {
+				inputs[currentIndex + 1].focus();
+			} else {
+				inputs[currentIndex].blur();
+			}
+		}
 	}
 
 </script>
@@ -156,7 +172,7 @@
 
 	.container-dark {
 		background: #272b38;
-        border: 1px solid #d1d1d1;
+        /*border: 1px solid #d1d1d1;*/
 	}
 
 	.input-light {
@@ -176,13 +192,23 @@
 	}
 </style>
 
-<div class="flex flex-col w-40 px-2 rounded-xl {classes}" class:container-light={currentMode} class:container-dark={!currentMode}>
+<div class="flex flex-col w-32 md:w-40 px-2 rounded-xl {classes}" class:container-light={currentMode} class:container-dark={!currentMode}>
 	<div class="flex flex-row w-full items-end">
 		<input
 			class="rounded-tl-3xl"
 			bind:value={day}
 			on:input={updateDate}
 			on:focusin={highlightOnClick}
+			on:focusout={() => {
+				if (day.length === 1) {
+					day = "0" + day;
+				}
+				if (day.length === 0) {
+					day = "01";
+				}
+				updateDate();
+			}}
+			on:keyup={handleEnter}
 			class:input-light={currentMode}
 			class:input-dark={!currentMode}
 		>
@@ -191,6 +217,16 @@
 			bind:value={month}
 			on:input={updateDate}
 			on:focusin={highlightOnClick}
+			on:focusout={() => {
+				if (month.length === 1) {
+					month = "0" + month;
+				}
+				if (month.length === 0) {
+					month = "01";
+				}
+				updateDate();
+			}}
+			on:keyup={handleEnter}
 			class:input-light={currentMode}
 			class:input-dark={!currentMode}
 		>
@@ -200,6 +236,13 @@
 			bind:value={year}
 			on:input={updateDate}
 			on:focusin={highlightOnClick}
+			on:focusout={() => {
+				if (year.length < 4) {
+					year = "2024";
+				}
+				updateDate();
+			}}
+			on:keyup={handleEnter}
 			class:input-light={currentMode}
 			class:input-dark={!currentMode}
 			style="flex-grow: 1.5"
@@ -207,13 +250,23 @@
 	</div>
 	<div
 		class="flex flex-row w-full items-end text-2xl"
-		style="border-top: 1px solid #d1d1d1;"
+		style="border-top: 1px solid #737373;"
 	>
 		<input
 			class="rounded-bl-3xl text-2xl py-1"
 			bind:value={hours}
 			on:input={updateDate}
 			on:focusin={highlightOnClick}
+			on:focusout={() => {
+				if (hours.length === 1) {
+					hours = "0" + hours;
+				}
+				if (hours.length === 0) {
+					hours = "00";
+				}
+				updateDate();
+			}}
+			on:keyup={handleEnter}
 			class:input-light={currentMode}
 			class:input-dark={!currentMode}
 		>
@@ -223,6 +276,16 @@
 			bind:value={minutes}
 			on:input={updateDate}
 			on:focusin={highlightOnClick}
+			on:focusout={() => {
+				if (minutes.length === 1) {
+					minutes = "0" + minutes;
+				}
+				if (minutes.length === 0) {
+					minutes = "00";
+				}
+				updateDate();
+			}}
+			on:keyup={handleEnter}
 			class:input-light={currentMode}
 			class:input-dark={!currentMode}
 		>

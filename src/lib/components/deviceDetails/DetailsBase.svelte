@@ -3,7 +3,16 @@
 	import SvgQR from '@svelte-put/qr/svg/QR.svelte';
 
 	// Stores
-	import { getModalStore, ListBox, ListBoxItem, popup, type PopupSettings, Accordion, AccordionItem } from '@skeletonlabs/skeleton';
+	import {
+		getModalStore,
+		ListBox,
+		ListBoxItem,
+		popup,
+		type PopupSettings,
+		Accordion,
+		AccordionItem,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
 	import ApiClient from '$lib/api/ApiClient';
 	import BaseDevice, { PrivacyState } from '$lib/api/devices/BaseDevice';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
@@ -34,8 +43,8 @@
 	// Privacy State
 	const privacyStateList = [
 		{ key: PrivacyState.LOCAL, text: 'Local', color: 'text-state-local' },
-		{ key: PrivacyState.THIRD_PARTY, text: 'Shared', color: 'text-state-third-party' },
 		{ key: PrivacyState.ONLINE, text: 'Online', color: 'text-state-online' },
+		{ key: PrivacyState.ONLINE_SHARED, text: 'Online-Shared', color: 'text-state-online-shared' },
 	];
 	let selectedPrivacyState: PrivacyState = device.privacyState;
 	let lastSelectedPrivacyState: PrivacyState = device.privacyState;
@@ -151,6 +160,31 @@
 			proxyLocationLoading = false;
 		});
 	};
+
+	const handleResetVirtualDevice = async () => {
+		ApiClient.resetVirtualDevice(accessLevel, device.nodeId, device.endpointId).then(() => {
+			location.reload();
+		}).catch(() => {
+			console.error('Failed to reset virtual device');
+		});
+	};
+
+	const resetModal: ModalSettings = {
+		type: 'confirm',
+		title: 'Reset Virtual Device',
+		body: 'Do you want to reset the virtual device?<br>This will only reset the virtual device used for connecting to third party hubs.<br>No PrivacyHub data will be lost.',
+		buttonTextConfirm: 'Reset',
+		response: (response) => {
+			if (response) {
+				handleResetVirtualDevice();
+			}
+		}
+	};
+
+	const showResetModal = () => {
+		modalStore.close();
+		modalStore.trigger(resetModal);
+	};
 </script>
 
 
@@ -181,21 +215,21 @@
 			</div>
 			<div class="text-sm">The device can only be accessed via the local web interface at
 				<a class="text-neutral-400" href="http://privacyhub:8080">http://privacyhub:8080</a>
-				in the same network as the PrivacyHub.</div>
-		</div>
-		<div class="flex flex-col items-center">
-			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.color}">
-				{privacyStateList.find((x) => x.key === PrivacyState.THIRD_PARTY)?.text}
-			</div>
-			<div class="text-sm">The device can be accessed from third party hubs like an Alexa. Use the top right button to pair it.</div>
+				in the same network as the PrivacyHub. While this is the most restrictive state, it offers the highest amout of privacy.</div>
 		</div>
 		<div class="flex flex-col items-center">
 			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.ONLINE)?.color}">
 				{privacyStateList.find((x) => x.key === PrivacyState.ONLINE)?.text}
 			</div>
-			<div class="text-sm">In addition to the other states the device can be accessed online at
+			<div class="text-sm">In this state, the device can be accessed online at
 				<a class="text-neutral-400" href="https://privacyhub.ngrok.app/">https://privacyhub.ngrok.app</a>
 			</div>
+		</div>
+		<div class="flex flex-col items-center">
+			<div class="font-bold text-xl {privacyStateList.find((x) => x.key === PrivacyState.ONLINE_SHARED)?.color}">
+				{privacyStateList.find((x) => x.key === PrivacyState.ONLINE_SHARED)?.text}
+			</div>
+			<div class="text-sm">In addition to the other states the device can be accessed from third party hubs like an Alexa. Use the top right button to pair it. This state provides the most features, but carries the most security risks.</div>
 		</div>
 	</div>
 	<div class="arrow variant-filled-surface" />
@@ -258,7 +292,7 @@
 				</button>
 			{/if}
 			<header class='px-4 text-lg md:text-2xl font-bold flex-grow'><i class="fa-solid {icon} mr-2"></i>{device.formattedVendorAndProduct}</header>
-			{#if !showQrCode && device.privacyState !== PrivacyState.LOCAL}
+			{#if !showQrCode && device.privacyState === PrivacyState.ONLINE_SHARED}
 				<button
 					class="btn-icon variant-ringed-tertiary w-11 shrink-0 !ml-auto"
 					on:click={() => showQrCode = true}
@@ -274,6 +308,11 @@
 				</span>
 				<SvgQR class="w-60" data={device.qrCode} />
 				<span class="text-gray-600">{device.manualPairingCode}</span>
+				<span class="text-lg mb-4">
+					If you are having trouble pairing the device to a hub, try
+					<a class="underline text-primary-500" on:click={showResetModal}>resetting the virtual device</a>
+					. This will not erase any data on the PrivacyHub.
+				</span>
 			</span>
 		{:else}
 			<div class="flex flex-col">
@@ -282,7 +321,7 @@
 				</div>
 				<div class="flex flex-row items-center justify-between mt-4 pt-4 border-t border-neutral-500">
 					<div>Privacy State <i class="fa-solid fa-circle-question text-sm ml-1" use:popup={popupPrivacyInfo}></i></div>
-					<button class="btn variant-ghost-tertiary h-10 w-24 {privacyStateColor}" use:popup={popupPrivacy}>
+					<button class="btn variant-ghost-tertiary h-10 w-28 {privacyStateColor}" use:popup={popupPrivacy}>
 						{#if privacyStateLoading}
 							<LoadingSpinner classes="h-6" />
 						{:else}

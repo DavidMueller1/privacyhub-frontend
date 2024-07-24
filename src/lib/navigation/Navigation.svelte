@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getDrawerStore, getModeUserPrefers, LightSwitch, modeCurrent } from '@skeletonlabs/skeleton';
+	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { AccessLevel } from '$lib/util/EnvChecker.js';
 
 	export let accessLevel: AccessLevel;
@@ -8,12 +8,6 @@
 	const drawerClose = () => {
 		drawerStore.close();
 	};
-
-	// Set the current mode
-	let currentMode = getModeUserPrefers();
-	modeCurrent.subscribe((value) => {
-		currentMode = value;
-	});
 </script>
 
 <nav class="list-nav grow">
@@ -24,23 +18,29 @@
 				<span>Dashboard</span>
 			</a>
 		</li>
-		{#if accessLevel === AccessLevel.PRIVATE }
-			<li>
-				<a href="/history" on:click={drawerClose}>
-					<i class="fa-solid fa-square-poll-vertical text-4xl w-9"></i>
-					<span>History</span>
-				</a>
-			</li>
-		{/if}
+		<!--{#if accessLevel === AccessLevel.PRIVATE }-->
+		<li>
+			<a href="/history" on:click={drawerClose}>
+				<i class="fa-solid fa-square-poll-vertical text-4xl w-9"></i>
+				<span>History</span>
+			</a>
+		</li>
+		<!--{/if}-->
 		<li>
 			<a href="/about" on:click={drawerClose}>
 				<i class="fa-solid fa-circle-question text-4xl w-9"></i>
 				<span>About</span>
 			</a>
 		</li>
+		<li>
+			<a href="/settings" on:click={drawerClose}>
+				<i class="fa-solid fa-gear text-4xl w-9"></i>
+				<span>Settings</span>
+			</a>
+		</li>
 	</ul>
 </nav>
-<!--Align bottom-->
-<div class="align-bottom p-4">
-	<LightSwitch />
-</div>
+<!--&lt;!&ndash;Align bottom&ndash;&gt;-->
+<!--<div class="align-bottom p-4">-->
+<!--	<LightSwitch />-->
+<!--</div>-->

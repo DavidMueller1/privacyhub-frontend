@@ -5,6 +5,7 @@ import typography from '@tailwindcss/typography';
 import { skeleton } from '@skeletonlabs/tw-plugin';
 import { Private } from './src/Private';
 
+/** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: 'class',
 	content: [
@@ -18,9 +19,9 @@ export default {
 				'connected-dark': '#61913c',
 				'disconnected-light': '#b14b4b',
 				'disconnected-dark': '#7f2d2d',
-				'state-local': '#4cb5dc',
-				'state-third-party': '#f1d743',
-				'state-online': '#55e057',
+				'state-local': '#70b853',
+				'state-online': '#f2a641',
+				'state-online-shared': '#e05c49',
 			},
 			flexGrow: {
 

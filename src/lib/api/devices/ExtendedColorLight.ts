@@ -4,15 +4,22 @@ import OnOffPluginUnitOverview from '$lib/components/deviceOverviews/OnOffPlugin
 import type { AccessLevel } from '$lib/util/EnvChecker';
 import AttributeHistory from '$lib/components/deviceHistories/AttributeHistory.svelte';
 import type { HistoryAttributeMapping } from '$lib/components/deviceHistories/HistoryUtils';
+import ExtendedColorLightOverview from '$lib/components/deviceOverviews/ExtendedColorLightOverview.svelte';
 
-export interface IReturnOnOffPluginUnitState {
+export interface IReturnExtendedColorLightState {
 	connectionStatus: ConnectionStatus;
 	onOffState: boolean;
+	hue: number;
+	saturation: number;
+	value: number;
 	timestamp: number;
 }
 
-export default class OnOffPluginUnit extends BaseDevice {
+export default class ExtendedColorLight extends BaseDevice {
 	state: boolean;
+	hue: number;
+	saturation: number;
+	value: number;
 
 	constructor(
 		nodeId: string,
@@ -39,23 +46,49 @@ export default class OnOffPluginUnit extends BaseDevice {
 			accessLevel
 		);
 		this.state = false;
+		this.hue = 0;
+		this.saturation = 0;
+		this.value = 0;
 	}
 
 	override initialize = (): Promise<void> => {
 		return new Promise<void>((resolve, reject) => {
 			ApiClient.getOnOff(this.accessLevel, this.nodeId, this.endpointId).then((state) => {
 				this.state = state || false;
-				resolve();
+				ApiClient.getLightLevel(this.accessLevel, this.nodeId, this.endpointId).then((lightLevel) => {
+					this.value = lightLevel;
+
+					ApiClient.getColorHueSaturation(this.accessLevel, this.nodeId, this.endpointId).then((color) => {
+						this.hue = color.hue;
+						this.saturation = color.saturation;
+						resolve();
+					}).catch((error) => {
+						console.error('Error getting color hue saturation:', error);
+						reject(error.toString());
+					});
+				}).catch((error) => {
+					console.error('Error getting light level:', error);
+					reject(error.toString());
+				});
+				// ApiClient.getColorHSV(this.accessLevel, this.nodeId, this.endpointId).then((color) => {
+				// 	this.hue = color.hue;
+				// 	this.saturation = color.saturation;
+				// 	this.value = color.value;
+				// 	resolve();
+				// }).catch((error) => {
+				// 	console.error('Error getting color HSV:', error);
+				// 	reject(error.toString());
+				// });
 			}).catch((error) => {
-				console.error('Error:', error);
+				console.error('Error getting on off state:', error);
 				reject(error.toString());
 			});
 		});
 	}
 
-	override getHistory = (): Promise<IReturnOnOffPluginUnitState[]> => {
-		return new Promise<IReturnOnOffPluginUnitState[]>((resolve, reject) => {
-			ApiClient.getHistory<IReturnOnOffPluginUnitState>(this.accessLevel, this._nodeId, this._endpointId).then((data) => {
+	override getHistory = (): Promise<IReturnExtendedColorLightState[]> => {
+		return new Promise<IReturnExtendedColorLightState[]>((resolve, reject) => {
+			ApiClient.getHistory<IReturnExtendedColorLightState>(this.accessLevel, this._nodeId, this._endpointId).then((data) => {
 				resolve(data);
 			}).catch((error) => {
 				reject(error);
@@ -64,7 +97,7 @@ export default class OnOffPluginUnit extends BaseDevice {
 	}
 
 	override getOverviewComponent = () => {
-		return OnOffPluginUnitOverview;
+		return ExtendedColorLightOverview;
 	}
 
 	override getHistoryComponent = () => {

@@ -6,12 +6,11 @@
 		initializeStores,
 		getDrawerStore,
 		Drawer,
-		LightSwitch,
 		Modal,
 		type ModalComponent,
 		modeCurrent,
 		getModeUserPrefers,
-		getModeAutoPrefers, type DrawerStore
+		setModeCurrent
 	} from '@skeletonlabs/skeleton';
 
 	// Highlight JS
@@ -56,21 +55,27 @@
 	import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
 	import OnOffPluginUnitDetails from '$lib/components/deviceDetails/OnOffPluginUnitDetails.svelte';
 	import ContactSensorDetails from '$lib/components/deviceDetails/ContactSensorDetails.svelte';
-	import { AccessLevel, getAccessLevel } from '$lib/util/EnvChecker';
-	import { onMount } from 'svelte';
+	import ExtendedColorLightDetails from '$lib/components/deviceDetails/ExtendedColorLightDetails.svelte';
 	import type { LayoutData } from '../../.svelte-kit/types/src/routes/$types';
 	import Navigation from '$lib/navigation/Navigation.svelte';
+	import { onMount } from 'svelte';
+	import AddDeviceModal from '$lib/components/util/AddDeviceModal.svelte';
 
 	const modalRegistry: Record<string, ModalComponent> = {
 		loading: { ref: LoadingModal },
+		addDeviceModal: { ref: AddDeviceModal },
 		onOffPluginUnitDetails: { ref: OnOffPluginUnitDetails },
-		contactSensorDetails: {ref: ContactSensorDetails }
+		contactSensorDetails: {ref: ContactSensorDetails },
+		extendedColorLightDetails: { ref: ExtendedColorLightDetails },
 	};
 
 	// Set the current mode
 	let currentMode = getModeUserPrefers();
 	modeCurrent.subscribe((value) => {
 		currentMode = value;
+	});
+	onMount(() => {
+		setModeCurrent(false);
 	});
 </script>
 
@@ -99,13 +104,21 @@
 						<img
 							src="/images/logo_dark.svg"
 							alt="PrivacyHub Logo"
-							class="w-24 lg:w-36 lg:px-4"
+							class="w-24 lg:w-36 lg:px-4 cursor-pointer"
+							on:click={() => {
+								// navigate to home
+								window.location.href = '/';
+							}}
 						/>
 					{:else}
 						<img
 							src="/images/logo_light.svg"
 							alt="PrivacyHub Logo"
-							class="w-24 lg:w-36 lg:px-4"
+							class="w-24 lg:w-36 lg:px-4 cursor-pointer"
+							on:click={() => {
+								// navigate to home
+								window.location.href = '/';
+							}}
 						/>
 					{/if}
 					<!--					<strong class="text-xl uppercase">PrivacyHub</strong>-->

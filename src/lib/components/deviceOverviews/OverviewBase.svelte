@@ -54,13 +54,13 @@
 					connectionString = 'Local';
 					connectionColor = 'text-state-local';
 					break;
-				case PrivacyState.THIRD_PARTY:
-					connectionString = 'Shared';
-					connectionColor = 'text-state-third-party';
-					break;
 				case PrivacyState.ONLINE:
 					connectionString = 'Online';
 					connectionColor = 'text-state-online';
+					break;
+				case PrivacyState.ONLINE_SHARED:
+					connectionString = 'Online-Shared';
+					connectionColor = 'text-state-online-shared';
 					break;
 				default:
 					connectionString = 'UNKNOWN';
@@ -83,11 +83,11 @@
 </div>
 
 <button
-	class="card flex items-center space-x-8 px-8 h-20 hover:cursor-pointer"
+	class="card flex items-center px-8 h-20 hover:cursor-pointer"
 	on:click={openDetailsModal}
 >
 	<OverviewIcon icon={icon} connectionStatus={device.connectionStatus} privacyState={device.privacyState} popupSettings={popupState} />
 	<!--	<i class="fa-solid fa-satellite-dish {stateIconColor}" use:popup={popupState}></i>-->
-	<p class="text-left max-h-[72px] text-ellipsis overflow-clip">{device.formattedVendorAndProduct}</p>
+	<p class="text-left max-h-[72px] text-ellipsis overflow-clip ml-8 mr-4">{device.formattedVendorAndProduct}</p>
 	<slot/>
 </button>

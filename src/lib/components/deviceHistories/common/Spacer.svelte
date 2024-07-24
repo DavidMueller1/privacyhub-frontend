@@ -4,7 +4,7 @@
 
 	export let width = 640;
 	export let height = 100;
-	export let marginTop = 60;
+	export let marginTop = 0;
 	export let marginBottom = 30;
 	export let marginRight = 45;
 	export let marginLeft = 45;
@@ -87,7 +87,7 @@
 
 	// The D3 Magic
 	$: x = d3.scaleTime([timestampStart, timestampEnd], [marginLeft, width - marginRight]);
-	$: d3.select(xAxisBinding).call(d3.axisTop(x).ticks(ticks));
+	$: d3.select(xAxisBinding).call(d3.axisTop(x));
 	$: d3.select(xAxisGridBinding).call(d3.axisBottom(x).tickSize(height - marginTop).tickFormat('').ticks(ticks)) && d3.select(xAxisGridBinding).selectAll('path').remove() && d3.select(xAxisGridBinding).selectAll('line').attr('stroke', '#ffffff33');
 
 	// $: d3.select(viewBoxBinding).call(d3.drag().on('drag', dragEvent));
@@ -95,12 +95,7 @@
 
 </script>
 
-<svg bind:this={viewBoxBinding} style="margin-top: -7px" width={width} height={height}>
-	<polygon points="{marginLeft - arrowWidth / 2},{arrowMarginTop} {marginLeft + arrowWidth / 2},{arrowMarginTop} {marginLeft},{marginTop - arrowMarginBottom}" fill="#272b38" />
-<!--	<path d="M{marginLeft - arrowWidth / 2},{arrowMarginTop} L{marginLeft},{marginTop - arrowMarginBottom} L{marginLeft + arrowWidth / 2},{arrowMarginTop}" stroke="#ffffff" stroke-width="1" fill="None" />-->
-	<polygon points="{width - marginRight - arrowWidth / 2},{arrowMarginTop} {width - marginRight + arrowWidth / 2},{arrowMarginTop} {width - marginRight},{marginTop - arrowMarginBottom}" fill="#272b38" />
-<!--	<path d="M{width - marginRight - arrowWidth / 2},{arrowMarginTop} L{width - marginRight},{marginTop - arrowMarginBottom} L{width - marginRight + arrowWidth / 2},{arrowMarginTop}" stroke="#ffffff" stroke-width="1" fill="None" />-->
-	<g bind:this={xAxisBinding} class="text-base" transform="translate(0,{marginTop})" />
+<svg bind:this={viewBoxBinding} class="" width={width} height={height}>
 	<g bind:this={xAxisGridBinding} transform="translate(0,{marginTop})" />
 	<!--	<g bind:this={xAxisBinding} transform="translate(0,{height - marginBottom})" />-->
 </svg>
